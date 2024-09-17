@@ -66,4 +66,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // DATA MODULES
+    implementation(project(":data:remote"))
+    implementation(project(":data:repository"))
+
+    //KOIN
+    implementation (libs.koin.android)
 }
