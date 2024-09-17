@@ -4,7 +4,7 @@ sealed class Result<out T> {
     val isSuccess get() = this is Success
     val isError get() = this is Error
 
-    class Error(throwable: Throwable) : Result<Nothing>()
+    class Error(val throwable: Throwable) : Result<Nothing>()
     class Success<out T>(val data: T) : Result<T>()
 
     companion object {

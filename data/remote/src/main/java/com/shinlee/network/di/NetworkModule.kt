@@ -1,5 +1,6 @@
 package com.shinlee.network.di
 
+import com.shinlee.network.BuildConfig
 import com.shinlee.network.api.MarvelApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,7 +32,7 @@ fun createOkHttpClient(): OkHttpClient {
 
 fun createRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-        .baseUrl("https://gateway.marvel.com/")
+        .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
