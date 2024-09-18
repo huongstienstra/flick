@@ -23,3 +23,4 @@ rootProject.name = "Showplus"
 include(":app")
 include(":data:remote")
 include(":data:repository")
+include(":common")

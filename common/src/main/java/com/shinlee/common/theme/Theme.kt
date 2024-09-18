@@ -1,4 +1,4 @@
-package com.shinlee.showplus.ui.theme
+package com.shinlee.common.theme
 
 import android.app.Activity
 import android.os.Build

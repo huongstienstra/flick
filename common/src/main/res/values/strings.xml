@@ -1,0 +1,7 @@
+<resources>
+    <string name="home">show+</string>
+    <string name="contest">contest</string>
+    <string name="upload">upload</string>
+    <string name="search">search</string>
+    <string name="profile">profile</string>
+</resources>

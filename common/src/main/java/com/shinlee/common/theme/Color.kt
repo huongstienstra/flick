@@ -1,4 +1,4 @@
-package com.shinlee.showplus.ui.theme
+package com.shinlee.common.theme
 
 import androidx.compose.ui.graphics.Color
 
