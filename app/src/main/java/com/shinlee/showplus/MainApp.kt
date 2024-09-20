@@ -46,19 +46,27 @@ fun RootScreen() {
 
         Scaffold(
             topBar = {
-                Text("App Bar")
+
             },
             bottomBar = {
 //                    if (!isShowBottomBar) {
 //                        return@Scaffold
 //                    }
-                BottomBar(navController)
+               BottomBar(navController)
             }
         ) { innerPadding ->
 
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .padding(innerPadding)
+//            ) {
+//                AppNavHost(navController = navController)
+//            }
+
             AppNavHost(
                 navController = navController,
-                modifier = Modifier.padding(innerPadding)
+                //modifier = Modifier.padding(innerPadding)
             )
         }
     }
