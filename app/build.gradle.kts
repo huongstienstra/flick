@@ -84,6 +84,6 @@ dependencies {
     implementation("androidx.compose.material:material:1.6.8")
 
     // FIREBASE
-    implementation(libs.firebase.bom)
-    implementation(libs.firebase.analytics)
+//    implementation(libs.firebase.bom)
+//    implementation(libs.firebase.analytics)
 }
