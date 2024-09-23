@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shinlee.common.composable.VerticalVideoPage
-import com.shinlee.common.composable.VideoPlayer
-import com.shinlee.common.composable.VideoPlayer2
 
 @Composable
 fun ShowScreen() {

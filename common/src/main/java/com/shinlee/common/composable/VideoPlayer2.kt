@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.TextureView
 import android.view.ViewGroup
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -30,12 +31,14 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 
+@OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayer2(
     video: String,
@@ -148,9 +151,6 @@ fun VideoPlayer2(
 
             }
         }
-
-        playerView.videoSurfaceView as TextureView
-
 
         DisposableEffect(key1 = AndroidView(factory = {
             playerView
