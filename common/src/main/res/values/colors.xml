@@ -7,4 +7,9 @@
     <color name="text_sub">#f2eeed</color>
     <color name="icon_color">#FFBF00</color>
     <color name="overlay_color">#66000000</color>
+
+<!--    Bottom Bar icon-->
+    <color name="selected_color">#FF0000</color> <!-- Red for selected -->
+    <color name="unselected_color">#808080</color> <!-- Gray for unselected -->
+    <color name="bottom_navigation_background">#FFFFFF</color> <!-- White background -->
 </resources>
