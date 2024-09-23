@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279281643954",
+    "project_id": "showplus-dev",
+    "storage_bucket": "showplus-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279281643954:android:18ec656c5031b21b9234ab",
+        "android_client_info": {
+          "package_name": "com.shinlee.showplus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_QMxsAlaWB6QaAe6u28BwCJa5pEJly3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
