@@ -1,6 +1,7 @@
 package com.shinlee.showplus.di
 
 import com.shinlee.showplus.MarvelViewModel
+import com.shinlee.showplus.ui.screens.permission.PermissionViewModel
 import com.shinlee.showplus.ui.screens.show.ShowViewModel
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,4 +26,5 @@ val appModule = module {
             playersPool = get { parametersOf(maxPoolSize) }
         )
     }
+    viewModel { PermissionViewModel(get()) }
 }
