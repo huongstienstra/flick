@@ -10,3 +10,8 @@ val GrayColor = Color(0xFF7B6F72)
 val WhiteColor = Color(0xFFFFFFFF)
 val BgColor = Color(0xFFF7F8F8)
 val PinkColor = Color(0xFFD915AE)
+
+val Purple200 = Color(0xFFBB86FC)
+val Purple500 = Color(0xFF2382CE)
+val Purple700 = Color(0xFF3700B3)
+val Teal200 = Color(0xFF03DAC5)

@@ -6,10 +6,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.shinlee.showplus.ui.screens.onboarding.OnboardingScreen
+import com.shinlee.showplus.ui.theme.ViewPagerSliderTheme
 
 
 class PermissionActivity : AppCompatActivity(), PermissionCheckEvent {
@@ -24,12 +30,21 @@ class PermissionActivity : AppCompatActivity(), PermissionCheckEvent {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent { // In here, we can call composables!
-            MaterialTheme {
-                PermissionScreen(this)
+//            MaterialTheme {
+//                PermissionScreen(this)
+//            }
+
+            ViewPagerSliderTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(color = androidx.compose.material.MaterialTheme.colors.background) {
+                    OnboardingScreen()
+                }
+
             }
         }
     }
@@ -69,5 +84,18 @@ class PermissionActivity : AppCompatActivity(), PermissionCheckEvent {
 
     override fun checkPermissionButtonClicked() {
         checkPermissions()
+    }
+
+    @Composable
+    fun Greeting(name: String) {
+        Text(text = "Hello $name!")
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        ViewPagerSliderTheme {
+            Greeting("Android")
+        }
     }
 }
