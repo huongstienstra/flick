@@ -1,22 +1,17 @@
 package com.shinlee.showplus.ui.screens.show
 
 
-import android.content.Context
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
-import androidx.media3.ui.PlayerView
-import com.shinlee.showplus.R
 import com.shinlee.showplus.databinding.VideoItemViewBinding
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersAction
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
@@ -37,10 +32,13 @@ class VideoAdapter(
     private val lifecycleScope: CoroutineScope,
     private val playersActions: Flow<PlayersAction>,
     private val dispatcher: CoroutineDispatcher,
-    private val updatePlaybackPosition: (Int, Long) -> Unit
+    private val updatePlaybackPosition: (Int, Long) -> Unit,
+    private val listener: OnClickListener? = null
 ) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
     private var videoUrls: List<String> = listOf()
     var playbackPositions: List<Long> = listOf()
+
+    private var playPauseAnimatorSet: AnimatorSet? = null
 
     private var isFirstFrameRendered = false
 
@@ -67,6 +65,7 @@ class VideoAdapter(
 
     override fun onViewDetachedFromWindow(holder: VideoViewHolder) {
         holder.detach()
+        playPauseAnimatorSet?.cancel()
         super.onViewDetachedFromWindow(holder)
     }
 
@@ -112,6 +111,60 @@ class VideoAdapter(
                         }
                     }.launchIn(lifecycleScope)
             }
+
+            binding.playPauseIcon.visibility = View.GONE
+            with(binding) {
+                btnSend.setOnClickListener {
+                    listener?.onShare()
+                }
+                btnLike.setOnClickListener {
+                    listener?.onLikeVideo()
+                }
+                btnComment.setOnClickListener {
+                    listener?.onComment()
+                }
+
+                playerView.setOnClickListener {
+                    listener?.onSingleClick()
+                    togglePlayPause()
+                }
+
+            }
+        }
+
+        private fun togglePlayPause() {
+            val player = binding.playerView.player ?: return
+
+            if (player.isPlaying) {
+                player.pause()
+                binding.playPauseIcon.setImageResource(com.shinlee.common.R.drawable.ic_video_pause)
+            } else {
+                player.play()
+                binding.playPauseIcon.setImageResource(com.shinlee.common.R.drawable.ic_video_play)
+            }
+
+           animatePlayPauseIcon()
+        }
+
+        private fun animatePlayPauseIcon() {
+            playPauseAnimatorSet?.cancel()
+
+            val fadeIn = ObjectAnimator.ofFloat(binding.playPauseIcon, "alpha", 0f, 1f).apply {
+                duration = 300 // Fade-in duration (300 ms)
+                startDelay = 0 // No delay for fade-in
+                binding.playPauseIcon.visibility = View.VISIBLE // Ensure icon is visible
+            }
+
+            val fadeOut = ObjectAnimator.ofFloat(binding.playPauseIcon, "alpha", 1f, 0f).apply {
+                duration = 500 // Fade-out duration (500 ms)
+                startDelay = 1000 // Delay fade-out for 2 seconds (show icon for 2 seconds)
+            }
+
+            // Use AnimatorSet to play fade-in followed by fade-out sequentially
+            playPauseAnimatorSet = AnimatorSet().apply {
+                playSequentially(fadeIn, fadeOut)
+                start()
+            }
         }
 
 
@@ -152,9 +205,10 @@ class VideoAdapter(
 //                            playbackPosition
 //                        )
                         binding.playerView.player = this
-                        //setMediaItem(MediaItem.fromUri(url))
-                        setMediaItem(MediaItem.fromUri(Uri.parse(url)))
+                        setMediaItem(MediaItem.fromUri(url))
+                        //setMediaItem(MediaItem.fromUri(Uri.parse(url)))
                         playWhenReady = true
+                        repeatMode = ExoPlayer.REPEAT_MODE_ONE
                         this.addListener(
                             object : Player.Listener {
                                 override fun onRenderedFirstFrame() {
@@ -197,5 +251,13 @@ class VideoAdapter(
                 player = null
             }
         }
+    }
+
+    interface OnClickListener {
+        fun onSingleClick()
+        fun onDoubleClick()
+        fun onShare()
+        fun onLikeVideo()
+        fun onComment()
     }
 }

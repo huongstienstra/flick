@@ -13,7 +13,7 @@ import com.shinlee.showplus.ui.screens.show.ShowFragment
 import com.shinlee.showplus.ui.screens.upload.UploadFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()  {
     private val viewModel: MarvelViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {

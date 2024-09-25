@@ -4,13 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.Util
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.shinlee.showplus.R
+import com.shinlee.showplus.ShowPlusApplication
 import com.shinlee.showplus.databinding.ShowFragmentBinding
+import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
+import com.shinlee.showplus.ui.screens.show.core.video.availableCodecsNum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,10 +26,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class ShowFragment : Fragment() {
-    private val viewModel: ShowViewModel by viewModel { parametersOf(2) }
+
+    private val viewModel: ShowViewModel by viewModel {
+        parametersOf(minOf(4, availableCodecsNum())) // Pass your maxPoolSize here
+    }
 
     private var _binding: ShowFragmentBinding? = null
     private val binding get() = _binding!!
+
 
     private val adapter: VideoAdapter by lazy(LazyThreadSafetyMode.NONE) {
         VideoAdapter(
@@ -30,7 +41,28 @@ class ShowFragment : Fragment() {
             lifecycleScope,
             viewModel.playersActions,
             Dispatchers.Main,
-            viewModel::updatePlaybackPosition
+            viewModel::updatePlaybackPosition,
+            object: VideoAdapter.OnClickListener {
+                override fun onSingleClick() {
+                    Log.d("video_list", "Video")
+                }
+
+                override fun onDoubleClick() {
+                }
+
+                override fun onShare() {
+                    Log.d("video_list", "Share")
+                }
+
+                override fun onLikeVideo() {
+                    Log.d("video_list", "Like")
+                }
+
+                override fun onComment() {
+                    Log.d("video_list", "Comment")
+                }
+
+            }
         )
     }
 
@@ -49,6 +81,7 @@ class ShowFragment : Fragment() {
         binding.videoList.adapter = adapter
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.videoList)
+
         lifecycleScope.launch {
             viewModel.playbackPositions
                 .onEach { playbackPositions -> adapter.playbackPositions = playbackPositions }
@@ -57,6 +90,9 @@ class ShowFragment : Fragment() {
             viewModel.videoUrls
                 .onEach(adapter::updateVideoUrls)
                 .launchIn(this)
+
+            Log.e("video_list", "${availableCodecsNum()}")
+
 
             // Pre-cache videos when the activity is created
 //            viewModel.videoUrls
