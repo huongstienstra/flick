@@ -51,7 +51,6 @@ fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boole
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
-
         }
 
     }

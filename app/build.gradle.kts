@@ -98,6 +98,9 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.1")
     implementation ("com.github.permissions-dispatcher:permissionsdispatcher:4.9.2")
 
+// Paging Compose
+    implementation ("com.google.accompanist:accompanist-pager:0.13.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.13.0")
     // ExpoPlayer
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-exoplayer-dash:1.4.1")
