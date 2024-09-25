@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.fragment_container, fragment, fragment.tag)
+            .replace(R.id.fragment_container, fragment, fragment.tag)
             .commitAllowingStateLoss()
     }
 
