@@ -2,7 +2,9 @@ package com.shinlee.showplus.ui.screens.show.core.video
 
 import android.content.Context
 import android.util.Log
+import androidx.annotation.OptIn
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -21,6 +23,7 @@ class PlayersPool(
 
     private val waitingQueue: Queue<Channel<Player>> = LinkedList()
 
+    @OptIn(UnstableApi::class)
     @Synchronized
     fun acquire(): Channel<Player> =
         if (unlockedPlayers.isEmpty()) {

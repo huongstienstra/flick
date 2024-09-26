@@ -28,7 +28,7 @@ import org.koin.core.parameter.parametersOf
 class ShowFragment : Fragment() {
 
     private val viewModel: ShowViewModel by viewModel {
-        parametersOf(minOf(4, availableCodecsNum())) // Pass your maxPoolSize here
+        parametersOf(minOf(1, availableCodecsNum())) // Pass your maxPoolSize here
     }
 
     private var _binding: ShowFragmentBinding? = null

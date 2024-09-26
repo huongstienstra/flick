@@ -7,9 +7,11 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import com.shinlee.showplus.databinding.VideoItemViewBinding
@@ -20,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -39,8 +42,12 @@ class VideoAdapter(
     var playbackPositions: List<Long> = listOf()
 
     private var playPauseAnimatorSet: AnimatorSet? = null
-
     private var isFirstFrameRendered = false
+
+    private var isFavourite = false
+
+    // To handle seekbar updates
+    private var isSeeking: Boolean = false
 
     fun updateVideoUrls(videoUrls: List<String>) {
         this.videoUrls = videoUrls
@@ -76,6 +83,7 @@ class VideoAdapter(
         private lateinit var playerChannel: Channel<Player>
         private var playJob: Job? = null
         private var restartJob: Job? = null
+        private var progressJob: Job? = null  // Declare progressJob here
 
         fun bind(url: String, playbackPosition: Long) {
             videoScope = CoroutineScope(Job() + dispatcher)
@@ -112,12 +120,15 @@ class VideoAdapter(
                     }.launchIn(lifecycleScope)
             }
 
-            binding.playPauseIcon.visibility = View.GONE
             with(binding) {
                 btnSend.setOnClickListener {
                     listener?.onShare()
                 }
                 btnLike.setOnClickListener {
+                    isFavourite = !isFavourite
+                    if (isFavourite) {
+                        binding.btnLike.setIcon(com.shinlee.common.R.drawable.ic_redlike)
+                    } else binding.btnLike.setIcon(com.shinlee.common.R.drawable.ic_like)
                     listener?.onLikeVideo()
                 }
                 btnComment.setOnClickListener {
@@ -175,17 +186,14 @@ class VideoAdapter(
                     videoUrls[absoluteAdapterPosition],
                     playbackPositions[absoluteAdapterPosition]
                 )
+//                progressJob?.cancel()
+//                startProgressBarUpdater()
             }
         }
 
         private fun bindPlayer(url: String, playbackPosition: Long) {
             binding.playerView.apply {
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                setShowNextButton(false)
-                setShowPreviousButton(false)
-                setShowVrButton(false)
-                setShowRewindButton(false)
-                setShowFastForwardButton(false)
                 useController = false
             }
             playJob?.cancel()
@@ -233,7 +241,27 @@ class VideoAdapter(
             }
         }
 
+//        private fun startProgressBarUpdater() {
+//            progressJob = videoScope.launch {
+//                while (isActive) {
+//                    val player = binding.playerView.player ?: continue
+//                    val currentPosition = player.currentPosition
+//                    val duration = player.duration
+//
+//                    // Update the progress bar
+//                    if (duration > 0 && !isSeeking) {
+//                        val progress = (currentPosition * 100 / duration).toInt()
+//                        binding.videoProgressBar.progress = progress
+//                    }
+//
+//                    delay(1000) // Update every second
+//                }
+//            }
+//        }
+
+
         fun detach() {
+            binding.playPauseIcon.visibility = View.GONE
             with(binding.playerView) {
                 playersPool.removeFromAwaitingQueue(playerChannel)
                 player?.run {
@@ -248,6 +276,7 @@ class VideoAdapter(
 //                    player?.currentPosition
 //                )
                 videoScope.cancel()
+                progressJob?.cancel()
                 player = null
             }
         }

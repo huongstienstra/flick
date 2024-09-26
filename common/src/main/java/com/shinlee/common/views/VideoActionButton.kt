@@ -34,7 +34,7 @@ class VideoActionButton @JvmOverloads constructor(
         }
     }
 
-    private fun setIcon(iconResId: Int) {
+     fun setIcon(iconResId: Int) {
         binding.customButtonIcon.setBackgroundResource(iconResId)
     }
 
