@@ -1,11 +1,13 @@
 package com.shinlee.showplus.ui.screens.permission
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -14,7 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.shinlee.showplus.ui.screens.onboarding.OnboardingScreen
+import com.shinlee.showplus.MainActivity
+import com.shinlee.showplus.ui.screens.onboarding.OnboardingActivity
 import com.shinlee.showplus.ui.theme.ViewPagerSliderTheme
 
 
@@ -35,17 +38,19 @@ class PermissionActivity : AppCompatActivity(), PermissionCheckEvent {
         super.onCreate(savedInstanceState)
 
         setContent { // In here, we can call composables!
-//            MaterialTheme {
-//                PermissionScreen(this)
-//            }
-
-            ViewPagerSliderTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = androidx.compose.material.MaterialTheme.colors.background) {
-                    OnboardingScreen()
-                }
-
+            MaterialTheme {
+                PermissionScreen(this, onNextAction = {
+                    startActivity(Intent(this, OnboardingActivity::class.java))
+                })
             }
+
+//            ViewPagerSliderTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(color = androidx.compose.material.MaterialTheme.colors.background) {
+//                   // OnboardingScreen()
+//                }
+//
+//            }
         }
     }
 
@@ -66,7 +71,7 @@ class PermissionActivity : AppCompatActivity(), PermissionCheckEvent {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            Toast.makeText(this, "neext page", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "neext page", Toast.LENGTH_SHORT).show();
         }
     }
 

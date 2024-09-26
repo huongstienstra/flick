@@ -22,48 +22,48 @@ import com.shinlee.showplus.ui.components.ButtonComponent
 
 @ExperimentalPagerApi
 @Composable
-fun OnboardingScreen(){
+fun OnboardingScreen(modifier: Modifier, onNextScreen: () -> Unit) {
 
-    val pagerState  = rememberPagerState(
+    val pagerState = rememberPagerState(
         pageCount = kidsList.size,
-        initialPage =  2
+        initialPage = 2
     )
 
-    LaunchedEffect(Unit){
-//        while (true){
-//            yield()
-//            delay(2000)
-            pagerState.animateScrollToPage(
-                page = (pagerState.currentPage + 1) % (pagerState.pageCount),
-                animationSpec = tween(0)
-            )
-//        }
+    LaunchedEffect(Unit) {
+        pagerState.animateScrollToPage(
+            page = (pagerState.currentPage + 1) % (pagerState.pageCount),
+            animationSpec = tween(0)
+        )
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(state = pagerState,
+    Column(modifier = modifier) {
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
                 .weight(1f)
         ) { page ->
             Card(
             ) {
                 val newKids = kidsList[page]
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.LightGray)
-                    .align(Alignment.Center)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.LightGray)
+                        .align(Alignment.Center)
                 ) {
-                    Image(painter = painterResource(
-                        id = newKids.imgUri
-                    ),
+                    Image(
+                        painter = painterResource(
+                            id = newKids.imgUri
+                        ),
                         contentDescription = "Image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
 
-                    Column(modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(20.dp, 20.dp, 0.dp, 150.dp)
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(20.dp, 20.dp, 0.dp, 150.dp)
                     ) {
 
                         Text(
@@ -83,13 +83,9 @@ fun OnboardingScreen(){
                             color = Color.White,
                             fontWeight = FontWeight.Normal,
                         )
-
-
                     }
 
                 }
-
-
             }
 
         }
@@ -103,7 +99,7 @@ fun OnboardingScreen(){
         contentAlignment = Alignment.BottomEnd,
     ) {
         HorizontalPagerIndicator(
-            pagerState = pagerState,modifier = Modifier
+            pagerState = pagerState, modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(100.dp)
         )
@@ -118,6 +114,7 @@ fun OnboardingScreen(){
         ButtonComponent(
             value = "Next",
             onButtonClicked = {
+                onNextScreen()
             },
             isEnabled = true
         )
