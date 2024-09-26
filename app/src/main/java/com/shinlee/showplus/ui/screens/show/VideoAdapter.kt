@@ -14,6 +14,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
+import com.bumptech.glide.Glide
 import com.shinlee.showplus.databinding.VideoItemViewBinding
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersAction
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
@@ -38,7 +39,7 @@ class VideoAdapter(
     private val updatePlaybackPosition: (Int, Long) -> Unit,
     private val listener: OnClickListener? = null
 ) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
-    private var videoUrls: List<String> = listOf()
+    private var videoList: List<VideoShow> = listOf()
     var playbackPositions: List<Long> = listOf()
 
     private var playPauseAnimatorSet: AnimatorSet? = null
@@ -46,11 +47,8 @@ class VideoAdapter(
 
     private var isFavourite = false
 
-    // To handle seekbar updates
-    private var isSeeking: Boolean = false
-
-    fun updateVideoUrls(videoUrls: List<String>) {
-        this.videoUrls = videoUrls
+    fun updateVideoUrls(videoList: List<VideoShow>) {
+        this.videoList = videoList
         notifyDataSetChanged()
     }
 
@@ -60,10 +58,10 @@ class VideoAdapter(
         )
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        holder.bind(videoUrls[position], playbackPositions[position])
+        holder.bind(videoList[position], 0)
     }
 
-    override fun getItemCount(): Int = videoUrls.size
+    override fun getItemCount(): Int = videoList.size
 
     override fun onViewAttachedToWindow(holder: VideoViewHolder) {
         super.onViewAttachedToWindow(holder)
@@ -85,9 +83,9 @@ class VideoAdapter(
         private var restartJob: Job? = null
         private var progressJob: Job? = null  // Declare progressJob here
 
-        fun bind(url: String, playbackPosition: Long) {
+        fun bind(video: VideoShow, playbackPosition: Long) {
             videoScope = CoroutineScope(Job() + dispatcher)
-            bindPlayer(url, playbackPosition)
+            bindPlayer(video, playbackPosition)
             if (restartJob === null) {
                 restartJob = playersActions
                     .onEach { action ->
@@ -109,10 +107,10 @@ class VideoAdapter(
                             }
 
                             PlayersAction.RESTART -> {
-                                if (absoluteAdapterPosition in videoUrls.indices) {
+                                if (absoluteAdapterPosition in videoList.indices) {
                                     bindPlayer(
-                                        videoUrls[absoluteAdapterPosition],
-                                        playbackPositions[absoluteAdapterPosition]
+                                        videoList[absoluteAdapterPosition],
+                                       0
                                     )
                                 }
                             }
@@ -154,7 +152,7 @@ class VideoAdapter(
                 binding.playPauseIcon.setImageResource(com.shinlee.common.R.drawable.ic_video_play)
             }
 
-           animatePlayPauseIcon()
+            animatePlayPauseIcon()
         }
 
         private fun animatePlayPauseIcon() {
@@ -183,15 +181,16 @@ class VideoAdapter(
             if (!videoScope.isActive) {
                 videoScope = CoroutineScope(Job() + dispatcher)
                 bindPlayer(
-                    videoUrls[absoluteAdapterPosition],
-                    playbackPositions[absoluteAdapterPosition]
+                    videoList[absoluteAdapterPosition],
+                    0
                 )
 //                progressJob?.cancel()
 //                startProgressBarUpdater()
             }
         }
 
-        private fun bindPlayer(url: String, playbackPosition: Long) {
+        private fun bindPlayer(video: VideoShow, playbackPosition: Long) {
+            loadThumbnail(video.thumbnail)
             binding.playerView.apply {
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
                 useController = false
@@ -213,7 +212,7 @@ class VideoAdapter(
 //                            playbackPosition
 //                        )
                         binding.playerView.player = this
-                        setMediaItem(MediaItem.fromUri(url))
+                        setMediaItem(MediaItem.fromUri(video.videoLink))
                         //setMediaItem(MediaItem.fromUri(Uri.parse(url)))
                         playWhenReady = true
                         repeatMode = ExoPlayer.REPEAT_MODE_ONE
@@ -223,6 +222,7 @@ class VideoAdapter(
                                     super.onRenderedFirstFrame()
                                     isFirstFrameRendered = true
                                     binding.thumbnail.visibility = View.GONE
+                                    Log.d("video_list", "render new Frame")
                                 }
 
                                 override fun onPlaybackStateChanged(playbackState: Int) {
@@ -230,12 +230,17 @@ class VideoAdapter(
                                     if (playbackState == Player.STATE_READY && !isFirstFrameRendered) {
                                         // If the video is ready but the first frame hasn't rendered, keep the thumbnail visible
                                         binding.thumbnail.visibility = View.VISIBLE
+                                        Log.d("video_list", "Show thumnail")
                                     }
+                                }
+
+                                override fun onEvents(player: Player, events: Player.Events) {
+                                    super.onEvents(player, events)
                                 }
                             }
                         )
 
-                        seekTo(0, playbackPosition)
+                        seekTo(0, 0) //playbackPosition
                         prepare()
                     }
             }
@@ -279,6 +284,13 @@ class VideoAdapter(
                 progressJob?.cancel()
                 player = null
             }
+        }
+
+        private fun loadThumbnail(imageUrl: String) {
+            Glide.with(itemView.context)
+                .load(imageUrl)
+                .centerCrop()
+                .into(binding.thumbnail)
         }
     }
 

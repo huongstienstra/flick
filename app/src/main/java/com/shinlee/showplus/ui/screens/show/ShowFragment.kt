@@ -83,9 +83,9 @@ class ShowFragment : Fragment() {
         snapHelper.attachToRecyclerView(binding.videoList)
 
         lifecycleScope.launch {
-            viewModel.playbackPositions
-                .onEach { playbackPositions -> adapter.playbackPositions = playbackPositions }
-                .launchIn(this)
+//            viewModel.playbackPositions
+//                .onEach { playbackPositions -> adapter.playbackPositions = playbackPositions }
+//                .launchIn(this)
 
             viewModel.videoUrls
                 .onEach(adapter::updateVideoUrls)

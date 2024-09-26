@@ -22,9 +22,10 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="visible"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="center"
+        android:background="@drawable/avatar"/>
 
 <!--    <ProgressBar-->
 <!--        android:id="@+id/video_progress_bar"-->
