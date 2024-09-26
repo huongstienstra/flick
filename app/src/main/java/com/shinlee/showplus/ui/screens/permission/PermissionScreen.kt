@@ -45,7 +45,7 @@ import com.shinlee.showplus.ui.theme.PinkColor
 
 
 @Composable
-fun PermissionScreen(pPermissionCheckEvent: PermissionCheckEvent) {
+fun PermissionScreen(pPermissionCheckEvent: PermissionCheckEvent, onNextAction: () -> Unit) {
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
@@ -78,6 +78,7 @@ fun PermissionScreen(pPermissionCheckEvent: PermissionCheckEvent) {
                 value = "Next",
                 onButtonClicked = {
                     pPermissionCheckEvent.checkPermissionButtonClicked()
+                    onNextAction()
                 },
                 isEnabled = true
             )

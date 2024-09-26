@@ -1,21 +1,28 @@
 package com.shinlee.showplus.ui.screens.onboarding
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
+import com.shinlee.showplus.ui.screens.permission.PermissionActivity
 
 class OnboardingActivity : AppCompatActivity() {
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_onboarding)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContent {
+            OnboardingScreen(modifier = Modifier.fillMaxSize(), onNextScreen = {
+                startActivity(Intent(this, MainActivity::class.java))
+            })
         }
     }
 }
