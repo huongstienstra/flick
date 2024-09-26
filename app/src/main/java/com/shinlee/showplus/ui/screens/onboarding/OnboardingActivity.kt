@@ -9,13 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.permission.PermissionActivity
 
 class OnboardingActivity : AppCompatActivity() {
-    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

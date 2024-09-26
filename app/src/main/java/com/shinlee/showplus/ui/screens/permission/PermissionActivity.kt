@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.accompanist.pager.ExperimentalPagerApi
+//import com.google.accompanist.pager.ExperimentalPagerApi
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.ui.screens.onboarding.OnboardingActivity
 import com.shinlee.showplus.ui.theme.ViewPagerSliderTheme
@@ -33,7 +33,7 @@ class PermissionActivity : AppCompatActivity(), PermissionCheckEvent {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
-    @OptIn(ExperimentalPagerApi::class)
+//    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

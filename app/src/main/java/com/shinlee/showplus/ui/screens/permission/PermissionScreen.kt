@@ -77,7 +77,7 @@ fun PermissionScreen(pPermissionCheckEvent: PermissionCheckEvent, onNextAction: 
             ButtonComponent(
                 value = "Next",
                 onButtonClicked = {
-                    pPermissionCheckEvent.checkPermissionButtonClicked()
+                   pPermissionCheckEvent.checkPermissionButtonClicked()
                     onNextAction()
                 },
                 isEnabled = true

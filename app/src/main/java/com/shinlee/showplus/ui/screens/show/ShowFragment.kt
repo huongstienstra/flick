@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.shinlee.showplus.R
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(UnstableApi::class)
 class ShowFragment : Fragment() {
 
     private val viewModel: ShowViewModel by viewModel {
@@ -91,7 +94,7 @@ class ShowFragment : Fragment() {
                 .onEach(adapter::updateVideoUrls)
                 .launchIn(this)
 
-            Log.e("video_list", "${availableCodecsNum()}")
+           // Log.e("video_list", "${availableCodecsNum()}")
 
 
             // Pre-cache videos when the activity is created
