@@ -85,12 +85,14 @@ class ShowFragment : Fragment() {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.videoList)
 
+        viewModel.getVideos()
+
         lifecycleScope.launch {
 //            viewModel.playbackPositions
 //                .onEach { playbackPositions -> adapter.playbackPositions = playbackPositions }
 //                .launchIn(this)
 
-            viewModel.videoUrls
+            viewModel.videoStateFlow
                 .onEach(adapter::updateVideoUrls)
                 .launchIn(this)
 

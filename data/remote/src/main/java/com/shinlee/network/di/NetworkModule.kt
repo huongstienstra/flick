@@ -1,7 +1,7 @@
 package com.shinlee.network.di
 
 import com.shinlee.network.BuildConfig
-import com.shinlee.network.api.MarvelApiService
+import com.shinlee.network.api.ShowPlusApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -38,8 +38,8 @@ fun createRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-fun createService(retrofit: Retrofit): MarvelApiService {
-    return retrofit.create(MarvelApiService::class.java)
+fun createService(retrofit: Retrofit): ShowPlusApiService {
+    return retrofit.create(ShowPlusApiService::class.java)
 }
 
 

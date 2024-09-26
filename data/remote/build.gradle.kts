@@ -13,7 +13,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField ("String", "BASE_URL",  "\"https://gateway.marvel.com/\"") // change your url here
+        buildConfigField ("String", "BASE_URL",  "\"https://devapiv2.showpl.com\"") // change your url here
     }
 
     buildTypes {

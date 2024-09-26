@@ -6,6 +6,7 @@ import com.shinlee.showplus.ui.screens.show.ShowViewModel
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val appModule = module {
@@ -23,7 +24,8 @@ val appModule = module {
     // Provide ShowViewModel and inject PlayersPool with a maxPoolSize dynamically
     viewModel { (maxPoolSize: Int) ->
         ShowViewModel(
-            playersPool = get { parametersOf(maxPoolSize) }
+            playersPool = get { parametersOf(maxPoolSize) },
+            repository = get()
         )
     }
     viewModel { PermissionViewModel(get()) }

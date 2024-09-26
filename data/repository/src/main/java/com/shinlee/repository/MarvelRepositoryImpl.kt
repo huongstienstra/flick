@@ -1,13 +1,13 @@
 package com.shinlee.repository
 
 import com.shinlee.network.Result
-import com.shinlee.network.api.MarvelApiService
+import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
 import com.shinlee.repository.mapping.toMarvelCharacter
 import com.shinlee.repository.model.MarvelCharacter
 
 class MarvelRepositoryImpl(
-    private val marvelApiService: MarvelApiService
+    private val marvelApiService: ShowPlusApiService
 ) : MarvelRepository {
     override suspend fun getCharacters(
         apiKey: String,

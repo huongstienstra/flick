@@ -1,16 +1,25 @@
 package com.shinlee.showplus.ui.screens.show
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.Log
+import com.shinlee.network.Result
+import com.shinlee.repository.VideoRepository
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersAction
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
+import com.shinlee.showplus.ui.screens.show.mapping.toVideoShowList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ShowViewModel(
-     val playersPool: PlayersPool
+    val repository: VideoRepository,
+    val playersPool: PlayersPool
 ) : ViewModel() {
 //    val videoUrls: Flow<List<String>> = flowOf(
 //        listOf(
@@ -108,8 +117,24 @@ class ShowViewModel(
     )
     val playbackPositions: Flow<List<Long>> = _playbackPositions
 
-    private val _playerActions: MutableSharedFlow<PlayersAction> = MutableSharedFlow(extraBufferCapacity = 1)
+    private val _playerActions: MutableSharedFlow<PlayersAction> =
+        MutableSharedFlow(extraBufferCapacity = 1)
     val playersActions: Flow<PlayersAction> = _playerActions
+
+    private val _videoStateFlow = MutableStateFlow<List<VideoShow>>(emptyList())
+    val videoStateFlow: StateFlow<List<VideoShow>> = _videoStateFlow
+
+    fun getVideos() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getVideos()
+            if (result is Result.Success) {
+                val data = result.data.toVideoShowList()
+                _videoStateFlow.value = data // Update the StateFlow with the result
+            } else if (result is Result.Error) {
+                Log.e("getVideos", "Error: ${result.throwable.message}")
+            }
+        }
+    }
 
     fun updatePlaybackPosition(index: Int, playbackPosition: Long) {
         _playbackPositions.update { playbackPositions ->
