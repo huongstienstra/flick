@@ -7,6 +7,6 @@ import com.shinlee.repository.VideoRepositoryImp
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<MarvelRepository> { MarvelRepositoryImpl(get()) }
+    single<MarvelRepository> { MarvelRepositoryImpl(get())}
     single<VideoRepository> { VideoRepositoryImp(get()) }
 }

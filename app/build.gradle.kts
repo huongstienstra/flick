@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.paging.common.android)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.transition)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -111,4 +113,6 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation ("androidx.compose.material:material-icons-core:1.5.0")
+    implementation ("androidx.compose.material:material-icons-extended:1.5.0")
 }
