@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "279281643954",
-    "project_id": "showplus-dev",
-    "storage_bucket": "showplus-dev.appspot.com"
+    "project_number": "939914942724",
+    "project_id": "showplus-dev-e642f",
+    "storage_bucket": "showplus-dev-e642f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:279281643954:android:18ec656c5031b21b9234ab",
+        "mobilesdk_app_id": "1:939914942724:android:7f087eaab3636808a4d851",
         "android_client_info": {
           "package_name": "com.shinlee.showplus"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA_QMxsAlaWB6QaAe6u28BwCJa5pEJly3E"
+          "current_key": "AIzaSyATeNZip1j32hXTZYw-4kRP9lAJFtXvEv8"
         }
       ],
       "services": {
@@ -24,10 +24,9 @@
         }
       }
     },
-
     {
       "client_info": {
-        "mobilesdk_app_id": "1:279281643954:android:18ec656c5031b21b9234ab",
+        "mobilesdk_app_id": "1:939914942724:android:7f087eaab3636808a4d851",
         "android_client_info": {
           "package_name": "com.shinlee.showplus.debug"
         }
@@ -35,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA_QMxsAlaWB6QaAe6u28BwCJa5pEJly3E"
+          "current_key": "AIzaSyATeNZip1j32hXTZYw-4kRP9lAJFtXvEv8"
         }
       ],
       "services": {
