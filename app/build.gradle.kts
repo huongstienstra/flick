@@ -13,8 +13,8 @@ android {
         minSdk = 24
         targetSdk = 34
 
-        versionCode = 24092700 // YYMMDDNN
-        versionName = "0.1.0-alpha.1"
+        versionCode = 24092701 // YYMMDDNN
+        versionName = "0.1.1-alpha.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -30,10 +30,10 @@ android {
                 "proguard-rules.pro"
             )
         }
-        debug {
-            applicationIdSuffix = ".debug"
-            isDebuggable = true
-        }
+//        debug {
+//            applicationIdSuffix = ".debug"
+//            isDebuggable = true
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
