@@ -12,8 +12,9 @@ android {
         applicationId = "com.shinlee.showplus"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+
+        versionCode = 24092700 // YYMMDDNN
+        versionName = "0.1.0-alpha.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -90,8 +91,9 @@ dependencies {
     implementation("androidx.compose.material:material:1.6.8")
 
     // FIREBASE
-//    implementation(libs.firebase.bom)
-//    implementation(libs.firebase.analytics)
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
 
     // NAVIGATION
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.1")
