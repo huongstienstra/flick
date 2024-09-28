@@ -8,66 +8,14 @@
         android:id="@+id/player_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/play_pause_icon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:background="@null"
-        android:src="@drawable/ic_video_pause"
-        android:visibility="gone" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        android:layout_gravity="center" />
-
-<!--    <ProgressBar-->
-<!--        android:id="@+id/video_progress_bar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="@dimen/dp_16"-->
-<!--        android:indeterminate="false"-->
-<!--        android:layout_gravity="bottom"-->
-<!--        android:progress="100"-->
-<!--        android:progressTint="@color/black"-->
-<!--        style="?android:attr/progressBarStyleHorizontal" />-->
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_marginHorizontal="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_24"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_logo_app_bar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_video"
-            android:tint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:surface_type="texture_view" />
 
     <LinearLayout
         android:id="@+id/side_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="@dimen/dp_16"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginBottom="@dimen/dp_8"
         android:orientation="vertical">
 
@@ -76,47 +24,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:iconSrc="@drawable/ic_like"
-            app:label="12.6k" />
+            app:label="99.9k" />
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:iconSrc="@drawable/ic_message" />
+            android:layout_marginTop="@dimen/dp_32"
+            app:iconSrc="@drawable/ic_comment"
+            app:label="9,999" />
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:iconSrc="@drawable/ic_send" />
+            android:layout_marginTop="@dimen/dp_32"
+            app:iconSrc="@drawable/ic_share"
+            app:label="share" />
+
+        <com.shinlee.common.views.VideoActionButton
+            android:id="@+id/btn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_32"
+            app:iconSrc="@drawable/ic_more" />
 
     </LinearLayout>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/footer_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="@dimen/dp_24"
         android:layout_marginBottom="@dimen/dp_16">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
             android:background="@drawable/avatar"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_4"
+            android:layout_marginStart="@dimen/dp_12"
             android:text="apple"
             android:textColor="@color/white"
+            android:textSize="@dimen/text_16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/avatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -125,11 +84,11 @@
             android:id="@+id/btn_subscribe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_12"
             android:background="@drawable/gradient_button_background"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/dp_16"
-            android:paddingVertical="@dimen/dp_8"
+            android:paddingHorizontal="@dimen/dp_4"
+            android:paddingVertical="@dimen/dp_4"
             android:text="Subscribe"
             android:textAllCaps="false"
             android:textColor="@color/white"
@@ -144,10 +103,25 @@
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginEnd="100dp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:text="is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
             android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/btn_subscribe" />
+            android:textSize="@dimen/dp_16"
+            app:layout_constraintTop_toBottomOf="@+id/avatar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:layout_marginEnd="100dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="#DJ #Contest #Music"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_16sp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

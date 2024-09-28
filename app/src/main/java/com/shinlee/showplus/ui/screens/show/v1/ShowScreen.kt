@@ -1,4 +1,4 @@
-package com.shinlee.showplus.ui.screens.show
+package com.shinlee.showplus.ui.screens.show.v1
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shinlee.common.composable.VerticalVideoPage
+import com.shinlee.showplus.ui.screens.show.VideoShow
 
 @Composable
 fun ShowScreen() {

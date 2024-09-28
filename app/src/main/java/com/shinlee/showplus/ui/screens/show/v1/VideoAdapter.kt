@@ -1,13 +1,11 @@
-package com.shinlee.showplus.ui.screens.show
+package com.shinlee.showplus.ui.screens.show.v1
 
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -16,6 +14,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import com.bumptech.glide.Glide
 import com.shinlee.showplus.databinding.VideoItemViewBinding
+import com.shinlee.showplus.ui.screens.show.VideoShow
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersAction
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +22,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

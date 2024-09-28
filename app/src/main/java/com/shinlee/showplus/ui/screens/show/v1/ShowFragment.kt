@@ -1,24 +1,17 @@
-package com.shinlee.showplus.ui.screens.show
+package com.shinlee.showplus.ui.screens.show.v1
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.shinlee.showplus.R
-import com.shinlee.showplus.ShowPlusApplication
 import com.shinlee.showplus.databinding.ShowFragmentBinding
-import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
 import com.shinlee.showplus.ui.screens.show.core.video.availableCodecsNum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn

@@ -1,10 +1,11 @@
-package com.shinlee.showplus.ui.screens.show
+package com.shinlee.showplus.ui.screens.show.v1
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.Log
 import com.shinlee.network.Result
 import com.shinlee.repository.VideoRepository
+import com.shinlee.showplus.ui.screens.show.VideoShow
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersAction
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
 import com.shinlee.showplus.ui.screens.show.mapping.toVideoShowList

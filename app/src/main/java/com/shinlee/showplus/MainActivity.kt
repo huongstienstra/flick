@@ -1,5 +1,6 @@
 package com.shinlee.showplus
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
@@ -9,11 +10,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shinlee.showplus.ui.screens.contest.ContestFragment
 import com.shinlee.showplus.ui.screens.profile.ProfileFragment
 import com.shinlee.showplus.ui.screens.search.SearchFragment
-import com.shinlee.showplus.ui.screens.show.ShowFragment
+import com.shinlee.showplus.ui.screens.show.v1.ShowFragment
+import com.shinlee.showplus.ui.screens.show.ShowFragmentV2
 import com.shinlee.showplus.ui.screens.upload.UploadFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity() {
     private val viewModel: MarvelViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity()  {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            loadFragment(ShowFragment())
+            loadFragment(ShowFragmentV2())
         }
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity()  {
         bottomNavigationView.setOnItemSelectedListener { item ->
             var selectedFragment: Fragment? = null
             when (item.itemId) {
-                R.id.showFragment -> selectedFragment = ShowFragment()
+                R.id.showFragment -> selectedFragment = ShowFragmentV2()
                 R.id.contestFragment -> selectedFragment = ContestFragment()
                 R.id.uploadFragment -> selectedFragment = UploadFragment()
                 R.id.searchFragment -> selectedFragment = SearchFragment()
@@ -49,11 +51,15 @@ class MainActivity : AppCompatActivity()  {
         })
     }
 
+    @SuppressLint("CommitTransaction")
     private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragment, fragment.tag)
-            .commitAllowingStateLoss()
+        try {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
+                .commit()
+        } catch (e: IllegalStateException) {
+            Log.e("FragmentTransaction", "Error in fragment transaction", e)
+        }
     }
 
 
@@ -63,7 +69,7 @@ class MainActivity : AppCompatActivity()  {
         if (currentFragment !is ShowFragment) {
             findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId =
                 R.id.showFragment
-            loadFragment(ShowFragment())
+            loadFragment(ShowFragmentV2())
         } else {
             finish()
         }
