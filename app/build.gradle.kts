@@ -84,6 +84,7 @@ dependencies {
     // DATA MODULES
     implementation(project(":data:remote"))
     implementation(project(":data:repository"))
+    implementation(project(":data:local"))
     implementation(project(":common"))
 
     //KOIN

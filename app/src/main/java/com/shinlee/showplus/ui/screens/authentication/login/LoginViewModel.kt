@@ -8,9 +8,8 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.nativemobilebits.loginflow.data.rules.Validator
 import com.nativemobilebits.loginflow.navigation.PostOfficeAppRouter
 import com.nativemobilebits.loginflow.navigation.Screen
+import com.shinlee.local.pref.SharedPreferencesDataSource
 import com.shinlee.repository.MarvelRepository
-import com.shinlee.showplus.ui.screens.authentication.datasource.SharedPreferencesDataSource
-import com.shinlee.showplus.ui.screens.authentication.datasource.SharedPreferencesDataSourceImplement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch

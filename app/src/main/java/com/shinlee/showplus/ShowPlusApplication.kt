@@ -6,6 +6,7 @@ import android.preference.PreferenceManager
 import com.shinlee.network.di.networkModule
 import com.shinlee.repository.di.repositoryModule
 import com.shinlee.showplus.di.appModule
+import com.shinlee.showplus.di.viewModelModule
 import com.shinlee.showplus.ui.screens.show.core.video.ExoPlayerCache
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -18,16 +19,12 @@ class ShowPlusApplication : Application() {
             get() = privateInstance
     }
 
-    //fixme: create data:local module, make di for it
-    val sharedPreferences: SharedPreferences
-        get() = PreferenceManager.getDefaultSharedPreferences(this)
-
     override fun onCreate() {
         super.onCreate()
         privateInstance = this
         startKoin {
             androidContext(this@ShowPlusApplication)
-            modules(listOf(appModule, networkModule, repositoryModule))
+            modules(listOf(appModule, viewModelModule, networkModule, repositoryModule))
         }
     }
 }
