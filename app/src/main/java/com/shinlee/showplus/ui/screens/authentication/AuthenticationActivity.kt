@@ -14,7 +14,7 @@ class AuthenticationActivity : AppCompatActivity() {
     private val loginViewModel: LoginViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { // In here, we can call composables!
+        setContent {
             PostFlowAuthentication(marvelViewModel, loginViewModel, this)
         }
     }

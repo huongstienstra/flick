@@ -1,0 +1,157 @@
+package com.shinlee.common.composable
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.shinlee.common.R
+
+@Composable
+fun CustomInputField(
+    modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String,
+    error: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingIcon: @Composable (() -> Unit)? = null,
+) {
+    var value by remember { mutableStateOf("") }
+
+    Column(modifier = modifier) {
+        Text(
+            text = label,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            style = TextStyle(fontSize = 16.sp)
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .height(48.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .border(
+                    width = 1.dp,
+                    color = Color.Gray.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .background(Color(0xFFF5F5F5))
+        ) {
+            BasicTextField(
+                value = value,
+                onValueChange = {
+                    value = it
+                    onValueChange(value)
+                },
+                keyboardOptions = keyboardOptions,
+                visualTransformation = visualTransformation,
+                decorationBox = { innerTextField ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = placeholder,
+                                    color = Color.Gray
+                                )
+                            }
+                            innerTextField()
+                        }
+                        if (trailingIcon != null) {
+                            trailingIcon()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        if (error != null) {
+            Text(
+                text = error,
+                color = colorResource(R.color.icon_color),
+                // style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun InputEmailPreview() {
+    CustomInputField(
+        modifier = Modifier.fillMaxWidth(),
+        label = "Email address",
+        onValueChange = { },
+        placeholder = "email@email.com",
+        error = "is not valid",
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email).copy(imeAction = ImeAction.Done)
+    )
+}
+
+@Preview
+@Composable
+fun InputPasswordPreview() {
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    val iconImage = if (passwordVisible) {
+        painterResource(id = R.drawable.ic_password_visible)
+    } else {
+        painterResource(id = R.drawable.ic_password_invisible)
+    }
+    CustomInputField(
+        modifier = Modifier.fillMaxWidth(),
+        label = "Password",
+        onValueChange = {
+            //viewModel.onPasswordChanged(it)
+        },
+        placeholder = "8-16 character with letters & numbers",
+        error = "password should be at least 8 characters",
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(
+                    painter = iconImage,
+                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                    tint = Color.Gray
+                )
+            }
+        }
+    )
+
+}
+

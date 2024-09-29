@@ -12,8 +12,6 @@ import org.koin.core.context.startKoin
 
 
 class ShowPlusApplication : Application() {
-   // lateinit var playerCache: ExoPlayerCache
-
     companion object {
         private lateinit var privateInstance: ShowPlusApplication
         val instance: ShowPlusApplication
@@ -27,7 +25,6 @@ class ShowPlusApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         privateInstance = this
-       // playerCache = ExoPlayerCache(this)
         startKoin {
             androidContext(this@ShowPlusApplication)
             modules(listOf(appModule, networkModule, repositoryModule))

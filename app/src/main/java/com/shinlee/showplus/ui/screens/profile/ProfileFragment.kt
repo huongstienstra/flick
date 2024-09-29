@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
 import com.shinlee.showplus.ui.screens.authentication.login.AlertDialogExample
 import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity
+import com.shinlee.showplus.ui.screens.authentication.login.AuthenticationActivityV2
 
 
 class ProfileFragment : Fragment() {
@@ -25,27 +26,27 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.profile_fragment, container, false)
-//        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
-//        composeView.apply {
-//            // Dispose of the Composition when the view's LifecycleOwner
-//            // is destroyed
-//            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-//            setContent {
-//                // In Compose world
-//                AlertDialogExample(
-//                    onDismissRequest = { false },
-//                    onConfirmation = {
-//                        activity?.let{
-//                            val intent = Intent (it, AuthenticationActivity::class.java)
-//                            it.startActivity(intent)
-//                        } // Add logic here to handle confirmation.
-//                    },
-//                    dialogTitle = "You have to login?",
-//                    dialogText = "Login to the app to continue to use this feature",
-//                    icon = Icons.Default.Info
-//                )
-//            }
-//        }
+        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
+        composeView.apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                // In Compose world
+                AlertDialogExample(
+                    onDismissRequest = { false },
+                    onConfirmation = {
+                        activity?.let{
+                            val intent = Intent (it, AuthenticationActivityV2::class.java)
+                            it.startActivity(intent)
+                        } // Add logic here to handle confirmation.
+                    },
+                    dialogTitle = "You have to login?",
+                    dialogText = "Login to the app to continue to use this feature",
+                    icon = Icons.Default.Info
+                )
+            }
+        }
         return view
     }
 

@@ -38,7 +38,7 @@ fun PostFlowAuthentication(marvelViewModel: MarvelViewModel = viewModel(),
         Crossfade(targetState = PostOfficeAppRouter.currentScreen) { currentState ->
             when (currentState.value) {
                 is Screen.LoginScreen -> {
-                    LoginScreen(loginViewModel)
+                   // LoginScreen(loginViewModel)
                 }
 
                 is Screen.SignUpScreen -> {

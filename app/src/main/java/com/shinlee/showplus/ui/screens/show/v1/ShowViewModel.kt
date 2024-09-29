@@ -140,7 +140,7 @@ class ShowViewModel(
     fun updatePlaybackPosition(index: Int, playbackPosition: Long) {
         _playbackPositions.update { playbackPositions ->
 //      if (index in playbackPositions.indices) { // Check if index is valid
-//        playbackPositions.toMutableList().apply {
+//        playbackPosiMtions.toMutableList().apply {
 //          removeAt(index)
 //          add(index, playbackPosition)
 //        }

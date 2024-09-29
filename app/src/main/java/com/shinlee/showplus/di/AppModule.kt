@@ -8,6 +8,7 @@ import com.shinlee.showplus.ui.screens.permission.PermissionViewModel
 import com.shinlee.showplus.ui.screens.show.v1.ShowViewModel
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersPool
 import com.shinlee.showplus.ui.screens.authentication.login.LoginViewModel
+import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginViewModelV2
 import com.shinlee.showplus.ui.screens.show.ShowViewModelV2
 import com.shinlee.showplus.ui.screens.show.core.video.ExoPlayerCache
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,7 +39,6 @@ val appModule = module {
     }
     viewModel { ShowViewModelV2(get(), get()) }
     viewModel { PermissionViewModel(get()) }
-    viewModel {
-        LoginViewModel(get(), get())
-    }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel { LoginViewModelV2() }
 }

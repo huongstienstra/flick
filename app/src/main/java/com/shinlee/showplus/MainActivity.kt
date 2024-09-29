@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleBackPress() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-        if (currentFragment !is ShowFragment) {
+        if (currentFragment !is ShowFragmentV2) {
             findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId =
                 R.id.showFragment
             loadFragment(ShowFragmentV2())
