@@ -1,11 +1,10 @@
 package com.shinlee.showplus.ui.screens.authentication.login
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,9 +48,14 @@ fun LoginScreen(
     onBackClick: () -> Unit,
     onSignUp: () -> Unit,
     onLogin: () -> Unit,
+    onLoginSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
+
+    if (uiState.isLoggedIn) {
+        onLoginSuccess()
+    }
 
     Column(
         modifier = modifier,
@@ -60,17 +65,25 @@ fun LoginScreen(
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.Start)
         ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription = "Back")
         }
 
         Spacer(modifier = Modifier.height(56.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.ic_logo_showplus),
+                contentDescription = "Description of the image"
+            )
+            Text(
+                text = " Log in",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+            )
+        }
 
-        Text(
-            text = "Show+ Log in",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
 
         CustomInputField(
             modifier = Modifier
@@ -142,11 +155,16 @@ fun LoginScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             SocialLoginButton(
-                R.drawable.google_social_button,
+                R.drawable.ic_google_login,
                 "Google",
                 onClick = {})
             SocialLoginButton(
-                R.drawable.google_social_button,
+                R.drawable.ic_line_login,
+                "Apple",
+                onClick = {})
+
+            SocialLoginButton(
+                R.drawable.ic_kakao_login,
                 "Apple",
                 onClick = {})
         }

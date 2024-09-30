@@ -19,9 +19,7 @@ class MarvelViewModel(
     val isUserLoggedIn: MutableLiveData<Boolean> = MutableLiveData()
 
 
-     fun checkForActiveSession(): Boolean {
-         return false
-     }
+
 
     fun getCharacters(apiKey: String, timeStamp: String, hash: String) {
         viewModelScope.launch(Dispatchers.IO) {

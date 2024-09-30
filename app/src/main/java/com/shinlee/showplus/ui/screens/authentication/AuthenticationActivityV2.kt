@@ -1,4 +1,4 @@
-package com.shinlee.showplus.ui.screens.authentication.login
+package com.shinlee.showplus.ui.screens.authentication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
