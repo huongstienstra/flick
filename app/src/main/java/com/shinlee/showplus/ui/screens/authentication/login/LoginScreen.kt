@@ -1,11 +1,10 @@
 package com.shinlee.showplus.ui.screens.authentication.login
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,10 +48,14 @@ fun LoginScreen(
     viewModel: LoginViewModelV2,
     onBackClick: () -> Unit,
     onSignUp: () -> Unit,
-    onLogin: () -> Unit,
+    onLoginSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
+
+    if (uiState.isLoggedIn) {
+        onLoginSuccess()
+    }
 
     Column(
         modifier = modifier,
@@ -60,24 +65,32 @@ fun LoginScreen(
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.Start)
         ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription = "Back")
         }
 
         Spacer(modifier = Modifier.height(56.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.ic_logo_showplus),
+                contentDescription = "Description of the image"
+            )
+            Text(
+                text = stringResource(R.string.log_in),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+            )
+        }
 
-        Text(
-            text = "Show+ Log in",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
 
         CustomInputField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email).copy(imeAction = ImeAction.Done),
-            label = "Email Address",
+            label = stringResource(R.string.email_address),
             onValueChange = {
                 viewModel.updateEmail(it)
             },
@@ -89,11 +102,11 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp, start = 16.dp, end = 16.dp),
-            label = "Password",
+            label = stringResource(R.string.password),
             onValueChange = {
                 viewModel.updatePassword(it)
             },
-            placeholder = "8-16 character with letters & numbers",
+            placeholder = stringResource(R.string.character_with_letters_numbers),
             error = uiState.passwordError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password).copy(imeAction = ImeAction.Done),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -114,14 +127,14 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
-            text = "Login with Email/ID",
+            text = stringResource(R.string.login_with_email),
             onClick = {
-                onLogin()
+                viewModel.loginByEmail()
             }
         )
 
         Text(
-            text = "Forgot your ID or password?",
+            text = stringResource(R.string.forgot_your_id_or_password),
             color = Color.Black,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -142,11 +155,16 @@ fun LoginScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             SocialLoginButton(
-                R.drawable.google_social_button,
+                R.drawable.ic_google_login,
                 "Google",
                 onClick = {})
             SocialLoginButton(
-                R.drawable.google_social_button,
+                R.drawable.ic_line_login,
+                "Apple",
+                onClick = {})
+
+            SocialLoginButton(
+                R.drawable.ic_kakao_login,
                 "Apple",
                 onClick = {})
         }
@@ -157,7 +175,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            text = "SignUp",
+            text = stringResource(R.string.sign_up),
             onClick = {
                 onSignUp()
             }

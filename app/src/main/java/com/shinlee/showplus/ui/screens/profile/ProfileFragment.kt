@@ -1,20 +1,14 @@
 package com.shinlee.showplus.ui.screens.profile
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.authentication.login.AlertDialogExample
-import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity
-import com.shinlee.showplus.ui.screens.authentication.login.AuthenticationActivityV2
 
 
 class ProfileFragment : Fragment() {
@@ -33,18 +27,18 @@ class ProfileFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 // In Compose world
-                AlertDialogExample(
-                    onDismissRequest = { false },
-                    onConfirmation = {
-                        activity?.let{
-                            val intent = Intent (it, AuthenticationActivityV2::class.java)
-                            it.startActivity(intent)
-                        } // Add logic here to handle confirmation.
-                    },
-                    dialogTitle = "You have to login?",
-                    dialogText = "Login to the app to continue to use this feature",
-                    icon = Icons.Default.Info
-                )
+//                AlertDialogExample(
+//                    onDismissRequest = { false },
+//                    onConfirmation = {
+//                        activity?.let{
+//                            val intent = Intent (it, AuthenticationActivityV2::class.java)
+//                            it.startActivity(intent)
+//                        } // Add logic here to handle confirmation.
+//                    },
+//                    dialogTitle = "You have to login?",
+//                    dialogText = "Login to the app to continue to use this feature",
+//                    icon = Icons.Default.Info
+//                )
             }
         }
         return view

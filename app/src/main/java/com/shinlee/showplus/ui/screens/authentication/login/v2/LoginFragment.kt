@@ -1,8 +1,8 @@
 package com.shinlee.showplus.ui.screens.authentication.login.v2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.shinlee.showplus.ui.screens.authentication.login.LoginScreen
 
 class LoginFragment : Fragment() {
 
-    private val viewModel: LoginViewModelV2 by viewModels()
-
+    private val viewModel: LoginViewModelV2 by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,12 +40,15 @@ class LoginFragment : Fragment() {
                         onSignUp = {
 
                         },
-                        onLogin = {
-
-                        }
+                        onLoginSuccess = { navigateToMain() }
                     )
                 }
             }
         }
+    }
+
+    private fun navigateToMain() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        startActivity(intent)
     }
 }

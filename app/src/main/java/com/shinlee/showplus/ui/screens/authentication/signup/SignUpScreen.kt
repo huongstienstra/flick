@@ -11,9 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.nativemobilebits.loginflow.navigation.PostOfficeAppRouter
-import com.nativemobilebits.loginflow.navigation.Screen
-import com.nativemobilebits.loginflow.navigation.SystemBackButtonHandler
 import com.shinlee.common.composable.ButtonIconComponent
 import com.shinlee.common.composable.DividerTextComponent
 import com.shinlee.common.composable.HeadingTextComponent
@@ -82,9 +79,6 @@ fun SignUpScreen(signupViewModel: SignupViewModel = viewModel()) {
 
         if(signupViewModel.signUpInProgress.value) {
             CircularProgressIndicator()
-        }
-        SystemBackButtonHandler {
-            PostOfficeAppRouter.navigateTo(Screen.TermsAndConditionsScreen)
         }
     }
 }

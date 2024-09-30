@@ -1,9 +1,13 @@
 package com.shinlee.network.api
 
+import com.shinlee.network.model.LoginRequest
+import com.shinlee.network.model.LoginResponse
 import com.shinlee.network.model.MarvelCharacterResponseDto
 import com.shinlee.network.model.VideoResponse
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ShowPlusApiService {
@@ -16,4 +20,7 @@ interface ShowPlusApiService {
 
     @GET("/api/videos")
     suspend fun getVideos(): Response<VideoResponse>
+
+    @POST("/auth/login")
+    suspend fun loginByEmail(@Body loginRequest: LoginRequest): Response<LoginResponse>
 }
