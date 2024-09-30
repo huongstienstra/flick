@@ -8,8 +8,9 @@
     <color name="icon_color">#FFBF00</color>
     <color name="overlay_color">#66000000</color>
 
-<!--    Bottom Bar icon-->
-    <color name="selected_color">#FF0000</color> <!-- Red for selected -->
-    <color name="unselected_color">#808080</color> <!-- Gray for unselected -->
-    <color name="bottom_navigation_background">#FFFFFF</color> <!-- White background -->
+    <color name="selected_color">#FF0000</color>
+    <color name="unselected_color">#808080</color>
+    <color name="bottom_navigation_background">#FFFFFF</color>
+
+    <color name="white">#FFFFFFFF</color>
 </resources>
