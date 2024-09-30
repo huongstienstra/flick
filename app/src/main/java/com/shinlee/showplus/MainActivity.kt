@@ -39,9 +39,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.uploadFragment -> selectedFragment = UploadFragment()
                 R.id.searchFragment -> selectedFragment = SearchFragment()
                 R.id.profileFragment -> {
-                    if(viewModel.checkForActiveSession()){
+                    if (viewModel.checkForActiveSession()) {
                         selectedFragment = ProfileFragment()
-                    }else showAlertDialog()
+                    } else showAlertDialog()
 
                 }
             }
