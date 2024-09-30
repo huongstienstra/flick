@@ -1,6 +1,6 @@
 package com.shinlee.showplus.di
 
-import com.shinlee.showplus.ui.screens.authentication.login.LoginViewModel
+import com.shinlee.showplus.ShareViewModel
 import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginViewModelV2
 import com.shinlee.showplus.ui.screens.permission.PermissionViewModel
 import com.shinlee.showplus.ui.screens.show.ShowViewModelV2
@@ -18,6 +18,6 @@ val viewModelModule = module {
     }
     viewModel { ShowViewModelV2(get(), get()) }
     viewModel { PermissionViewModel(get()) }
-    viewModel { LoginViewModel(get(), get()) }
-    viewModel { LoginViewModelV2() }
+    viewModel { LoginViewModelV2(get(), get()) }
+    viewModel { ShareViewModel(get()) }
 }
