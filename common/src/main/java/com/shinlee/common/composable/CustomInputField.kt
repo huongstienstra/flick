@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinlee.common.R
+import com.shinlee.common.theme.RedColor
 
 @Composable
 fun CustomInputField(
@@ -101,7 +102,7 @@ fun CustomInputField(
         if (error != null) {
             Text(
                 text = error,
-                color = colorResource(R.color.icon_color),
+                color = RedColor,
                 // style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(top = 8.dp)
             )

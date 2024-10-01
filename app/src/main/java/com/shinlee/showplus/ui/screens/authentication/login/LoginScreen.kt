@@ -78,12 +78,12 @@ fun LoginScreen(
                 contentDescription = "Description of the image"
             )
             Text(
+                modifier = Modifier.padding(start = 5.dp),
                 text = stringResource(R.string.log_in),
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )
         }
-
 
         CustomInputField(
             modifier = Modifier
@@ -122,12 +122,12 @@ fun LoginScreen(
             }
         )
 
-
         GradientButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             text = stringResource(R.string.login_with_email),
+            isActive = uiState.emailError == null && uiState.passwordError == null,
             onClick = {
                 viewModel.loginByEmail()
             }
@@ -143,6 +143,7 @@ fun LoginScreen(
 
 
         EasyLoginDivider(
+            text = stringResource(R.string.easy_login_with),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp)

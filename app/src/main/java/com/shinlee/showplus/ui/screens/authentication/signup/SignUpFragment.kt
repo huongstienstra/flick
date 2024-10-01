@@ -1,10 +1,7 @@
-package com.shinlee.showplus.ui.screens.authentication.login.v2
+package com.shinlee.showplus.ui.screens.authentication.signup
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,17 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.shinlee.showplus.MainActivity
+import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivityV2
 import com.shinlee.showplus.ui.screens.authentication.Destination
 import com.shinlee.showplus.ui.screens.authentication.FragmentNavigation
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.shinlee.showplus.ui.screens.authentication.login.LoginScreen
 
-class LoginFragment : Fragment() {
+class SignUpFragment : Fragment() {
 
-    private val viewModel: LoginViewModelV2 by viewModel()
+    private val viewModel: SignupViewModel by viewModel()
     private lateinit var navigator: FragmentNavigation
 
     override fun onAttach(context: Context) {
@@ -41,29 +36,22 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.login_fragment, container, false).apply {
+        return inflater.inflate(R.layout.fragment_sign_up, container, false).apply {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    LoginScreen(
+                    SignUpScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White),
-                        viewModel = viewModel,
+                        onSignupByEmailClick = {
+                            navigator.navigateTo(Destination.TermFragment)
+                        },
                         onBackClick = {
                         },
-                        onSignUp = {
-                            navigator.navigateTo(Destination.SignUpFragment)
-                        },
-                        onLoginSuccess = { navigateToMain() }
                     )
                 }
             }
         }
-    }
-
-    private fun navigateToMain() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(intent)
     }
 }

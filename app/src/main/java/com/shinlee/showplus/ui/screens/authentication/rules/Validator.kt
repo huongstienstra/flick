@@ -1,46 +1,28 @@
 package com.nativemobilebits.loginflow.data.rules
 
-import android.util.Log
-
 object Validator {
 
-
-    fun validateFirstName(fName: String): ValidationResult {
-        return ValidationResult(
-            (!fName.isNullOrEmpty() && fName.length >= 2)
-        )
-
+     fun validateEmail(email: String): String? {
+        return if (email.isEmpty()) {
+            "Email cannot be empty"
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "Please enter valid email address"
+        } else {
+            null
+        }
     }
 
-    fun validateLastName(lName: String): ValidationResult {
-        return ValidationResult(
-            (!lName.isNullOrEmpty() && lName.length >= 2)
-        )
-    }
-
-    fun validateEmail(email: String): ValidationResult {
-        return ValidationResult(
-            (!email.isNullOrEmpty())
-        )
-    }
-
-    fun validatePassword(password: String): ValidationResult {
-        return ValidationResult(
-            (!password.isNullOrEmpty() && password.length >= 4)
-        )
-    }
-
-    fun validatePrivacyPolicyAcceptance(statusValue:Boolean):ValidationResult{
-        return ValidationResult(
-            statusValue
-        )
+     fun validatePassword(password: String): String? {
+        return when {
+            password.isEmpty() -> "Password cannot be empty"
+            password.length < 8 -> "Password must be at least 8 characters"
+//            !password.any { it.isDigit() } -> "Password must contain at least one number"
+//            !password.any { it.isLetter() } -> "Password must contain at least one letter"
+            else -> null
+        }
     }
 
 }
-
-data class ValidationResult(
-    val status: Boolean = false
-)
 
 
 

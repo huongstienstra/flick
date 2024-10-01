@@ -31,7 +31,9 @@ import com.shinlee.common.theme.TextColor
 
 
 @Composable
-fun DividerTextComponent() {
+fun DividerTextComponent(
+    text: String
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -47,7 +49,7 @@ fun DividerTextComponent() {
 
         Text(
             modifier = Modifier.padding(8.dp),
-            text = "Easy login with",
+            text = text,
             fontSize = 18.sp,
             color = TextColor
         )

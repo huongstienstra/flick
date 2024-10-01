@@ -1,7 +1,7 @@
 package com.shinlee.common.composable
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,17 +22,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinlee.common.theme.AppSpace
+import com.shinlee.common.theme.Gray3Color
+import com.shinlee.common.theme.Grey
+import com.shinlee.common.theme.WhiteColor
+
 
 @Composable
 fun GradientButton(
+    isActive: Boolean = true,
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val gradientColors = if (isActive) {
+        listOf(Color(0xFFFB5E3A), Color(0xFFE61DEC)) // Colors for active state
+    } else {
+        listOf(Grey, Grey) // Colors for inactive state
+    }
+
+
     Button(
         onClick = onClick,
         modifier = modifier
             .height(48.dp)
+            .clickable { isActive }
             .fillMaxWidth(),
         shape = RoundedCornerShape(AppSpace.space8dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
@@ -42,21 +55,20 @@ fun GradientButton(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xFFFB5E3A), Color(0xFFE61DEC))
-                    )
+                    brush = Brush.horizontalGradient(colors = gradientColors)
                 ),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = text,
-                color = Color.White,
+                color = if (isActive) WhiteColor else Gray3Color,
                 fontWeight = FontWeight.Normal,
                 style = TextStyle(fontSize = 14.sp)
             )
         }
     }
 }
+
 
 @Preview
 @Composable
