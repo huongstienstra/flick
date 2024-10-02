@@ -55,6 +55,7 @@ fun FirstStepSignupScreen(
             text = stringResource(R.string.next),
             enable = uiState.emailError == null,
             onClick = {
+                onNext()
             }
         )
     }

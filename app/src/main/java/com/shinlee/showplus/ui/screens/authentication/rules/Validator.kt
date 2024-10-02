@@ -22,6 +22,13 @@ object Validator {
         }
     }
 
+    fun validateConfirmPassword(password: String, confirmPassword: String): String? {
+        return when {
+            password != confirmPassword -> "Your password no correct"
+            else -> null
+        }
+    }
+
 }
 
 

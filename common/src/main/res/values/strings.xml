@@ -35,5 +35,8 @@
     // Signup step 1
     <string name="enter_email_address">Enter email address</string>
 
+    // Signup Step 2
+    <string name="re_enter_password">Re-enter password</string>
+
 
 </resources>
