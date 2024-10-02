@@ -46,7 +46,7 @@ fun GradientButton(
     Button(
         onClick = onClick,
         modifier = modifier
-            .height(48.dp)
+            .height(44.dp)
             .clickable {
                 onClick()
             }

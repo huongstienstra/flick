@@ -9,5 +9,6 @@ object AppSpace {
     val space16dp = 16.dp
     val space24dp = 24.dp
     val space32dp = 32.dp
+    val space36dp = 36.dp
     val space48dp = 48.dp
 }

@@ -1,38 +1,41 @@
 package com.shinlee.common.composable
 
-import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.shinlee.common.theme.PinkColor
+import com.shinlee.common.theme.TextColor
 import com.shinlee.common.theme.WhiteColor
 
 @Composable
 fun TermItem(
     modifier: Modifier,
-    value: String,
-    valueClick: String,
+    titleRes: Int,
+    descriptionRes: Int? = null,
     isChecked: Boolean,
-    onTextSelected: (String) -> Unit,
-    onCheckedChange: () -> Unit
+    onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = isChecked,
             onCheckedChange = {
-                onCheckedChange.invoke()
+                onCheckedChange(it)
             },
             colors = CheckboxDefaults.colors(
                 checkedColor = PinkColor,
@@ -40,40 +43,16 @@ fun TermItem(
                 checkmarkColor = WhiteColor,
             )
         )
+        Text(
+            text = stringResource(titleRes),
+            color = TextColor
+        )
 
-
-        ClickableTextComponent(value, valueClick, onTextSelected)
-    }
-}
-
-@Composable
-fun ClickableTextComponent(
-    firstValue: String,
-    valueClick: String,
-    onTextSelected: (String) -> Unit
-) {
-
-    val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = Color.Black, fontSize = 20.sp)) {
-            append(firstValue)
-        }
-
-        withStyle(style = SpanStyle(color = PinkColor, fontSize = 20.sp)) {
-            pushStringAnnotation(tag = valueClick, annotation = valueClick)
-            append(valueClick)
+        if (descriptionRes != null) {
+            Text(
+                text = stringResource(descriptionRes),
+                color = PinkColor
+            )
         }
     }
-
-    ClickableText(text = annotatedString, onClick = { offset ->
-
-        annotatedString.getStringAnnotations(offset, offset)
-            .firstOrNull()?.also { span ->
-                Log.d("ClickableTextComponent", "{${span.item}}")
-
-                if (span.item == valueClick) {
-                    onTextSelected(span.item)
-                }
-            }
-
-    })
 }

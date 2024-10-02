@@ -18,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TermFragment : Fragment() {
 
-    private val viewModel: TermViewModel by viewModel()
     private var navigator: AuthNavigator? = null
 
     override fun onAttach(context: Context) {
@@ -41,14 +40,16 @@ class TermFragment : Fragment() {
                 setContent {
                     TermScreen(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White),
-                        viewModel = viewModel,
+                            .fillMaxSize().background(Color.White),
                         onNextClick = {
                             navigator?.navigateToFirstStepSignup()
 
+                        },
+                        navigateUp = {
+
                         }
                     )
+
                 }
             }
         }

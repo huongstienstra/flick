@@ -28,6 +28,7 @@
     <string name="select_all">Select All</string>
     <string name="term_of_service">Term of service </string>
     <string name="require">[Require]</string>
+    <string name="optional">[Optional]</string>
     <string name="privacy_policy">Privacy Policy </string>
     <string name="marketing_communication">Marketing Communication </string>
     <string name="agree_to_term_and_condition">Agree to Term and Conditions</string>

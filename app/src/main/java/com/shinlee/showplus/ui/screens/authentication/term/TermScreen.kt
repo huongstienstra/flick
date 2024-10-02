@@ -1,5 +1,6 @@
 package com.shinlee.showplus.ui.screens.authentication.term
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,34 +17,38 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinlee.common.R
 import com.shinlee.common.composable.TermItem
 import com.shinlee.common.composable.GradientButton
-import com.shinlee.common.theme.ShowUpTypography
-
+import com.shinlee.common.composable.TopBar
+import com.shinlee.common.theme.AppSpace
 
 @Composable
 fun TermScreen(
     modifier: Modifier,
-    viewModel: TermViewModel,
-    onNextClick: () -> Unit
+    onNextClick: () -> Unit,
+    navigateUp: () -> Unit
 ) {
-    val uiState by viewModel.uiStateTerm.collectAsStateWithLifecycle()
-    val uiCheckBoxState by viewModel.uiCheckBox.collectAsStateWithLifecycle()
-    var isActive by remember { mutableStateOf(false) }
-    val stringResources = listOf(
-        R.string.term_of_service,
-        R.string.privacy_policy,
-        R.string.marketing_communication
-    )
 
+    val terms = remember {
+        listOf(
+            Term(1, R.string.term_of_service, R.string.require, true),
+            Term(2, R.string.privacy_policy, R.string.require, true),
+            Term(3, R.string.marketing_communication, R.string.optional, false),
+        )
+    }
 
-    isActive =
-        uiState.isCheckedAll || (uiCheckBoxState[0].isChecked && uiCheckBoxState[1].isChecked)
+    var termStates by remember { mutableStateOf(terms.associate { it.id to false }) }
+    var selectAllChecked by remember { mutableStateOf(false) }
+
+    val isNextEnabled = remember(termStates) {
+        termStates.all { (id, isChecked) ->
+            isChecked || !terms.find { it.id == id }!!.isRequired
+        }
+    }
 
     Column(
         modifier = modifier,
@@ -50,54 +56,55 @@ fun TermScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+
+        TopBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White),
+            titleRes = R.string.sign_up,
+            navigateUp = {
+                navigateUp()
+            }
+        )
+
+        Spacer(modifier = Modifier.height(AppSpace.space36dp))
+
         Text(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 100.dp)
+                .padding(start = 16.dp, end = 16.dp)
                 .fillMaxWidth(),
             text = stringResource(R.string.agree_to_term_and_condition),
-            style = ShowUpTypography.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(AppSpace.space36dp))
 
         TermItem(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = stringResource(
-            R.string.select_all), "",
-            onTextSelected = {},
-            isChecked = uiState.isCheckedAll,
-            onCheckedChange = {
-                viewModel.checkAllClick()
-            }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+            modifier = Modifier.fillMaxWidth(),
+            titleRes = R.string.select_all,
+            descriptionRes = null,
+            isChecked = selectAllChecked
+        ) { isChecked ->
+            selectAllChecked = isChecked
+            termStates = termStates.mapValues { isChecked }
+        }
+
+        Spacer(modifier = Modifier.height(AppSpace.space24dp))
 
         LazyColumn {
-            Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
-            items(uiCheckBoxState.size) { index ->
+            items(terms) { term ->
                 TermItem(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = stringResource(stringResources[index]),
-                    valueClick = " " + stringResource(R.string.require),
-                    onTextSelected = {
-                        when (stringResources[index]) {
-                            R.string.term_of_service -> {}
-                            R.string.term_of_service -> {}
-                            R.string.marketing_communication -> {}
-                            else -> {}
-                        }
-                    },
-                    isChecked = uiCheckBoxState[index].isChecked,
-                    onCheckedChange = {
-                        viewModel.handleCheckBoxClick(index)
+                    modifier = Modifier.fillMaxWidth(),
+                    titleRes = term.title,
+                    descriptionRes = term.descriptor,
+                    isChecked = termStates[term.id] ?: false
+                ) { isChecked ->
+                    termStates = termStates.toMutableMap().apply {
+                        this[term.id] = isChecked
                     }
-                )
+                    selectAllChecked = termStates.all { it.value }
+                }
             }
+
         }
         Spacer(modifier = Modifier.height(20.dp))
         GradientButton(
@@ -105,12 +112,10 @@ fun TermScreen(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             text = stringResource(R.string.next),
-            enable = isActive,
+            enable = isNextEnabled,
             onClick = {
                 onNextClick()
             }
         )
     }
-
-
 }
