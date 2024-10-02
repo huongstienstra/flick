@@ -3,8 +3,6 @@ package com.shinlee.showplus.ui.screens.authentication.login.v2
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nativemobilebits.loginflow.data.rules.Validator.validateEmail
-import com.nativemobilebits.loginflow.data.rules.Validator.validatePassword
 import com.shinlee.local.pref.SharedPreferencesDataSource
 import com.shinlee.network.Result
 import com.shinlee.network.model.LoginRequest
@@ -84,6 +82,26 @@ class LoginViewModelV2(
             }
             val byteArray = byteArrayOutputStream.toByteArray()
             sharedPreferencesDataSource.saveUserInformation(byteArray.joinToString {","})
+        }
+    }
+
+    private fun validateEmail(email: String): String? {
+        return if (email.isEmpty()) {
+            "Email cannot be empty"
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "Please enter valid email address"
+        } else {
+            null
+        }
+    }
+
+    private fun validatePassword(password: String): String? {
+        return when {
+            password.isEmpty() -> "Password cannot be empty"
+            password.length < 8 -> "Password must be at least 8 characters"
+//            !password.any { it.isDigit() } -> "Password must contain at least one number"
+//            !password.any { it.isLetter() } -> "Password must contain at least one letter"
+            else -> null
         }
     }
 
