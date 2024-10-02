@@ -31,9 +31,15 @@ import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
 @Composable
 fun SecondStepSignupScreen(
     modifier: Modifier,
-    viewModel: SignupViewModel) {
+    viewModel: SignupViewModel,
+    onBackClick: () -> Unit,
+    onSignUpSuccess : () -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
+    if (viewModel.uiState.value.isSignUpSuccess){
+        onSignUpSuccess()
+    }
 
     Column(
         modifier = modifier,
@@ -76,14 +82,14 @@ fun SecondStepSignupScreen(
             placeholder = stringResource(R.string.character_with_letters_numbers),
             error = uiState.confirmPasswordError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password).copy(imeAction = ImeAction.Done),
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
                     Icon(
-                        painter = if (passwordVisible) painterResource(id = R.drawable.ic_password_visible) else painterResource(
+                        painter = if (confirmPasswordVisible) painterResource(id = R.drawable.ic_password_visible) else painterResource(
                             id = R.drawable.ic_password_invisible
                         ),
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                        contentDescription = if (confirmPasswordVisible) "Hide password" else "Show password"
                     )
                 }
             }
@@ -96,6 +102,7 @@ fun SecondStepSignupScreen(
             text = stringResource(R.string.next),
             enable = uiState.passwordError == null && uiState.confirmPasswordError == null,
             onClick = {
+                viewModel.registerFirstStep()
             }
         )
     }

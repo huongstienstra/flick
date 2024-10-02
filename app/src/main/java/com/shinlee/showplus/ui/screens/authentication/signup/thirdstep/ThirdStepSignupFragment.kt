@@ -1,6 +1,5 @@
-package com.shinlee.showplus.ui.screens.authentication.signup.firststep
+package com.shinlee.showplus.ui.screens.authentication.signup.thirdstep
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,47 +12,42 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class FirstStepSignUpFragment : Fragment() {
-
+class ThirdStepSignupFragment : Fragment() {
     private val viewModel: SignupViewModel by viewModel()
-    private var navigator: AuthNavigator? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is AuthNavigator) {
-            navigator = context
-        } else {
-            throw ClassCastException("$context must implement FragmentNavigation")
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_signup_first_step, container, false).apply {
+        return inflater.inflate(R.layout.fragment_third_step_signup, container, false).apply {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    FirstStepSignupScreen(
+                    ThirdStepSignupScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White),
                         viewModel = viewModel,
-                        onBackClick = {
-                        },
-                        onNext = {
-                            navigator?.navigateToSecondStepSignup(viewModel.uiState.value.email)
-                        },
+                        onBackClick = {},
+                        onSignUpSuccess = {
+
+                        }
                     )
                 }
             }
         }
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        arguments?.getString("email")?.let { value ->
+            viewModel.emailState.value = value
+        }
+    }
+
 }

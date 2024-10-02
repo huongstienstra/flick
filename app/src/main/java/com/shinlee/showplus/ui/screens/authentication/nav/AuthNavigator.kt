@@ -5,5 +5,6 @@ interface AuthNavigator {
     fun navigateTerm()
     fun navigateToFirstStepSignup()
     fun navigateToMain()
-    fun navigateToSecondStepSignup()
+    fun navigateToSecondStepSignup(email: String)
+    fun navigateToThirdStepSignup(token: String)
 }

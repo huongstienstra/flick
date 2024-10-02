@@ -1,16 +1,27 @@
 package com.shinlee.showplus.ui.screens.authentication.signup
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginUiState
+import androidx.lifecycle.viewModelScope
+import com.nativemobilebits.loginflow.data.rules.Validator.validateConfirmPassword
+import com.nativemobilebits.loginflow.data.rules.Validator.validateEmail
+import com.nativemobilebits.loginflow.data.rules.Validator.validatePassword
+import com.shinlee.network.Result
+import com.shinlee.network.model.RegisterRequest
+import com.shinlee.repository.AuthenticationRepository
+import com.shinlee.showplus.ui.screens.show.mapping.toLoginData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class SignupUiState(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
+    val nickName: String = "",
     val emailError: String? = "",
     val passwordError: String? = "",
     val confirmPasswordError: String? = "",
@@ -18,7 +29,12 @@ data class SignupUiState(
     val isSignUpSuccess: Boolean = false,
 )
 
-class SignupViewModel : ViewModel() {
+class SignupViewModel(
+    private val repository: AuthenticationRepository,
+) : ViewModel() {
+
+    var token = MutableStateFlow("")
+    var emailState = MutableStateFlow("")
 
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> = _uiState
@@ -30,6 +46,7 @@ class SignupViewModel : ViewModel() {
                 emailError = validateEmail(email)
             )
         }
+        emailState.value = email
     }
 
     fun updatePassword(password: String) {
@@ -45,7 +62,10 @@ class SignupViewModel : ViewModel() {
         _uiState.update {
             it.copy(
                 confirmPassword = confirmPassword,
-                confirmPasswordError = validateConfirmPassword(password = it.password, confirmPassword =  confirmPassword)
+                confirmPasswordError = validateConfirmPassword(
+                    password = it.password,
+                    confirmPassword = confirmPassword
+                )
             )
         }
     }
@@ -57,6 +77,26 @@ class SignupViewModel : ViewModel() {
             "Please enter valid email address"
         } else {
             null
+        }
+    }
+
+    fun registerFirstStep() {
+        val currentState = _uiState.value
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.registerByEmail(
+                RegisterRequest(
+                    email = emailState.value,
+                    password = currentState.password.trim(),
+                    password_confirm = currentState.confirmPassword.trim()
+                )
+            )
+            if (result is Result.Success) {
+                val data = result.data
+                token.value = data.token
+                _uiState.update { it.copy(isLoading = false, isSignUpSuccess = true) }
+            } else if (result is Result.Error) {
+                Log.e("register", "Error: ${result.throwable.message}")
+            }
         }
     }
 }

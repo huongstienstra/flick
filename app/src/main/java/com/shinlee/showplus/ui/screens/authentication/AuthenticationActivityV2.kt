@@ -11,6 +11,8 @@ import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import com.shinlee.showplus.ui.screens.authentication.signup.firststep.FirstStepSignUpFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.SignUpFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.secondstep.SecondStepSignupFragment
+import com.shinlee.showplus.ui.screens.authentication.signup.thirdstep.ThirdStepSignupFragment
+import com.shinlee.showplus.ui.screens.authentication.signup.thirdstep.ThirdStepSignupScreen
 import com.shinlee.showplus.ui.screens.authentication.term.TermFragment
 
 class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
@@ -58,11 +60,32 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
             .commit()
     }
 
-    override fun navigateToSecondStepSignup() {
+    override fun navigateToSecondStepSignup(email: String) {
+        val bundle = Bundle().apply {
+            putString("email", email)
+        }
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.fragment_container,
-                SecondStepSignupFragment(),
+                SecondStepSignupFragment().apply {
+                    arguments = bundle
+                },
+                SecondStepSignupFragment::class.java.simpleName
+            )
+            .addToBackStack("auth_stack")
+            .commit()
+    }
+
+    override fun navigateToThirdStepSignup(token: String) {
+        val bundle = Bundle().apply {
+            putString("token", token)
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                ThirdStepSignupFragment().apply {
+                    arguments = bundle
+                },
                 SecondStepSignupFragment::class.java.simpleName
             )
             .addToBackStack("auth_stack")
