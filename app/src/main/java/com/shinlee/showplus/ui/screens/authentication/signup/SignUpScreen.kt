@@ -12,9 +12,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shinlee.common.R
-import com.shinlee.common.composable.ButtonIconComponent
-import com.shinlee.common.composable.EasyLoginDivider
 import com.shinlee.common.composable.GradientButton
+import com.shinlee.common.composable.SocialButtonHorizontal
+import com.shinlee.common.composable.TextDivider
 
 @Composable
 fun SignUpScreen(
@@ -56,43 +56,37 @@ fun SignUpScreen(
             }
         )
 
-        EasyLoginDivider(
+        TextDivider(
             text = stringResource(R.string.or),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp)
         )
 
-        ButtonIconComponent(
+        SocialButtonHorizontal(
             icon = R.drawable.ic_google_register,
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(48.dp)
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             value = stringResource(R.string.continue_with_google),
-            onButtonClicked = {
-            },
-        )
-        ButtonIconComponent(
+        ) {
+
+        }
+        SocialButtonHorizontal(
             icon = R.drawable.ic_kakao_register,
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(48.dp)
                 .padding(start = 16.dp, end = 16.dp, top = 20.dp),
             value = stringResource(R.string.continue_with_kakao_talk),
-            onButtonClicked = {
-            },
-        )
-        ButtonIconComponent(
+        ) {
+
+        }
+        SocialButtonHorizontal(
             icon = R.drawable.ic_naver_register,
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(48.dp)
                 .padding(start = 16.dp, end = 16.dp, top = 20.dp),
             value = stringResource(R.string.continue_with_naver),
-            onButtonClicked = {
-            },
-        )
+        ) {
+
+        }
     }
 }
 

@@ -36,10 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinlee.common.R
 import com.shinlee.common.composable.CustomInputField
-import com.shinlee.common.composable.EasyLoginDivider
 import com.shinlee.common.composable.GradientButton
 import com.shinlee.common.composable.OutlinedCustomButton
 import com.shinlee.common.composable.SocialLoginButton
+import com.shinlee.common.composable.TextDivider
 import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginViewModelV2
 
 @Composable
@@ -127,7 +127,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             text = stringResource(R.string.login_with_email),
-            isActive = uiState.emailError == null && uiState.passwordError == null,
+            enable = uiState.emailError == null && uiState.passwordError == null,
             onClick = {
                 viewModel.loginByEmail()
             }
@@ -142,7 +142,7 @@ fun LoginScreen(
         )
 
 
-        EasyLoginDivider(
+        TextDivider(
             text = stringResource(R.string.easy_login_with),
             modifier = Modifier
                 .fillMaxWidth()

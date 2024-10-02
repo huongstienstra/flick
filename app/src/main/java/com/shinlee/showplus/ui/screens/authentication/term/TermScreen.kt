@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinlee.common.R
 import com.shinlee.common.composable.TermItem
 import com.shinlee.common.composable.GradientButton
-import com.shinlee.common.theme.AppTypography
+import com.shinlee.common.theme.ShowUpTypography
 
 
 @Composable
@@ -55,7 +55,7 @@ fun TermScreen(
                 .padding(start = 16.dp, end = 16.dp, top = 100.dp)
                 .fillMaxWidth(),
             text = stringResource(R.string.agree_to_term_and_condition),
-            style = AppTypography.typography.titleLarge,
+            style = ShowUpTypography.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
 
@@ -105,7 +105,7 @@ fun TermScreen(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             text = stringResource(R.string.next),
-            isActive = isActive,
+            enable = isActive,
             onClick = {
                 onNextClick()
             }

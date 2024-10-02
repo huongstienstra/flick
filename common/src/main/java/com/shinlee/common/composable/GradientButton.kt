@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,39 +30,43 @@ import com.shinlee.common.theme.WhiteColor
 
 @Composable
 fun GradientButton(
-    isActive: Boolean = true,
+    modifier: Modifier = Modifier,
+    enable: Boolean = true,
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
-    val gradientColors = if (isActive) {
-        listOf(Color(0xFFFB5E3A), Color(0xFFE61DEC)) // Colors for active state
+    val backgroundColor = if (enable) {
+        listOf(Color(0xFFFB5E3A), Color(0xFFE61DEC))
     } else {
-        listOf(Grey, Grey) // Colors for inactive state
+        listOf(Grey, Grey)
     }
 
+    val textColor = if (enable) WhiteColor else Gray3Color
 
     Button(
         onClick = onClick,
         modifier = modifier
             .height(48.dp)
-            .clickable { isActive }
+            .clickable {
+                onClick()
+            }
             .fillMaxWidth(),
         shape = RoundedCornerShape(AppSpace.space8dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-        contentPadding = PaddingValues(0.dp)
+        contentPadding = PaddingValues(0.dp),
+        enabled = enable
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    brush = Brush.horizontalGradient(colors = gradientColors)
+                    brush = Brush.horizontalGradient(colors = backgroundColor)
                 ),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = text,
-                color = if (isActive) WhiteColor else Gray3Color,
+                color = textColor,
                 fontWeight = FontWeight.Normal,
                 style = TextStyle(fontSize = 14.sp)
             )

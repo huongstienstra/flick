@@ -10,7 +10,7 @@ import androidx.compose.ui.text.TextStyle
 import com.shinlee.common.R
 
 // Fix font size here if need it
-object AppTypography {
+object ShowUpTypography {
     private val NunitoSans = FontFamily(
         Font(R.font.nunito_sans_extra_light, FontWeight.ExtraLight),
         Font(R.font.nunito_sans_extra_light_italic, FontWeight.ExtraLight, FontStyle.Italic),
@@ -49,7 +49,7 @@ object AppTypography {
         headlineLarge = TextStyle(
             fontFamily = NunitoSans,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 32.sp,
+            fontSize = 14.sp,
             lineHeight = 40.sp
         ),
         headlineMedium = TextStyle(

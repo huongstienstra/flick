@@ -53,7 +53,7 @@ fun FirstStepSignupScreen(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             text = stringResource(R.string.next),
-            isActive = uiState.emailError == null,
+            enable = uiState.emailError == null,
             onClick = {
             }
         )

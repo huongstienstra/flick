@@ -8,12 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun EasyLoginDivider(
+fun TextDivider(
     text: String,
     modifier: Modifier
 ) {
@@ -28,8 +29,6 @@ fun EasyLoginDivider(
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 16.dp),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Normal,
             color = Color.Gray
         )
         Divider(
@@ -37,14 +36,4 @@ fun EasyLoginDivider(
             modifier = Modifier.weight(1f)
         )
     }
-}
-
-@Preview
-@Composable
-fun EasyLoginDividerPreview() {
-    EasyLoginDivider(
-        text = "",
-        modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 16.dp))
 }
