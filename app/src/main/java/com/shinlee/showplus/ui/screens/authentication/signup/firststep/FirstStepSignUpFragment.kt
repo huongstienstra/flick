@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.authentication.Destination
 import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

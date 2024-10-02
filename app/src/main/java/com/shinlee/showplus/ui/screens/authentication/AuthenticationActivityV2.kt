@@ -1,38 +1,62 @@
 package com.shinlee.showplus.ui.screens.authentication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
 import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginFragment
+import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import com.shinlee.showplus.ui.screens.authentication.signup.firststep.FirstStepSignUpFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.SignUpFragment
 import com.shinlee.showplus.ui.screens.authentication.term.TermFragment
 
-class AuthenticationActivityV2 : AppCompatActivity(), FragmentNavigation {
+class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, LoginFragment()) // Ensure LoginFragment is defined
+                .add(R.id.fragment_container, LoginFragment())
                 .commit()
         }
     }
 
-    override fun navigateTo(destination: Destination) {
-        val fragment = when (destination) {
-            is Destination.LoginFragment -> LoginFragment()
-            is Destination.SignUpFragment -> SignUpFragment()
-            is Destination.TermFragment -> TermFragment()
-            is Destination.FirstStepSignup -> FirstStepSignUpFragment()
-        }
+    override fun navigateSignUp() {
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                SignUpFragment(),
+                SignUpFragment::class.java.simpleName
+            )
+            .addToBackStack("auth_stack")
+            .commit()
+    }
 
-        fragment.let {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, it)
-                .addToBackStack(null)
-                .commit()
-        }
+    override fun navigateTerm() {
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                TermFragment(),
+                TermFragment::class.java.simpleName
+            )
+            .addToBackStack("auth_stack")
+            .commit()
+    }
+
+    override fun navigateToFirstStepSignup() {
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                FirstStepSignUpFragment(),
+                FirstStepSignUpFragment::class.java.simpleName
+            )
+            .addToBackStack("auth_stack")
+            .commit()
+    }
+
+    override fun navigateToMain() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

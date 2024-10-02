@@ -13,18 +13,17 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.authentication.Destination
-import com.shinlee.showplus.ui.screens.authentication.FragmentNavigation
+import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment : Fragment() {
 
     private val viewModel: SignupViewModel by viewModel()
-    private lateinit var navigator: FragmentNavigation
+    private var navigator: AuthNavigator? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentNavigation) {
+        if (context is AuthNavigator) {
             navigator = context
         } else {
             throw ClassCastException("$context must implement FragmentNavigation")
@@ -45,7 +44,7 @@ class SignUpFragment : Fragment() {
                             .fillMaxSize()
                             .background(Color.White),
                         onSignupByEmailClick = {
-                            navigator.navigateTo(Destination.TermFragment)
+                            navigator?.navigateTerm()
                         },
                         onBackClick = {
                         },

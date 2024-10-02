@@ -16,20 +16,18 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
-import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivityV2
-import com.shinlee.showplus.ui.screens.authentication.Destination
-import com.shinlee.showplus.ui.screens.authentication.FragmentNavigation
+import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.shinlee.showplus.ui.screens.authentication.login.LoginScreen
 
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModelV2 by viewModel()
-    private lateinit var navigator: FragmentNavigation
+    private var navigator: AuthNavigator? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentNavigation) {
+        if (context is AuthNavigator) {
             navigator = context
         } else {
             throw ClassCastException("$context must implement FragmentNavigation")
@@ -53,7 +51,7 @@ class LoginFragment : Fragment() {
                         onBackClick = {
                         },
                         onSignUp = {
-                            navigator.navigateTo(Destination.SignUpFragment)
+                            navigator?.navigateSignUp()
                         },
                         onLoginSuccess = { navigateToMain() }
                     )
