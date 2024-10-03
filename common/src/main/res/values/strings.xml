@@ -40,5 +40,11 @@
     // Signup Step 2
     <string name="re_enter_password">Re-enter password</string>
 
+    // dialog
+    <string name="login"> Login</string>
+    <string name="cancel">CanCel</string>
+    <string name="you_must_login_first">You must login first</string>
+    <string name="please_log_in_to_use">Please log in to use this feature</string>
+
 
 </resources>
