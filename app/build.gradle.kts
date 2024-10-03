@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.paging.common.android)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.transition)
+    implementation(libs.androidx.media3.exoplayer.hls)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

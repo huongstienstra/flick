@@ -8,7 +8,7 @@ import com.shinlee.showplus.ui.screens.show.VideoShow
 fun List<VideoInfo>.toVideoShowList(): List<VideoShow> {
     return this.map {
         VideoShow(
-            id = it.id ?: "",
+            id = it.id ?: 0,
             videoLink = it.videoUrl ?: "",
             thumbnail = it.thumbnailUrl ?: ""
         )

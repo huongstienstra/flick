@@ -8,8 +8,8 @@ data class VideoResponse(
 ) : BaseResponse() {
     data class VideoInfo(
         @SerializedName("id")
-        val id: String? = null,
-        @SerializedName("url")
+        val id: Int? = null,
+        @SerializedName("video")
         val videoLink: String? = null,
         @SerializedName("thumbnail")
         val thumbnail: String? = null

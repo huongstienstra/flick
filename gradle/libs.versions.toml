@@ -23,6 +23,7 @@ pagingCommonAndroid = "3.3.2"
 media3Ui = "1.4.1"
 transition = "1.2.0"
 uiTestAndroid = "1.7.0"
+media3ExoplayerHls = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ androidx-paging-common-android = { group = "androidx.paging", name = "paging-com
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3Ui" }
 androidx-transition = { group = "androidx.transition", name = "transition", version.ref = "transition" }
 androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
+androidx-media3-exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version.ref = "media3ExoplayerHls" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

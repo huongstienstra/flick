@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tabFollowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_8"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_16sp"
+            tools:text="Following" />
+
+        <Space
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tabForYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_8"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_16sp"
+            tools:text="For You" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/tabIndicator"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/white" />
+
+</LinearLayout>

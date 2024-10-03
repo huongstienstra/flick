@@ -4,4 +4,10 @@
         <attr name="iconSrc" format="reference" />
         <attr name="label" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="CustomTab">
+        <attr name="leftTabText" format="string" />
+        <attr name="rightTabText" format="string" />
+        <attr name="textAppearance" format="reference" />
+    </declare-styleable>
 </resources>

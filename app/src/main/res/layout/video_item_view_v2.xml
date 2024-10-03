@@ -10,6 +10,21 @@
         android:layout_height="match_parent"
         app:surface_type="texture_view" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/play_pause_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:src="@drawable/ic_video_pause"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/side_menu"
         android:layout_width="wrap_content"
@@ -24,7 +39,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:iconSrc="@drawable/ic_like"
-            app:label="99.9k" />
+            app:label="99.9k"
+            android:background="@drawable/custom_button_background"/>
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_comment"
@@ -32,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_32"
             app:iconSrc="@drawable/ic_comment"
-            app:label="9,999" />
+            app:label="9,999"
+            android:background="@drawable/custom_button_background"/>
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_send"
@@ -40,14 +57,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_32"
             app:iconSrc="@drawable/ic_share"
-            app:label="share" />
+            app:label="share"
+            android:background="@drawable/custom_button_background"/>
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_32"
-            app:iconSrc="@drawable/ic_more" />
+            app:iconSrc="@drawable/ic_more"
+            android:background="@drawable/custom_button_background"/>
 
     </LinearLayout>
 
@@ -124,4 +143,60 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ProgressBar
+        android:id="@+id/video_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_gravity="bottom"
+        android:max="100"
+        android:progressTint="#FF0000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/dp_60"
+        android:background="#1A000000"
+        android:paddingHorizontal="@dimen/dp_24"
+        android:paddingVertical="@dimen/dp_16"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iconMegaphone"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginStart="@dimen/dp_16"
+            android:src="@drawable/ic_speaker"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtShowPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:text="ShowPlus Competition."
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconMegaphone"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtViewDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:text="View Details"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
 </FrameLayout>
+
