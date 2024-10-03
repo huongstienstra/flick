@@ -46,7 +46,9 @@ class SecondStepSignupFragment : Fragment() {
                             .fillMaxSize()
                             .background(Color.White),
                         viewModel = viewModel,
-                        onBackClick = {},
+                        onBackClick = {
+                            navigator?.onBackPress()
+                        },
                         onSignUpSuccess = {
                             navigator?.navigateToThirdStepSignup(viewModel.token.value)
                         }

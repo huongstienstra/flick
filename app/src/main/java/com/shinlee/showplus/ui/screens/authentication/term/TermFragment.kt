@@ -46,7 +46,7 @@ class TermFragment : Fragment() {
 
                         },
                         navigateUp = {
-
+                            navigator?.onBackPress()
                         }
                     )
 

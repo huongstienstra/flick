@@ -49,6 +49,7 @@ class LoginFragment : Fragment() {
                             .background(Color.White),
                         viewModel = viewModel,
                         onBackClick = {
+                            navigator?.onBackPress()
                         },
                         onSignUp = {
                             navigator?.navigateSignUp()

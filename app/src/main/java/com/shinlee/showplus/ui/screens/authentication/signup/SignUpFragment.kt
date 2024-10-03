@@ -47,7 +47,12 @@ class SignUpFragment : Fragment() {
                             navigator?.navigateTerm()
                         },
                         onBackClick = {
+                            navigator?.onBackPress()
                         },
+
+                        onGotoLoginClick = {
+                            navigator?.navigateToLogin()
+                        }
                     )
                 }
             }

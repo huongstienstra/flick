@@ -17,8 +17,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shinlee.common.R
 import com.shinlee.common.theme.AppSpace
+import com.shinlee.common.theme.ShowUpTypography
 
 @Composable
 fun TopBar(
@@ -28,7 +30,7 @@ fun TopBar(
 ) {
     Row(
         modifier = modifier
-            .height(AppSpace.space48dp)
+            .height(AppSpace.space56dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -43,6 +45,8 @@ fun TopBar(
                 modifier = Modifier.padding(start = 5.dp),
                 text = stringResource(titleRes),
                 fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                style = ShowUpTypography.typography.headlineSmall
             )
         }
     }

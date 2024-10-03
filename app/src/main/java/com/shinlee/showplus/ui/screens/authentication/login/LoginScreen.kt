@@ -1,6 +1,7 @@
 package com.shinlee.showplus.ui.screens.authentication.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +41,8 @@ import com.shinlee.common.composable.GradientButton
 import com.shinlee.common.composable.OutlinedCustomButton
 import com.shinlee.common.composable.SocialLoginButton
 import com.shinlee.common.composable.TextDivider
+import com.shinlee.common.composable.TopBar
+import com.shinlee.common.theme.AppSpace
 import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginViewModelV2
 
 @Composable
@@ -61,12 +64,15 @@ fun LoginScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.align(Alignment.Start)
-        ) {
-            Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription = "Back")
-        }
+        TopBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(AppSpace.space56dp)
+                .background(Color.White),
+            navigateUp = {
+                onBackClick()
+            }
+        )
 
         Spacer(modifier = Modifier.height(56.dp))
         Row(modifier = Modifier

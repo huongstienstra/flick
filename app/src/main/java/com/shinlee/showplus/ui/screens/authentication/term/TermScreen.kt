@@ -56,12 +56,12 @@ fun TermScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-
         TopBar(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(AppSpace.space56dp)
                 .background(Color.White),
-            titleRes = R.string.sign_up,
+            titleRes = R.string.sign_up_space,
             navigateUp = {
                 navigateUp()
             }
@@ -71,7 +71,7 @@ fun TermScreen(
 
         Text(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
+                .padding(start = 24.dp, end = 24.dp)
                 .fillMaxWidth(),
             text = stringResource(R.string.agree_to_term_and_condition),
         )
@@ -79,7 +79,8 @@ fun TermScreen(
         Spacer(modifier = Modifier.height(AppSpace.space36dp))
 
         TermItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 11.dp, end = 11.dp),
             titleRes = R.string.select_all,
             descriptionRes = null,
             isChecked = selectAllChecked
@@ -90,7 +91,10 @@ fun TermScreen(
 
         Spacer(modifier = Modifier.height(AppSpace.space24dp))
 
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 11.dp, end = 11.dp)
+        ) {
             items(terms) { term ->
                 TermItem(
                     modifier = Modifier.fillMaxWidth(),
@@ -107,10 +111,11 @@ fun TermScreen(
 
         }
         Spacer(modifier = Modifier.height(20.dp))
+
         GradientButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 32.dp),
+                .padding(start = 24.dp, end = 24.dp, top = 32.dp),
             text = stringResource(R.string.next),
             enable = isNextEnabled,
             onClick = {

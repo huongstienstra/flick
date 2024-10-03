@@ -47,6 +47,7 @@ class FirstStepSignUpFragment : Fragment() {
                             .background(Color.White),
                         viewModel = viewModel,
                         onBackClick = {
+                            navigator?.onBackPress()
                         },
                         onNext = {
                             navigator?.navigateToSecondStepSignup(viewModel.uiState.value.email)

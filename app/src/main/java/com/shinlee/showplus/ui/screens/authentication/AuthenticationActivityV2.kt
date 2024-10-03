@@ -2,7 +2,6 @@ package com.shinlee.showplus.ui.screens.authentication
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
@@ -12,7 +11,6 @@ import com.shinlee.showplus.ui.screens.authentication.signup.firststep.FirstStep
 import com.shinlee.showplus.ui.screens.authentication.signup.SignUpFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.secondstep.SecondStepSignupFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.thirdstep.ThirdStepSignupFragment
-import com.shinlee.showplus.ui.screens.authentication.signup.thirdstep.ThirdStepSignupScreen
 import com.shinlee.showplus.ui.screens.authentication.term.TermFragment
 
 class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
@@ -91,6 +89,22 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
             .addToBackStack("auth_stack")
             .commit()
     }
+
+    override fun navigateToLogin() {
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                LoginFragment(),
+                LoginFragment::class.java.simpleName
+            )
+            .addToBackStack("auth_stack")
+            .commit()
+    }
+
+    override fun onBackPress() {
+        super.onBackPressed()
+    }
+
 
     override fun navigateToMain() {
         startActivity(Intent(this, MainActivity::class.java))

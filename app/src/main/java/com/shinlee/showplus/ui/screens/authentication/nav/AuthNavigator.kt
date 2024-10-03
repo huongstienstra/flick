@@ -7,4 +7,6 @@ interface AuthNavigator {
     fun navigateToMain()
     fun navigateToSecondStepSignup(email: String)
     fun navigateToThirdStepSignup(token: String)
+    fun navigateToLogin()
+    fun onBackPress()
 }
