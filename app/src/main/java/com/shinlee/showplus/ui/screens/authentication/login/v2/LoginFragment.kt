@@ -54,15 +54,17 @@ class LoginFragment : Fragment() {
                         onSignUp = {
                             navigator?.navigateSignUp()
                         },
-                        onLoginSuccess = { navigateToMain() }
+                        onLoginSuccess = { isPhoneValidate ->
+                            if (isPhoneValidate){
+                                navigator?.navigateToMain()
+                            }else{
+                                navigator?.navigateToThirdStepSignup(viewModel.token.value)
+                            }
+                        }
                     )
                 }
             }
         }
     }
 
-    private fun navigateToMain() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(intent)
-    }
 }

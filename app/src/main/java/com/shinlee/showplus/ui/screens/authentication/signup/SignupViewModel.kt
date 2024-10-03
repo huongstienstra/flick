@@ -4,9 +4,8 @@ package com.shinlee.showplus.ui.screens.authentication.signup
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthOptions
 import com.shinlee.network.Result
+import com.shinlee.network.model.CheckEmailExistRequest
 import com.shinlee.network.model.RegisterRequest
 import com.shinlee.repository.AuthenticationRepository
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 data class SignupUiState(
     val email: String = "",
@@ -29,10 +27,10 @@ data class SignupUiState(
     val phoneNumberError: String? = "",
     val isLoading: Boolean = false,
     val isSignUpSuccess: Boolean = false,
+    val isCheckEmailExist: Boolean = true
 )
 
 data class PhonePrefix(val country: String, val code: String)
-
 
 class SignupViewModel(
     private val repository: AuthenticationRepository,
@@ -93,7 +91,7 @@ class SignupViewModel(
         }
     }
 
-    private fun validateEmail(email: String): String? {
+    fun validateEmail(email: String): String? {
         return if (email.isEmpty()) {
             "Email cannot be empty"
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -155,8 +153,26 @@ class SignupViewModel(
         }
     }
 
-    fun getCode() {
-
+    fun checkEmailExit() {
+        val currentState = _uiState.value
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =
+                repository.checkEmailExist(CheckEmailExistRequest(email = currentState.email))
+            if (result is Result.Success) {
+                if (result.data.isExist) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            emailError = "Your Email have Exist"
+                        )
+                    }
+                } else {
+                    _uiState.update { it.copy(isLoading = false, isCheckEmailExist = false) }
+                }
+            } else if (result is Result.Error) {
+                Log.e("checkEmailExist", "Error: ${result.throwable.message}")
+            }
+        }
     }
 
 }

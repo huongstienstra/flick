@@ -9,7 +9,8 @@ data class LoginData(
 ): Serializable{
     data class UserInfo(
         val id: String? = null,
-        val email: String? = null
+        val email: String? = null,
+        val phone: String = ""
     ) : Serializable
 }
 

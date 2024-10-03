@@ -72,8 +72,9 @@ class ThirdStepSignupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("email")?.let { value ->
-            viewModel.emailState.value = value
+        arguments?.getString("token")?.let { value ->
+            viewModel.token.value = value
+            Log.d("khanh", viewModel.token.value)
         }
     }
 

@@ -36,6 +36,7 @@
 
     // Signup step 1
     <string name="enter_email_address">Enter email address</string>
+    <string name="your_mail_have_exist">Your Email have Exist</string>
 
     // Signup Step 2
     <string name="re_enter_password">Re-enter password</string>

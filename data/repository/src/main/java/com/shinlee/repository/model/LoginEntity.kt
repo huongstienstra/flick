@@ -7,7 +7,8 @@ data class LoginEntity(
 ){
     data class UserInfoEntity(
         val id: String? = null,
-        val email: String? = null
+        val email: String? = null,
+        val phone: String = ""
     )
 }
 

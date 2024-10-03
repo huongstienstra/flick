@@ -3,10 +3,13 @@ package com.shinlee.repository
 import com.shinlee.network.Result
 import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
+import com.shinlee.network.model.CheckEmailExistRequest
 import com.shinlee.network.model.LoginRequest
 import com.shinlee.network.model.RegisterRequest
+import com.shinlee.repository.mapping.toCheckEmailExistEntity
 import com.shinlee.repository.mapping.toEntity
 import com.shinlee.repository.mapping.toRegisterEntity
+import com.shinlee.repository.model.CheckEmailExistEntity
 import com.shinlee.repository.model.LoginEntity
 import com.shinlee.repository.model.RegisterEntity
 
@@ -39,6 +42,22 @@ class AuthenticationRepositoryImp(private val apiService: ShowPlusApiService) :A
             is Result.Success -> {
                 val registerData = response.data.toRegisterEntity()
                 Result.success(registerData)
+            }
+        }
+    }
+
+    override suspend fun checkEmailExist(checkEmailExistRequest: CheckEmailExistRequest): Result<CheckEmailExistEntity> {
+        val response = safeApiCall {
+            apiService.checkEmailExist(checkEmailExistRequest)
+        }
+        return when (response) {
+
+            is Result.Error -> {
+                Result.error(response.throwable)
+            }
+            is Result.Success -> {
+                val emailCheckExistData = response.data.toCheckEmailExistEntity()
+                Result.success(emailCheckExistData)
             }
         }
     }

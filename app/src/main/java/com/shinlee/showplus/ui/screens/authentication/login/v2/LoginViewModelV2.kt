@@ -23,13 +23,16 @@ data class LoginUiState(
     val emailError: String? = "",
     val passwordError: String? = "",
     val isLoading: Boolean = false,
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean = false,
 )
 
 class LoginViewModelV2(
     private val repository: AuthenticationRepository,
     private val sharedPreferencesDataSource: SharedPreferencesDataSource
     ) : ViewModel() {
+
+    var token = MutableStateFlow("")
+    var isPhoneValid = MutableStateFlow(false)
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
@@ -60,9 +63,16 @@ class LoginViewModelV2(
                 val result = repository.loginByEmail(LoginRequest(currentState.email.trim(), currentState.password.trim()))
                 if (result is Result.Success) {
                     val data = result.data
-                    saveUserInfo(result.data.toLoginData().userInfo)
-                    sharedPreferencesDataSource.setToken(data.token)
-                    _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
+                    if (result.data.userInfo.phone.isEmpty()){
+                        isPhoneValid.value = false
+                        token.value = data.token
+                        _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
+                    }else {
+                        saveUserInfo(result.data.toLoginData().userInfo)
+                        sharedPreferencesDataSource.setToken(data.token)
+                        isPhoneValid.value = true
+                        _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
+                    }
                 } else if (result is Result.Error) {
                     Log.e("login", "Error: ${result.throwable.message}")
 

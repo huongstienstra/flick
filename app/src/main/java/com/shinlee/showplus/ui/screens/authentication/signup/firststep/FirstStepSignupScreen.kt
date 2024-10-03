@@ -33,6 +33,10 @@ fun FirstStepSignupScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    if (!uiState.isCheckEmailExist){
+        onNext()
+    }else viewModel.validateEmail(uiState.email)
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
@@ -69,7 +73,7 @@ fun FirstStepSignupScreen(
             text = stringResource(R.string.next),
             enable = uiState.emailError == null,
             onClick = {
-                onNext()
+                viewModel.checkEmailExit()
             }
         )
     }
