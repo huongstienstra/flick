@@ -51,6 +51,7 @@ class SecondStepSignupFragment : Fragment() {
                         },
                         onSignUpSuccess = {
                             navigator?.navigateToThirdStepSignup(viewModel.token.value)
+                            viewModel.refreshState()
                         }
                     )
                 }

@@ -41,7 +41,7 @@ fun SecondStepSignupScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    if (viewModel.uiState.value.isSignUpSuccess){
+    if (viewModel.uiState.value.isSignUpSuccess == true){
         onSignUpSuccess()
     }
 

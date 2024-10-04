@@ -26,8 +26,8 @@ data class SignupUiState(
     val nickNameError: String? = "",
     val phoneNumberError: String? = "",
     val isLoading: Boolean = false,
-    val isSignUpSuccess: Boolean = false,
-    val isCheckEmailExist: Boolean = true
+    val isSignUpSuccess: Boolean? = null,
+    val isCheckEmailExist: Boolean? = null
 )
 
 data class PhonePrefix(val country: String, val code: String)
@@ -163,7 +163,8 @@ class SignupViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            emailError = "Your Email have Exist"
+                            emailError = "Your Email have Exist",
+                            isCheckEmailExist = true
                         )
                     }
                 } else {
@@ -175,4 +176,7 @@ class SignupViewModel(
         }
     }
 
+    fun refreshState(){
+        _uiState.update {it.copy(isSignUpSuccess = null, isCheckEmailExist = null)}
+    }
 }

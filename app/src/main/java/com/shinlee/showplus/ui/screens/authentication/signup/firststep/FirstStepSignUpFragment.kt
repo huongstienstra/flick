@@ -51,6 +51,7 @@ class FirstStepSignUpFragment : Fragment() {
                         },
                         onNext = {
                             navigator?.navigateToSecondStepSignup(viewModel.uiState.value.email)
+                            viewModel.refreshState()
                         },
                     )
                 }

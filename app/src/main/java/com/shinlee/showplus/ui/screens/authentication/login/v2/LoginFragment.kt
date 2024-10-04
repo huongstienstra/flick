@@ -60,6 +60,7 @@ class LoginFragment : Fragment() {
                             }else{
                                 navigator?.navigateToThirdStepSignup(viewModel.token.value)
                             }
+                            viewModel.refreshState()
                         }
                     )
                 }

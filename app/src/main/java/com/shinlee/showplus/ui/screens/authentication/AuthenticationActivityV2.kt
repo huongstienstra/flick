@@ -27,7 +27,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
 
     override fun navigateSignUp() {
         supportFragmentManager.beginTransaction()
-            .replace(
+            .add(
                 R.id.fragment_container,
                 SignUpFragment(),
                 SignUpFragment::class.java.simpleName
@@ -38,7 +38,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
 
     override fun navigateTerm() {
         supportFragmentManager.beginTransaction()
-            .replace(
+            .add(
                 R.id.fragment_container,
                 TermFragment(),
                 TermFragment::class.java.simpleName
@@ -49,7 +49,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
 
     override fun navigateToFirstStepSignup() {
         supportFragmentManager.beginTransaction()
-            .replace(
+            .add(
                 R.id.fragment_container,
                 FirstStepSignUpFragment(),
                 FirstStepSignUpFragment::class.java.simpleName
@@ -63,7 +63,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
             putString("email", email)
         }
         supportFragmentManager.beginTransaction()
-            .replace(
+            .add(
                 R.id.fragment_container,
                 SecondStepSignupFragment().apply {
                     arguments = bundle
@@ -79,7 +79,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
             putString("token", token)
         }
         supportFragmentManager.beginTransaction()
-            .replace(
+            .add(
                 R.id.fragment_container,
                 ThirdStepSignupFragment().apply {
                     arguments = bundle
@@ -92,7 +92,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
 
     override fun navigateToLogin() {
         supportFragmentManager.beginTransaction()
-            .replace(
+            .add(
                 R.id.fragment_container,
                 LoginFragment(),
                 LoginFragment::class.java.simpleName

@@ -39,7 +39,7 @@ fun ThirdStepSignupScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    if (viewModel.uiState.value.isSignUpSuccess) {
+    if (viewModel.uiState.value.isSignUpSuccess == true) {
         onSignUpSuccess()
     }
 

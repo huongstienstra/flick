@@ -23,7 +23,7 @@ data class LoginUiState(
     val emailError: String? = "",
     val passwordError: String? = "",
     val isLoading: Boolean = false,
-    val isLoggedIn: Boolean = false,
+    val isLoggedIn: Boolean? = null,
 )
 
 class LoginViewModelV2(
@@ -113,6 +113,10 @@ class LoginViewModelV2(
 //            !password.any { it.isLetter() } -> "Password must contain at least one letter"
             else -> null
         }
+    }
+
+    fun refreshState(){
+        _uiState.update {it.copy(isLoggedIn = null)}
     }
 
 }
