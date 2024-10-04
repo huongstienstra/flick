@@ -23,5 +23,5 @@ val viewModelModule = module {
     viewModel { LoginViewModelV2(get(), get()) }
     viewModel { ShareViewModel(get()) }
     viewModel { TermViewModel() }
-    viewModel { SignupViewModel(get()) }
+    viewModel { SignupViewModel(get(), get()) }
 }

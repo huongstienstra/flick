@@ -2,18 +2,22 @@ package com.shinlee.showplus.ui.screens.authentication
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
 import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginFragment
 import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
-import com.shinlee.showplus.ui.screens.authentication.signup.firststep.FirstStepSignUpFragment
+import com.shinlee.showplus.ui.screens.authentication.signup.email.InputEmailFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.SignUpFragment
-import com.shinlee.showplus.ui.screens.authentication.signup.secondstep.SecondStepSignupFragment
-import com.shinlee.showplus.ui.screens.authentication.signup.thirdstep.ThirdStepSignupFragment
+import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
+import com.shinlee.showplus.ui.screens.authentication.signup.confirm_password.ConfirmPasswordFragment
+import com.shinlee.showplus.ui.screens.authentication.signup.phone_number.ThirdStepSignupFragment
 import com.shinlee.showplus.ui.screens.authentication.term.TermFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
@@ -51,24 +55,19 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
         supportFragmentManager.beginTransaction()
             .add(
                 R.id.fragment_container,
-                FirstStepSignUpFragment(),
-                FirstStepSignUpFragment::class.java.simpleName
+                InputEmailFragment(),
+                InputEmailFragment::class.java.simpleName
             )
             .addToBackStack("auth_stack")
             .commit()
     }
 
-    override fun navigateToSecondStepSignup(email: String) {
-        val bundle = Bundle().apply {
-            putString("email", email)
-        }
+    override fun navigateToConfirmPassword() {
         supportFragmentManager.beginTransaction()
             .add(
                 R.id.fragment_container,
-                SecondStepSignupFragment().apply {
-                    arguments = bundle
-                },
-                SecondStepSignupFragment::class.java.simpleName
+                ConfirmPasswordFragment(),
+                ConfirmPasswordFragment::class.java.simpleName
             )
             .addToBackStack("auth_stack")
             .commit()
@@ -84,7 +83,7 @@ class AuthenticationActivityV2 : AppCompatActivity(), AuthNavigator {
                 ThirdStepSignupFragment().apply {
                     arguments = bundle
                 },
-                SecondStepSignupFragment::class.java.simpleName
+                ConfirmPasswordFragment::class.java.simpleName
             )
             .addToBackStack("auth_stack")
             .commit()

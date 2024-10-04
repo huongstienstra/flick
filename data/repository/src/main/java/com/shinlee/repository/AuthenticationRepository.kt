@@ -12,6 +12,6 @@ import com.shinlee.repository.model.RegisterEntity
 
 interface AuthenticationRepository {
     suspend fun loginByEmail(loginRequest: LoginRequest): Result<LoginEntity>
-    suspend fun registerByEmail(registerRequest: RegisterRequest): Result<RegisterEntity>
-    suspend fun checkEmailExist(checkEmailExistRequest: CheckEmailExistRequest ): Result<CheckEmailExistEntity>
+    suspend fun registerByEmail(email: String, password: String, passwordConfirm: String): Result<RegisterEntity>
+    suspend fun checkEmailExist(email: String ): Result<CheckEmailExistEntity>
 }

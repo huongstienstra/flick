@@ -1,11 +1,10 @@
-package com.shinlee.showplus.ui.screens.authentication.signup.thirdstep
+package com.shinlee.showplus.ui.screens.authentication.signup.phone_number
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -39,9 +38,9 @@ fun ThirdStepSignupScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    if (viewModel.uiState.value.isSignUpSuccess == true) {
-        onSignUpSuccess()
-    }
+//    if (viewModel.uiState.value.isSignUpSuccess == true) {
+//        onSignUpSuccess()
+//    }
 
     val isNextEnabled = remember(uiState) {
         uiState.nickNameError == null

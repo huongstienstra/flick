@@ -33,5 +33,5 @@ interface ShowPlusApiService {
     suspend fun registerWithEmail(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
     @POST("/auth/check-exist-email")
-    suspend fun checkEmailExist(@Body checkEmailExistRequest: CheckEmailExistRequest,): Response<CheckEmailExistResponse>
+    suspend fun checkEmailExist(@Body email: CheckEmailExistRequest): Response<CheckEmailExistResponse>
 }

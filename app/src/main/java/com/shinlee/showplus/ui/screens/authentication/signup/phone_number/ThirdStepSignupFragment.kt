@@ -1,4 +1,4 @@
-package com.shinlee.showplus.ui.screens.authentication.signup.thirdstep
+package com.shinlee.showplus.ui.screens.authentication.signup.phone_number
 
 import android.content.Context
 import android.os.Bundle
@@ -48,7 +48,7 @@ class ThirdStepSignupFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_third_step_signup, container, false).apply {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setupCallbacks()
+               // setupCallbacks()
                 setContent {
                     ThirdStepSignupScreen(
                         modifier = Modifier
@@ -62,7 +62,7 @@ class ThirdStepSignupFragment : Fragment() {
 
                         },
                         onGetOtpClick = {
-                            sendVerificationCode(it)
+                            //sendVerificationCode(it)
                         }
                     )
                 }
@@ -70,39 +70,39 @@ class ThirdStepSignupFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("token")?.let { value ->
-            viewModel.token.value = value
-            Log.d("khanh", viewModel.token.value)
-        }
-    }
-
-    private fun sendVerificationCode(phoneNumber: String) {
-        val options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(requireActivity())
-            .setCallbacks(callbacks)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    private fun setupCallbacks() {
-        callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                // Auto verification completed
-//                signInWithPhoneAuthCredential(credential)
-            }
-
-            override fun onVerificationFailed(e: FirebaseException) {
-                Log.d("khanh", e.message+"")
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-
-            }
-        }
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        arguments?.getString("token")?.let { value ->
+//            viewModel.token.value = value
+//            Log.d("khanh", viewModel.token.value)
+//        }
+//    }
+//
+//    private fun sendVerificationCode(phoneNumber: String) {
+//        val options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
+//            .setPhoneNumber(phoneNumber)
+//            .setTimeout(60L, TimeUnit.SECONDS)
+//            .setActivity(requireActivity())
+//            .setCallbacks(callbacks)
+//            .build()
+//        PhoneAuthProvider.verifyPhoneNumber(options)
+//    }
+//
+//    private fun setupCallbacks() {
+//        callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+//            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+//                // Auto verification completed
+////                signInWithPhoneAuthCredential(credential)
+//            }
+//
+//            override fun onVerificationFailed(e: FirebaseException) {
+//                Log.d("khanh", e.message+"")
+//                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
+//
+//            }
+//        }
+//    }
 }

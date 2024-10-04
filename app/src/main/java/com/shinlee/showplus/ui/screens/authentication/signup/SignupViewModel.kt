@@ -4,40 +4,44 @@ package com.shinlee.showplus.ui.screens.authentication.signup
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shinlee.local.pref.SharedPreferencesDataSource
 import com.shinlee.network.Result
 import com.shinlee.network.model.CheckEmailExistRequest
 import com.shinlee.network.model.RegisterRequest
 import com.shinlee.repository.AuthenticationRepository
+import com.shinlee.showplus.ui.screens.authentication.login.LoginData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
 
 data class SignupUiState(
+    val isLoading: Boolean = false,
+
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
     val nickName: String = "",
     val phoneNumber: String = "",
+
     val emailError: String? = "",
     val passwordError: String? = "",
     val confirmPasswordError: String? = "",
     val nickNameError: String? = "",
+
     val phoneNumberError: String? = "",
-    val isLoading: Boolean = false,
     val isSignUpSuccess: Boolean? = null,
-    val isCheckEmailExist: Boolean? = null
+    val isEmailValid: Boolean? = null
 )
 
-data class PhonePrefix(val country: String, val code: String)
 
 class SignupViewModel(
     private val repository: AuthenticationRepository,
+    private val sharedPreferencesDataSource: SharedPreferencesDataSource
 ) : ViewModel() {
-
-    var token = MutableStateFlow("")
-    var emailState = MutableStateFlow("")
 
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> = _uiState
@@ -49,7 +53,6 @@ class SignupViewModel(
                 emailError = validateEmail(email)
             )
         }
-        emailState.value = email
     }
 
     fun updatePassword(password: String) {
@@ -91,7 +94,7 @@ class SignupViewModel(
         }
     }
 
-    fun validateEmail(email: String): String? {
+    private fun validateEmail(email: String): String? {
         return if (email.isEmpty()) {
             "Email cannot be empty"
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -101,19 +104,17 @@ class SignupViewModel(
         }
     }
 
-    fun registerFirstStep() {
-        val currentState = _uiState.value
+    fun onSignup() {
         viewModelScope.launch(Dispatchers.IO) {
+            Log.e("signup", "${_uiState.value.email}")
             val result = repository.registerByEmail(
-                RegisterRequest(
-                    email = emailState.value,
-                    password = currentState.password.trim(),
-                    password_confirm = currentState.confirmPassword.trim()
-                )
+                email = _uiState.value.email,
+                password = _uiState.value.password,
+                passwordConfirm = _uiState.value.confirmPassword
             )
             if (result is Result.Success) {
                 val data = result.data
-                token.value = data.token
+                sharedPreferencesDataSource.setToken(data.token)
                 _uiState.update { it.copy(isLoading = false, isSignUpSuccess = true) }
             } else if (result is Result.Error) {
                 Log.e("register", "Error: ${result.throwable.message}")
@@ -154,21 +155,20 @@ class SignupViewModel(
     }
 
     fun checkEmailExit() {
-        val currentState = _uiState.value
         viewModelScope.launch(Dispatchers.IO) {
             val result =
-                repository.checkEmailExist(CheckEmailExistRequest(email = currentState.email))
+                repository.checkEmailExist(_uiState.value.email)
             if (result is Result.Success) {
                 if (result.data.isExist) {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            emailError = "Your Email have Exist",
-                            isCheckEmailExist = true
+                            isEmailValid = false
                         )
                     }
                 } else {
-                    _uiState.update { it.copy(isLoading = false, isCheckEmailExist = false) }
+                    Log.e("checkEmailExist", "${result.data.isExist}")
+                    _uiState.update { it.copy(isEmailValid = true) }
                 }
             } else if (result is Result.Error) {
                 Log.e("checkEmailExist", "Error: ${result.throwable.message}")
@@ -176,7 +176,7 @@ class SignupViewModel(
         }
     }
 
-    fun refreshState(){
-        _uiState.update {it.copy(isSignUpSuccess = null, isCheckEmailExist = null)}
+    fun checkedEmailAlready() {
+        _uiState.update { it.copy(isEmailValid = null) }
     }
 }

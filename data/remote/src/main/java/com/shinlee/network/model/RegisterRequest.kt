@@ -1,7 +1,12 @@
 package com.shinlee.network.model
 
-data class RegisterRequest (
+import com.google.gson.annotations.SerializedName
+
+data class RegisterRequest(
+    @SerializedName("email")
     val email: String,
-    val password: String = "",
-    val password_confirm: String = ""
+    @SerializedName("password")
+    val password: String,
+    @SerializedName("password_confirm")
+    val confirmPassword: String
 )

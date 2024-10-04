@@ -1,13 +1,14 @@
-package com.shinlee.showplus.ui.screens.authentication.signup.firststep
+package com.shinlee.showplus.ui.screens.authentication.signup.email
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,7 @@ import com.shinlee.common.composable.TopBar
 import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
 
 @Composable
-fun FirstStepSignupScreen(
+fun InputEmailScreen(
     modifier: Modifier,
     viewModel: SignupViewModel,
     onBackClick: () -> Unit,
@@ -33,9 +34,13 @@ fun FirstStepSignupScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    if (uiState.isCheckEmailExist == false){
-        onNext()
-    }else viewModel.validateEmail(uiState.email)
+    LaunchedEffect(uiState.isEmailValid) {
+        Log.e("checkEmailExist", "handle onNetx: ${uiState.isEmailValid}")
+        if (uiState.isEmailValid == true) {
+            onNext()
+            viewModel.checkedEmailAlready()
+        }
+    }
 
     Column(
         modifier = modifier,
@@ -77,10 +82,4 @@ fun FirstStepSignupScreen(
             }
         )
     }
-}
-
-
-@Preview
-@Composable
-fun FirstStepSignupScreen() {
 }

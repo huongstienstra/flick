@@ -1,4 +1,4 @@
-package com.shinlee.showplus.ui.screens.authentication.signup.secondstep
+package com.shinlee.showplus.ui.screens.authentication.signup.confirm_password
 
 import android.content.Context
 import android.os.Bundle
@@ -15,12 +15,11 @@ import androidx.fragment.app.Fragment
 import com.shinlee.showplus.R
 import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
-import com.shinlee.showplus.ui.screens.authentication.signup.firststep.FirstStepSignupScreen
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class SecondStepSignupFragment : Fragment() {
+class ConfirmPasswordFragment : Fragment() {
 
-    private val viewModel: SignupViewModel by viewModel()
+    private val signUpViewModel: SignupViewModel by sharedViewModel<SignupViewModel>()
     private var navigator: AuthNavigator? = null
 
     override fun onAttach(context: Context) {
@@ -41,28 +40,20 @@ class SecondStepSignupFragment : Fragment() {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    SecondStepSignupScreen(
+                    ConfirmPasswordScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White),
-                        viewModel = viewModel,
+                        viewModel = signUpViewModel,
                         onBackClick = {
                             navigator?.onBackPress()
                         },
                         onSignUpSuccess = {
-                            navigator?.navigateToThirdStepSignup(viewModel.token.value)
-                            viewModel.refreshState()
+                            navigator?.navigateToMain()
                         }
                     )
                 }
             }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("email")?.let { value ->
-            viewModel.emailState.value = value
         }
     }
 }

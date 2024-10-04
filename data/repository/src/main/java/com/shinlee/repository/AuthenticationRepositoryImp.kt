@@ -30,9 +30,13 @@ class AuthenticationRepositoryImp(private val apiService: ShowPlusApiService) :A
         }
     }
 
-    override suspend fun registerByEmail(registerRequest: RegisterRequest): Result<RegisterEntity> {
+    override suspend fun registerByEmail(
+        email: String,
+        password: String,
+        passwordConfirm: String
+    ): Result<RegisterEntity> {
         val response = safeApiCall {
-            apiService.registerWithEmail(registerRequest)
+            apiService.registerWithEmail(RegisterRequest(email, password, passwordConfirm))
         }
         return when (response) {
 
@@ -46,9 +50,9 @@ class AuthenticationRepositoryImp(private val apiService: ShowPlusApiService) :A
         }
     }
 
-    override suspend fun checkEmailExist(checkEmailExistRequest: CheckEmailExistRequest): Result<CheckEmailExistEntity> {
+    override suspend fun checkEmailExist(email: String): Result<CheckEmailExistEntity> {
         val response = safeApiCall {
-            apiService.checkEmailExist(checkEmailExistRequest)
+            apiService.checkEmailExist(CheckEmailExistRequest(email))
         }
         return when (response) {
 

@@ -1,15 +1,15 @@
-package com.shinlee.showplus.ui.screens.authentication.signup.secondstep
+package com.shinlee.showplus.ui.screens.authentication.signup.confirm_password
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,18 +31,21 @@ import com.shinlee.common.composable.GradientButton
 import com.shinlee.common.composable.TopBar
 import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
 
-
 @Composable
-fun SecondStepSignupScreen(
+fun ConfirmPasswordScreen(
     modifier: Modifier,
     viewModel: SignupViewModel,
     onBackClick: () -> Unit,
     onSignUpSuccess : () -> Unit) {
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    if (viewModel.uiState.value.isSignUpSuccess == true){
-        onSignUpSuccess()
+
+    LaunchedEffect(uiState.isSignUpSuccess) {
+        if (uiState.isSignUpSuccess == true) {
+            onSignUpSuccess()
+        }
     }
 
     Column(
@@ -115,7 +118,7 @@ fun SecondStepSignupScreen(
             text = stringResource(R.string.next),
             enable = uiState.passwordError == null && uiState.confirmPasswordError == null,
             onClick = {
-                viewModel.registerFirstStep()
+                viewModel.onSignup()
             }
         )
     }
