@@ -1,5 +1,6 @@
 package com.shinlee.showplus.ui.screens.authentication.login.v2
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,12 +16,24 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
+import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.shinlee.showplus.ui.screens.authentication.login.LoginScreen
 
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModelV2 by viewModel()
+    private var navigator: AuthNavigator? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is AuthNavigator) {
+            navigator = context
+        } else {
+            throw ClassCastException("$context must implement FragmentNavigation")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,19 +49,24 @@ class LoginFragment : Fragment() {
                             .background(Color.White),
                         viewModel = viewModel,
                         onBackClick = {
+                            navigator?.onBackPress()
                         },
                         onSignUp = {
-
+                            navigator?.navigateSignUp()
                         },
-                        onLoginSuccess = { navigateToMain() }
+                        onLoginSuccess = {
+//                            if (isPhoneValidate){
+//                                navigator?.navigateToMain()
+//                            }else{
+//                                navigator?.navigateToThirdStepSignup(viewModel.token.value)
+//                            }
+//                            viewModel.refreshState()
+                            navigator?.navigateToMain()
+                        }
                     )
                 }
             }
         }
     }
 
-    private fun navigateToMain() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(intent)
-    }
 }

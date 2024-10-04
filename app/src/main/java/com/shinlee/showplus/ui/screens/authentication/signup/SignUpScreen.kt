@@ -1,90 +1,120 @@
 package com.shinlee.showplus.ui.screens.authentication.signup
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.shinlee.common.composable.ButtonIconComponent
-import com.shinlee.common.composable.DividerTextComponent
-import com.shinlee.common.composable.HeadingTextComponent
-import com.shinlee.common.composable.NormalTextFieldComponent
-import com.shinlee.common.composable.NormalTextComponent
+import com.shinlee.common.R
+import com.shinlee.common.composable.GradientButton
+import com.shinlee.common.composable.OutlinedCustomButton
+import com.shinlee.common.composable.SocialButtonHorizontal
+import com.shinlee.common.composable.TextDivider
+import com.shinlee.common.composable.TopBar
+import com.shinlee.common.theme.AppSpace
 
 @Composable
-fun SignUpScreen(signupViewModel: SignupViewModel = viewModel()) {
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+fun SignUpScreen(
+    modifier: Modifier,
+    onBackClick: () -> Unit,
+    onSignupByEmailClick: () -> Unit,
+    onGotoLoginClick: () -> Unit) {
+    Column(
+        modifier = modifier,
     ) {
-
-        Surface(
+        TopBar(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(28.dp)
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-
-                NormalTextComponent("khanh")
-                HeadingTextComponent(value = "khanh")
-                Spacer(modifier = Modifier.height(20.dp))
-
-                NormalTextFieldComponent(
-                    placeholder = "khanh",
-                    onTextChanged = {
-//                        signupViewModel.onEvent(SignupUIEvent.FirstNameChanged(it))
-                    },
-                    errorStatus = signupViewModel.registrationUIState.value.firstNameError
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                DividerTextComponent()
-                Spacer(modifier = Modifier.height(20.dp))
-
-                ButtonIconComponent(
-                    value = "Next",
-                    onButtonClicked = {
-                    },
-                    isEnabled = signupViewModel.allValidationsPassed.value
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                ButtonIconComponent(
-                    value = "Next",
-                    onButtonClicked = {
-                    },
-                    isEnabled = signupViewModel.allValidationsPassed.value
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                ButtonIconComponent(
-                    value = "Next",
-                    onButtonClicked = {
-                    },
-                    isEnabled = signupViewModel.allValidationsPassed.value
-                )
-
+                .fillMaxWidth()
+                .height(AppSpace.space56dp)
+                .background(Color.White),
+            navigateUp = {
+                onBackClick()
             }
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 52.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_logo_showplus),
+                contentDescription = "Description of the image"
+            )
+            Text(
+                modifier = Modifier.padding(start = 5.dp),
+                text = stringResource(R.string.sign_up_space),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+
+        GradientButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 49.dp),
+            text = stringResource(R.string.continue_with_email),
+            onClick = {
+                onSignupByEmailClick()
+            }
+        )
+
+        TextDivider(
+            text = stringResource(R.string.or),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 43.dp)
+        )
+
+        SocialButtonHorizontal(
+            icon = R.drawable.ic_google_register,
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 39.dp),
+            value = stringResource(R.string.continue_with_google),
+        ) {
+
+        }
+        SocialButtonHorizontal(
+            icon = R.drawable.ic_kakao_register,
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 20.dp),
+            value = stringResource(R.string.continue_with_kakao_talk),
+        ) {
+
+        }
+        SocialButtonHorizontal(
+            icon = R.drawable.ic_naver_register,
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 20.dp),
+            value = stringResource(R.string.continue_with_naver),
+        ) {
 
         }
 
-        if(signupViewModel.signUpInProgress.value) {
-            CircularProgressIndicator()
-        }
+        Spacer(modifier = Modifier.weight(1f))
+
+        OutlinedCustomButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            text = stringResource(R.string.login_with_an_existing_account),
+            onClick = {
+                onGotoLoginClick()
+            }
+        )
     }
 }
 
 @Preview
 @Composable
 fun DefaultPreviewOfSignUpScreen() {
-    SignUpScreen()
 }

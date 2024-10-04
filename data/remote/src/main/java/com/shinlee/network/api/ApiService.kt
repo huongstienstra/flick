@@ -1,11 +1,16 @@
 package com.shinlee.network.api
 
+import com.shinlee.network.model.CheckEmailExistRequest
+import com.shinlee.network.model.CheckEmailExistResponse
 import com.shinlee.network.model.LoginRequest
 import com.shinlee.network.model.LoginResponse
 import com.shinlee.network.model.MarvelCharacterResponseDto
+import com.shinlee.network.model.RegisterRequest
+import com.shinlee.network.model.RegisterResponse
 import com.shinlee.network.model.VideoResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -23,4 +28,10 @@ interface ShowPlusApiService {
 
     @POST("/auth/login")
     suspend fun loginByEmail(@Body loginRequest: LoginRequest): Response<LoginResponse>
+
+    @POST("/auth/signup")
+    suspend fun registerWithEmail(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
+
+    @POST("/auth/check-exist-email")
+    suspend fun checkEmailExist(@Body email: CheckEmailExistRequest): Response<CheckEmailExistResponse>
 }

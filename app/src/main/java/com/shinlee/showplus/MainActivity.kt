@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivityV2
+import com.shinlee.showplus.ui.screens.authentication.dialog.ConfirmGoToLoginDialog
 import com.shinlee.showplus.ui.screens.contest.ContestFragment
 import com.shinlee.showplus.ui.screens.profile.ProfileFragment
 import com.shinlee.showplus.ui.screens.search.SearchFragment
@@ -83,23 +86,17 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // just test
     private fun showAlertDialog() {
-        // Create and configure the AlertDialog
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Login")
-            .setMessage("Are you sure you want to Login")
-            .setPositiveButton("OK") { dialog, _ ->
+        val dialog = ConfirmGoToLoginDialog(
+            title = "You must login first",
+            content = "Please log in to use this feature",
+            onLoginClick = {
                 startActivity(Intent(this@MainActivity, AuthenticationActivityV2::class.java))
-                dialog.dismiss() // Close the dialog
+            },
+            onCancelClick = {
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss() // Close the dialog
-            }
-
-        // Show the dialog
-        val dialog = builder.create()
-        dialog.show()
+        )
+        dialog.show(supportFragmentManager, "ConfirmGoToLoginDialog")
     }
 }
 

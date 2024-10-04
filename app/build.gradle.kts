@@ -89,7 +89,10 @@ dependencies {
     implementation(project(":common"))
 
     //KOIN
+//    implementation (libs.koin.bom)
     implementation (libs.koin.android)
+
+
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation("androidx.compose.material:material:1.6.8")
@@ -97,6 +100,7 @@ dependencies {
     // FIREBASE
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
 
 
     // NAVIGATION
@@ -104,7 +108,7 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.1")
     implementation ("com.github.permissions-dispatcher:permissionsdispatcher:4.9.2")
 
-// Paging Compose
+    // Paging Compose
     implementation ("com.google.accompanist:accompanist-pager:0.13.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.13.0")
     // ExpoPlayer

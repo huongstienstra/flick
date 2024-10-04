@@ -1,6 +1,7 @@
 package com.shinlee.showplus.ui.screens.authentication.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,10 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinlee.common.R
 import com.shinlee.common.composable.CustomInputField
-import com.shinlee.common.composable.EasyLoginDivider
 import com.shinlee.common.composable.GradientButton
 import com.shinlee.common.composable.OutlinedCustomButton
 import com.shinlee.common.composable.SocialLoginButton
+import com.shinlee.common.composable.TextDivider
+import com.shinlee.common.composable.TopBar
+import com.shinlee.common.theme.AppSpace
 import com.shinlee.showplus.ui.screens.authentication.login.v2.LoginViewModelV2
 
 @Composable
@@ -53,20 +56,25 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
 
-    if (uiState.isLoggedIn) {
-        onLoginSuccess()
+    LaunchedEffect(uiState.isLoggedIn) {
+        if (uiState.isLoggedIn == true) {
+            onLoginSuccess()
+        }
     }
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.align(Alignment.Start)
-        ) {
-            Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription = "Back")
-        }
+        TopBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(AppSpace.space56dp)
+                .background(Color.White),
+            navigateUp = {
+                onBackClick()
+            }
+        )
 
         Spacer(modifier = Modifier.height(56.dp))
         Row(modifier = Modifier
@@ -78,12 +86,12 @@ fun LoginScreen(
                 contentDescription = "Description of the image"
             )
             Text(
+                modifier = Modifier.padding(start = 5.dp),
                 text = stringResource(R.string.log_in),
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )
         }
-
 
         CustomInputField(
             modifier = Modifier
@@ -122,12 +130,12 @@ fun LoginScreen(
             }
         )
 
-
         GradientButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp),
             text = stringResource(R.string.login_with_email),
+            enable = uiState.emailError == null && uiState.passwordError == null,
             onClick = {
                 viewModel.loginByEmail()
             }
@@ -142,7 +150,8 @@ fun LoginScreen(
         )
 
 
-        EasyLoginDivider(
+        TextDivider(
+            text = stringResource(R.string.easy_login_with),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp)

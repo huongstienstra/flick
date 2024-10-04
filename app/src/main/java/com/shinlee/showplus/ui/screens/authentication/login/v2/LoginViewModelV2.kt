@@ -20,16 +20,19 @@ import java.io.ObjectOutputStream
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
-    val emailError: String? = null,
-    val passwordError: String? = null,
+    val emailError: String? = "",
+    val passwordError: String? = "",
     val isLoading: Boolean = false,
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean? = null,
 )
 
 class LoginViewModelV2(
     private val repository: AuthenticationRepository,
     private val sharedPreferencesDataSource: SharedPreferencesDataSource
     ) : ViewModel() {
+
+    var token = MutableStateFlow("")
+    var isPhoneValid = MutableStateFlow(false)
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
@@ -55,22 +58,46 @@ class LoginViewModelV2(
     fun loginByEmail() {
         val currentState = _uiState.value
         if (currentState.emailError == null && currentState.passwordError == null) {
-            // Perform login logic here
             _uiState.update { it.copy(isLoading = true) }
-            // Simulating network call
-            // In a real app, you'd make an API call here
             viewModelScope.launch(Dispatchers.IO) {
-                val result = repository.loginByEmail(LoginRequest(currentState.email.trim(), currentState.password.trim()))
+                val result = repository.loginByEmail(
+                    LoginRequest(
+                        currentState.email.trim(),
+                        currentState.password.trim()
+                    )
+                )
                 if (result is Result.Success) {
                     val data = result.data
+
                     saveUserInfo(result.data.toLoginData().userInfo)
                     sharedPreferencesDataSource.setToken(data.token)
+                    isPhoneValid.value = true
                     _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
+
                 } else if (result is Result.Error) {
                     Log.e("login", "Error: ${result.throwable.message}")
-                    _uiState.update { it.copy(isLoading = false) }
+
+                    // Handle later
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            passwordError = "Your password is not correct"
+                        )
+                    }
                 }
             }
+        }
+    }
+
+
+    private fun saveUserInfo(userInfo: LoginData.UserInfo){
+        viewModelScope.launch(Dispatchers.IO) {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            ObjectOutputStream(byteArrayOutputStream).use { oos ->
+                oos.writeObject(userInfo) // Serialize the object
+            }
+            val byteArray = byteArrayOutputStream.toByteArray()
+            sharedPreferencesDataSource.saveUserInformation(byteArray.joinToString {","})
         }
     }
 
@@ -78,7 +105,7 @@ class LoginViewModelV2(
         return if (email.isEmpty()) {
             "Email cannot be empty"
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "Invalid email format"
+            "Please enter valid email address"
         } else {
             null
         }
@@ -93,15 +120,9 @@ class LoginViewModelV2(
             else -> null
         }
     }
-    private fun saveUserInfo(userInfo: LoginData.UserInfo){
-        viewModelScope.launch(Dispatchers.IO) {
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            ObjectOutputStream(byteArrayOutputStream).use { oos ->
-                oos.writeObject(userInfo) // Serialize the object
-            }
-            val byteArray = byteArrayOutputStream.toByteArray()
-            sharedPreferencesDataSource.saveUserInformation(byteArray.joinToString {","})
-        }
+
+    fun refreshState(){
+        _uiState.update {it.copy(isLoggedIn = null)}
     }
 
 }

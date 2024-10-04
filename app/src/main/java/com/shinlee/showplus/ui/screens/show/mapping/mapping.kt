@@ -20,7 +20,8 @@ fun LoginEntity.toLoginData(): LoginData {
         token = this.token,
         userInfo = LoginData.UserInfo(
             id = this.userInfo.id,
-            email = this.userInfo.email
+            email = this.userInfo.email,
+            phone = this.userInfo.phone
         )
     )
 }

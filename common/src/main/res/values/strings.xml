@@ -7,11 +7,45 @@
 
     // Login screen
     <string name="password">Password</string>
-    <string name="log_in">Log in</string>
+    <string name="log_in"> Log in</string>
     <string name="email_address">Email Address</string>
     <string name="login_with_email">Login with Email/ID</string>
     <string name="sign_up">SignUp</string>
     <string name="easy_login_with">Easy login with</string>
     <string name="forgot_your_id_or_password">Forgot your ID or password?</string>
     <string name="character_with_letters_numbers">8–16 character with letters &amp; numbers</string>
+
+    //Signup Screen
+    <string name="sign_up_space"> Sign Up</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_kakao_talk">Continue with kakao talk</string>
+    <string name="continue_with_naver">Continue with Naver</string>
+    <string name="continue_with_email">Continue with Email/ID</string>
+    <string name="or">or</string>
+    <string name="login_with_an_existing_account">Login with an existing account</string>
+
+    // Term Screen
+    <string name="next">Next</string>
+    <string name="select_all">Select All</string>
+    <string name="term_of_service">Term of service </string>
+    <string name="require">[Require]</string>
+    <string name="optional">[Optional]</string>
+    <string name="privacy_policy">Privacy Policy </string>
+    <string name="marketing_communication">Marketing Communication </string>
+    <string name="agree_to_term_and_condition">Agree to Term and Conditions</string>
+
+    // Signup step 1
+    <string name="enter_email_address">Enter email address</string>
+    <string name="your_mail_have_exist">Your Email have Exist</string>
+
+    // Signup Step 2
+    <string name="re_enter_password">Re-enter password</string>
+
+    // dialog
+    <string name="login"> Login</string>
+    <string name="cancel">CanCel</string>
+    <string name="you_must_login_first">You must login first</string>
+    <string name="please_log_in_to_use">Please log in to use this feature</string>
+
+
 </resources>

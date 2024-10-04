@@ -1,87 +1,182 @@
 package com.shinlee.showplus.ui.screens.authentication.signup
 
+
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.nativemobilebits.loginflow.data.rules.Validator
+import androidx.lifecycle.viewModelScope
+import com.shinlee.local.pref.SharedPreferencesDataSource
+import com.shinlee.network.Result
+import com.shinlee.network.model.CheckEmailExistRequest
+import com.shinlee.network.model.RegisterRequest
+import com.shinlee.repository.AuthenticationRepository
+import com.shinlee.showplus.ui.screens.authentication.login.LoginData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
 
-class SignupViewModel : ViewModel() {
+data class SignupUiState(
+    val isLoading: Boolean = false,
 
-    private val TAG = SignupViewModel::class.simpleName
+    val email: String = "",
+    val password: String = "",
+    val confirmPassword: String = "",
+    val nickName: String = "",
+    val phoneNumber: String = "",
+
+    val emailError: String? = "",
+    val passwordError: String? = "",
+    val confirmPasswordError: String? = "",
+    val nickNameError: String? = "",
+
+    val phoneNumberError: String? = "",
+    val isSignUpSuccess: Boolean? = null,
+    val isEmailValid: Boolean? = null
+)
 
 
-    var registrationUIState = mutableStateOf(RegistrationUIState())
+class SignupViewModel(
+    private val repository: AuthenticationRepository,
+    private val sharedPreferencesDataSource: SharedPreferencesDataSource
+) : ViewModel() {
 
-    var allValidationsPassed = mutableStateOf(false)
+    private val _uiState = MutableStateFlow(SignupUiState())
+    val uiState: StateFlow<SignupUiState> = _uiState
 
-    var signUpInProgress = mutableStateOf(false)
-
-
-    private fun signUp() {
-        Log.d(TAG, "Inside_signUp")
-        printState()
-        createUserInFirebase(
-            email = registrationUIState.value.email,
-            password = registrationUIState.value.password
-        )
+    fun updateEmail(email: String) {
+        _uiState.update {
+            it.copy(
+                email = email,
+                emailError = validateEmail(email)
+            )
+        }
     }
 
-    private fun validateDataWithRules() {
-        val fNameResult = Validator.validateFirstName(
-            fName = registrationUIState.value.firstName
-        )
-
-        val lNameResult = Validator.validateLastName(
-            lName = registrationUIState.value.lastName
-        )
-
-        val emailResult = Validator.validateEmail(
-            email = registrationUIState.value.email
-        )
-
-
-        val passwordResult = Validator.validatePassword(
-            password = registrationUIState.value.password
-        )
-
-        val privacyPolicyResult = Validator.validatePrivacyPolicyAcceptance(
-            statusValue = registrationUIState.value.privacyPolicyAccepted
-        )
-
-
-        Log.d(TAG, "Inside_validateDataWithRules")
-        Log.d(TAG, "fNameResult= $fNameResult")
-        Log.d(TAG, "lNameResult= $lNameResult")
-        Log.d(TAG, "emailResult= $emailResult")
-        Log.d(TAG, "passwordResult= $passwordResult")
-        Log.d(TAG, "privacyPolicyResult= $privacyPolicyResult")
-
-        registrationUIState.value = registrationUIState.value.copy(
-            firstNameError = fNameResult.status,
-            lastNameError = lNameResult.status,
-            emailError = emailResult.status,
-            passwordError = passwordResult.status,
-            privacyPolicyError = privacyPolicyResult.status
-        )
-
-
-        allValidationsPassed.value = fNameResult.status && lNameResult.status &&
-                emailResult.status && passwordResult.status && privacyPolicyResult.status
-
+    fun updatePassword(password: String) {
+        _uiState.update {
+            it.copy(
+                password = password,
+                passwordError = validatePassword(password = it.password)
+            )
+        }
     }
 
-
-    private fun printState() {
-        Log.d(TAG, "Inside_printState")
-        Log.d(TAG, registrationUIState.value.toString())
+    fun updateConfirmPassword(confirmPassword: String) {
+        _uiState.update {
+            it.copy(
+                confirmPassword = confirmPassword,
+                confirmPasswordError = validateConfirmPassword(
+                    password = it.password,
+                    confirmPassword = confirmPassword
+                )
+            )
+        }
     }
 
-
-    private fun createUserInFirebase(email: String, password: String) {
-
-        signUpInProgress.value = true
-
+    fun updateNickName(nickName: String) {
+        _uiState.update {
+            it.copy(
+                nickName = nickName,
+                nickNameError = validateNickName(nickName = it.nickName)
+            )
+        }
     }
 
+    fun updatePhoneNumber(phone: String) {
+        _uiState.update {
+            it.copy(
+                phoneNumber = phone,
+                phoneNumberError = validatePhoneNumber(phone = it.phoneNumber)
+            )
+        }
+    }
 
+    private fun validateEmail(email: String): String? {
+        return if (email.isEmpty()) {
+            "Email cannot be empty"
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "Please enter valid email address"
+        } else {
+            null
+        }
+    }
+
+    fun onSignup() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.e("signup", "${_uiState.value.email}")
+            val result = repository.registerByEmail(
+                email = _uiState.value.email,
+                password = _uiState.value.password,
+                passwordConfirm = _uiState.value.confirmPassword
+            )
+            if (result is Result.Success) {
+                val data = result.data
+                sharedPreferencesDataSource.setToken(data.token)
+                _uiState.update { it.copy(isLoading = false, isSignUpSuccess = true) }
+            } else if (result is Result.Error) {
+                Log.e("register", "Error: ${result.throwable.message}")
+            }
+        }
+    }
+
+    private fun validatePassword(password: String): String? {
+        return when {
+            password.isEmpty() -> "Password cannot be empty"
+            password.length < 8 -> "Password must be at least 8 characters"
+//            !password.any { it.isDigit() } -> "Password must contain at least one number"
+//            !password.any { it.isLetter() } -> "Password must contain at least one letter"
+            else -> null
+        }
+    }
+
+    private fun validateConfirmPassword(password: String, confirmPassword: String): String? {
+        return when {
+            password != confirmPassword -> "Your password no correct"
+            else -> null
+        }
+    }
+
+    private fun validateNickName(nickName: String): String? {
+        return when {
+            nickName.isEmpty() -> "nick name not be empty"
+            nickName.length < 2 -> "Nick name must be at least 3 characters"
+            else -> null
+        }
+    }
+
+    private fun validatePhoneNumber(phone: String): String? {
+        return when {
+            phone.isEmpty() -> "Phone can not be empty"
+            else -> null
+        }
+    }
+
+    fun checkEmailExit() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =
+                repository.checkEmailExist(_uiState.value.email)
+            if (result is Result.Success) {
+                if (result.data.isExist) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isEmailValid = false
+                        )
+                    }
+                } else {
+                    Log.e("checkEmailExist", "${result.data.isExist}")
+                    _uiState.update { it.copy(isEmailValid = true) }
+                }
+            } else if (result is Result.Error) {
+                Log.e("checkEmailExist", "Error: ${result.throwable.message}")
+            }
+        }
+    }
+
+    fun checkedEmailAlready() {
+        _uiState.update { it.copy(isEmailValid = null) }
+    }
 }
