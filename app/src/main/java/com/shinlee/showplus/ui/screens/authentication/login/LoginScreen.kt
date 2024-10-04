@@ -51,13 +51,15 @@ fun LoginScreen(
     viewModel: LoginViewModelV2,
     onBackClick: () -> Unit,
     onSignUp: () -> Unit,
-    onLoginSuccess: (Boolean) -> Unit
+    onLoginSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var passwordVisible by remember { mutableStateOf(false) }
 
-    if (uiState.isLoggedIn == true) {
-        onLoginSuccess(viewModel.isPhoneValid.value)
+    LaunchedEffect(uiState.isLoggedIn) {
+        if (uiState.isLoggedIn == true) {
+            onLoginSuccess()
+        }
     }
 
     Column(

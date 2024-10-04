@@ -20,7 +20,7 @@ class ShareViewModel(
         }
     }
 
-    fun getDataUserInfo(){
+    fun getDataUserInfo() {
         runBlocking {
             val userInfoString = sharePreference.getUserInformation()
             val byteArray = userInfoString.split(",").map { it.toByte() }.toByteArray()

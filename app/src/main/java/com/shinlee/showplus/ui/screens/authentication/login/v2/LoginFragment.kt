@@ -54,13 +54,14 @@ class LoginFragment : Fragment() {
                         onSignUp = {
                             navigator?.navigateSignUp()
                         },
-                        onLoginSuccess = { isPhoneValidate ->
-                            if (isPhoneValidate){
-                                navigator?.navigateToMain()
-                            }else{
-                                navigator?.navigateToThirdStepSignup(viewModel.token.value)
-                            }
-                            viewModel.refreshState()
+                        onLoginSuccess = {
+//                            if (isPhoneValidate){
+//                                navigator?.navigateToMain()
+//                            }else{
+//                                navigator?.navigateToThirdStepSignup(viewModel.token.value)
+//                            }
+//                            viewModel.refreshState()
+                            navigator?.navigateToMain()
                         }
                     )
                 }

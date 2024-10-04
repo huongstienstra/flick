@@ -60,24 +60,30 @@ class LoginViewModelV2(
         if (currentState.emailError == null && currentState.passwordError == null) {
             _uiState.update { it.copy(isLoading = true) }
             viewModelScope.launch(Dispatchers.IO) {
-                val result = repository.loginByEmail(LoginRequest(currentState.email.trim(), currentState.password.trim()))
+                val result = repository.loginByEmail(
+                    LoginRequest(
+                        currentState.email.trim(),
+                        currentState.password.trim()
+                    )
+                )
                 if (result is Result.Success) {
                     val data = result.data
-                    if (result.data.userInfo.phone.isEmpty()){
-                        isPhoneValid.value = false
-                        token.value = data.token
-                        _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
-                    }else {
-                        saveUserInfo(result.data.toLoginData().userInfo)
-                        sharedPreferencesDataSource.setToken(data.token)
-                        isPhoneValid.value = true
-                        _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
-                    }
+
+                    saveUserInfo(result.data.toLoginData().userInfo)
+                    sharedPreferencesDataSource.setToken(data.token)
+                    isPhoneValid.value = true
+                    _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
+
                 } else if (result is Result.Error) {
                     Log.e("login", "Error: ${result.throwable.message}")
 
                     // Handle later
-                    _uiState.update { it.copy(isLoading = false, passwordError = "Your password is not correct") }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            passwordError = "Your password is not correct"
+                        )
+                    }
                 }
             }
         }
