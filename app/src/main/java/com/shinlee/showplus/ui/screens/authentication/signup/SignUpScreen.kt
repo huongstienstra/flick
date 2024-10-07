@@ -14,9 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shinlee.common.R
-import com.shinlee.common.composable.GradientButton
-import com.shinlee.common.composable.OutlinedCustomButton
-import com.shinlee.common.composable.SocialButtonHorizontal
+import com.shinlee.common.composable.buttons.GradientButton
+import com.shinlee.common.composable.buttons.OutlinedCustomButton
+import com.shinlee.common.composable.buttons.SocialButtonHorizontal
 import com.shinlee.common.composable.TextDivider
 import com.shinlee.common.composable.TopBar
 import com.shinlee.common.theme.AppSpace

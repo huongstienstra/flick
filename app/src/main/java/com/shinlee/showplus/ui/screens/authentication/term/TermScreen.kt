@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shinlee.common.R
 import com.shinlee.common.composable.TermItem
-import com.shinlee.common.composable.GradientButton
+import com.shinlee.common.composable.buttons.GradientButton
 import com.shinlee.common.composable.TopBar
 import com.shinlee.common.theme.AppSpace
 

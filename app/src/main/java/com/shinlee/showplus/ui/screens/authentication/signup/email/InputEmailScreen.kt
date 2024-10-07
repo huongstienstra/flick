@@ -16,12 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinlee.common.R
-import com.shinlee.common.composable.CustomInputField
-import com.shinlee.common.composable.GradientButton
+import com.shinlee.common.composable.input.CustomInputField
+import com.shinlee.common.composable.buttons.GradientButton
 import com.shinlee.common.composable.TopBar
 import com.shinlee.showplus.ui.screens.authentication.signup.SignupViewModel
 

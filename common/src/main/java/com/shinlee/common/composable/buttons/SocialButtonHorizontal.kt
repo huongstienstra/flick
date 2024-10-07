@@ -1,4 +1,4 @@
-package com.shinlee.common.composable
+package com.shinlee.common.composable.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.shinlee.common.R
 import com.shinlee.common.theme.AppSpace
 import com.shinlee.common.theme.BlackColor
 import com.shinlee.common.theme.GrayColor
@@ -80,7 +81,7 @@ fun SocialButtonHorizontal(
 fun SocialButtonHorizontalPreview() {
     SocialButtonHorizontal(
         modifier = Modifier.fillMaxWidth(),
-        icon = com.shinlee.common.R.drawable.ic_google_register,
+        icon = R.drawable.ic_google_register,
         value = "구글"
     ) {
 

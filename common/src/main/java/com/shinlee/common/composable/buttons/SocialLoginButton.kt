@@ -1,4 +1,4 @@
-package com.shinlee.common.composable
+package com.shinlee.common.composable.buttons
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

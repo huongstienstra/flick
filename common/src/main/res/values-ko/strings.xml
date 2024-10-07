@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">show+</string>
+
+    <string name="btn_confirm">Confirm</string>
 </resources>

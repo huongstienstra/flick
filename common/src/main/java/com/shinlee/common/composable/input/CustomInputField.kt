@@ -1,4 +1,4 @@
-package com.shinlee.common.composable
+package com.shinlee.common.composable.input
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

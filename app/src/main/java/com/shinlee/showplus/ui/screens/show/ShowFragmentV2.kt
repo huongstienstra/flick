@@ -12,7 +12,12 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.shinlee.showplus.databinding.SeeMoreBottomsheetBinding
 import com.shinlee.showplus.databinding.ShowFragmentV2Binding
+import com.shinlee.showplus.ui.screens.show.dialogs.DescriptionBottomSheet
+import com.shinlee.showplus.ui.screens.show.dialogs.OnClickListener
+import com.shinlee.showplus.ui.screens.show.dialogs.ReportBottomSheet
+import com.shinlee.showplus.ui.screens.show.dialogs.VideoSeeMoreBottomSheet
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ShowFragmentV2 : Fragment() {
@@ -62,6 +67,17 @@ class ShowFragmentV2 : Fragment() {
                 }
 
                 override fun onSeeMore() {
+                    val bottomSheet = VideoSeeMoreBottomSheet()
+                    bottomSheet.showByTag(childFragmentManager, object : OnClickListener {
+                        override fun onSeeDescription() {
+                            DescriptionBottomSheet().showByTag(childFragmentManager)
+                        }
+
+                        override fun onReport() {
+                            ReportBottomSheet().showByTag(childFragmentManager)
+                        }
+
+                    })
                 }
 
             })
@@ -80,6 +96,7 @@ class ShowFragmentV2 : Fragment() {
                     // Handle "Following" tab selection
                     // For example, load Following content
                 }
+
                 1 -> {
                     // Handle "For You" tab selection
                     // For example, load For You content

@@ -1,4 +1,4 @@
-package com.shinlee.common.composable
+package com.shinlee.common.composable.buttons
 
 
 import androidx.compose.foundation.layout.*
