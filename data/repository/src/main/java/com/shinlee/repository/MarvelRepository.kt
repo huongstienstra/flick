@@ -1,6 +1,6 @@
 package com.shinlee.repository
 
-import com.shinlee.network.Result
+import com.shinlee.network.ApiResult
 import com.shinlee.repository.model.MarvelCharacter
 
 interface MarvelRepository {
@@ -8,6 +8,6 @@ interface MarvelRepository {
         apiKey: String,
         timestamp: String,
         hash: String
-    ): Result<List<MarvelCharacter>>
+    ): ApiResult<List<MarvelCharacter>>
 
 }

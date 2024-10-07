@@ -1,5 +1,6 @@
 package com.shinlee.network.di
 
+import com.shinlee.local.pref.SharedPreferencesDataSource
 import com.shinlee.network.BuildConfig
 import com.shinlee.network.api.ShowPlusApiService
 import okhttp3.OkHttpClient
@@ -17,17 +18,28 @@ val networkModule = module {
 
     single { createRetrofit(get()) }
 
-    single { createOkHttpClient() }
+    single { createOkHttpClient(get()) }
 
 }
 
-fun createOkHttpClient(): OkHttpClient {
+fun createOkHttpClient(sharedPreferencesDataSource: SharedPreferencesDataSource): OkHttpClient {
     val httpLoggingInterceptor = HttpLoggingInterceptor()
     httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
+
     return OkHttpClient.Builder()
         .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
         .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-        .addInterceptor(httpLoggingInterceptor).build()
+        .addInterceptor(httpLoggingInterceptor)
+        .addInterceptor { chain ->
+            val original = chain.request()
+            val requestBuilder = original.newBuilder()
+            val token = sharedPreferencesDataSource.getToken()
+            if (token.isNotEmpty()) {
+                requestBuilder.addHeader("Authorization", "Bearer $token")
+            }
+            chain.proceed(requestBuilder.build())
+        }
+        .build()
 }
 
 fun createRetrofit(okHttpClient: OkHttpClient): Retrofit {

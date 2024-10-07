@@ -1,6 +1,14 @@
 package com.shinlee.network.model
 
-data class LoginRequest (
+import com.google.gson.annotations.SerializedName
+
+data class LoginRequest(
+    @SerializedName("email")
     val email: String,
-    val password: String
+    @SerializedName("password")
+    val password: String,
+    @SerializedName("password_confirm")
+    val confirmPassword: String,
+    @SerializedName("firebase_token")
+    val firebaseToken: String
 )

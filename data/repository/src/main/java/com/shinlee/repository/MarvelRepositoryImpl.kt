@@ -1,6 +1,6 @@
 package com.shinlee.repository
 
-import com.shinlee.network.Result
+import com.shinlee.network.ApiResult
 import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
 import com.shinlee.repository.mapping.toMarvelCharacter
@@ -13,7 +13,7 @@ class MarvelRepositoryImpl(
         apiKey: String,
         timestamp: String,
         hash: String
-    ): Result<List<MarvelCharacter>> {
+    ): ApiResult<List<MarvelCharacter>> {
         val response = safeApiCall {
             marvelApiService.getCharacters(
                 apiKey, timestamp, hash
@@ -21,15 +21,15 @@ class MarvelRepositoryImpl(
         }
 
         return when (response) {
-            is Result.Success -> {
+            is ApiResult.Success -> {
                 // Map the list of MarvelCharacterDto to the list of MarvelCharacter
                 val characters =
                     response.data.data?.results?.map { it.toMarvelCharacter() } ?: emptyList()
-                Result.success(characters)
+                ApiResult.success(characters)
             }
 
-            is Result.Error -> {
-                Result.error(response.throwable)
+            is ApiResult.Error -> {
+                ApiResult.error(response.throwable)
             }
         }
 

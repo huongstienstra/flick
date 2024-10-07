@@ -33,7 +33,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.screens.authentication.AuthenticationActivityV2"
+            android:name=".ui.screens.authentication.AuthenticationActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 

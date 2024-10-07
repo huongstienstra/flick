@@ -1,27 +1,27 @@
 package com.shinlee.local.pref
 
 import android.content.SharedPreferences
+import com.google.gson.Gson
 
 
 class SharedPreferencesDataSourceImpl(
     private val sharedPreferences: SharedPreferences
 ) : SharedPreferencesDataSource {
 
-
-    override suspend fun setToken(token: String): Boolean {
+    override fun setToken(token: String): Boolean {
         return sharedPreferences.edit().putString(KEY_TOKEN, token).commit()
     }
 
-    override suspend fun getToken(withBearPrefix: Boolean): String {
-        var token = sharedPreferences.getString(KEY_TOKEN, "") ?: ""
-        if (token.isNotEmpty() && withBearPrefix) {
-            token = "HEADER_VALUE_AUTHORIZATION_PREFIX$token"
-        }
-        return token
+    override fun getToken(): String {
+        return sharedPreferences.getString(KEY_TOKEN, "") ?: ""
     }
 
-    override suspend fun removeToken(): Boolean {
+    override fun removeToken(): Boolean {
         return sharedPreferences.edit().remove(KEY_TOKEN).commit()
+    }
+
+    override fun isUserLoggedIn(): Boolean {
+        return !sharedPreferences.getString(KEY_TOKEN, "").isNullOrEmpty()
     }
 
     override suspend fun saveUserInformation(userInfo: String): Boolean {

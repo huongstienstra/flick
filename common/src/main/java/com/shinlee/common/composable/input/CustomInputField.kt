@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,7 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,17 +45,18 @@ import com.shinlee.common.theme.RedColor
 fun CustomInputField(
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
-    label: String = "",
-    placeholder: String,
+    label: String? = null,
+    placeholder: String? = null,
     error: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     var value by remember { mutableStateOf("") }
 
     Column(modifier = modifier) {
-        if (label.isNotEmpty()) {
+        label?.let {
             Text(
                 text = label,
                 color = Color.Black,
@@ -62,15 +67,15 @@ fun CustomInputField(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
-                .height(48.dp)
+                .padding(top = 12.dp)
+                .height(44.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .border(
                     width = 1.dp,
                     color = Color.Gray.copy(alpha = 0.5f),
                     shape = RoundedCornerShape(8.dp)
                 )
-                .background(Color(0xFFF5F5F5))
+                .background(color = Color.White)
         ) {
             BasicTextField(
                 value = value,
@@ -79,6 +84,7 @@ fun CustomInputField(
                     onValueChange(value)
                 },
                 keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
                 visualTransformation = visualTransformation,
                 decorationBox = { innerTextField ->
                     Row(
@@ -91,7 +97,7 @@ fun CustomInputField(
                             modifier = Modifier.weight(1f),
                             contentAlignment = Alignment.CenterStart
                         ) {
-                            if (value.isEmpty()) {
+                            if (value.isEmpty() && placeholder != null) {
                                 Text(
                                     text = placeholder,
                                     color = Color.Gray
@@ -104,7 +110,8 @@ fun CustomInputField(
                         }
                     }
                 },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
             )
         }
         if (error != null) {

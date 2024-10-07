@@ -5,10 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shinlee.local.pref.SharedPreferencesDataSource
-import com.shinlee.network.Result
+import com.shinlee.network.ApiResult
 import com.shinlee.repository.MarvelRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MarvelViewModel(
@@ -28,11 +27,11 @@ class MarvelViewModel(
             )
 
 
-            if(response is Result.Success) {
+            if(response is ApiResult.Success) {
                 Log.e("API", "GET ${response.data}")
             }
 
-            if(response is Result.Error) {
+            if(response is ApiResult.Error) {
                 Log.e("API", "vmGET ${response.throwable.message}")
             }
 

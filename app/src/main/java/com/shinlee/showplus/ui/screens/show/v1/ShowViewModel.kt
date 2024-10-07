@@ -3,7 +3,7 @@ package com.shinlee.showplus.ui.screens.show.v1
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.Log
-import com.shinlee.network.Result
+import com.shinlee.network.ApiResult
 import com.shinlee.repository.VideoRepository
 import com.shinlee.showplus.ui.screens.show.VideoShow
 import com.shinlee.showplus.ui.screens.show.core.video.PlayersAction
@@ -67,10 +67,10 @@ class ShowViewModel(
     fun getVideos() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getVideos()
-            if (result is Result.Success) {
+            if (result is ApiResult.Success) {
                 val data = result.data.toVideoShowList()
                 _videoStateFlow.value = data // Update the StateFlow with the result
-            } else if (result is Result.Error) {
+            } else if (result is ApiResult.Error) {
                 Log.e("getVideos", "Error: ${result.throwable.message}")
             }
         }

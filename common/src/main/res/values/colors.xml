@@ -13,4 +13,5 @@
     <color name="bottom_navigation_background">#FFFFFF</color>
 
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

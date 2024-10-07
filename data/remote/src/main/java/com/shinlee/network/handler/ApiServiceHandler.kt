@@ -1,39 +1,44 @@
 package com.shinlee.network.handler
 
-import android.util.Log
+import com.google.gson.Gson
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
-import com.shinlee.network.Result
+import com.shinlee.network.ApiResult
 import com.shinlee.network.model.BaseResponse
-import com.shinlee.network.model.ErrorData
 
-suspend fun <T: BaseResponse> safeApiCall(apiCall: suspend () -> Response<T>): Result<T> {
+class ApiError(message: String) : Exception(message)
+
+suspend fun <T : BaseResponse> safeApiCall(apiCall: suspend () -> Response<T>): ApiResult<T> {
     return try {
         val response = apiCall()
         if (response.isSuccessful) {
             val body = response.body()
-            Result.success(body!!)
-
-            //fixme: handle APi flags if needed
-//            if (body != null) {
-//                val flag = body.code
-//                if (flag == 200) {
-//                    Log.e("API", "body ${flag}")
-//                    Result.success(body)
-//                } else {
-//                    Log.e("API", "error ${flag}")
-//                    Result.error(Throwable(message = body.message))
-//                }
-//            } else Result.error(NullPointerException("Response body is null"))
+            if (body != null) {
+                if (body.error != null) {
+                    // API returned an error message
+                    ApiResult.error(ApiError(body.error))
+                } else {
+                    ApiResult.success(body)
+                }
+            } else {
+                ApiResult.error(ApiError("Response body is null"))
+            }
         } else {
-            Result.error(HttpException(response))
+            // Try to parse error body
+            val errorBody = response.errorBody()?.string()
+            val errorResponse = try {
+                Gson().fromJson(errorBody, BaseResponse::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            ApiResult.error(ApiError(errorResponse?.error ?: "Unknown error occurred"))
         }
     } catch (e: IOException) {
-        Result.error(e)
+        ApiResult.error(e)
     } catch (e: HttpException) {
-        Result.error(e)
+        ApiResult.error(e)
     } catch (e: Exception) {
-        Result.error(e)
+        ApiResult.error(e)
     }
 }

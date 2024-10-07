@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">show+</string>
+    <string name="contest">contest</string>
+    <string name="upload">upload</string>
+    <string name="search">search</string>
+    <string name="profile">profile</string>
+
+    <string name="signup">Sign Up</string>
+
+    <string name="button_login_with_phone_number">Continue with phone number</string>
+    <string name="button_login_with_google">Continue with Google</string>
+    <string name="button_login_with_kakao_talk">Continue with kakao talk</string>
+    <string name="button_login_with_naver">Continue with Naver</string>
+    <string name="button_login_with_email">Continue with Email/ID</string>
+    <string name="button_login_with_an_existing_account">Login with an existing account</string>
+    <string name="text_or">or</string>
+
+    <string name="label_input_nick_name">Nickname</string>
+    <string name="label_invited_code">Invited code</string>
+    <string name="label_enter_email_address">Enter email address</string>
+    <string name="label_enter_password">Password</string>
+    <string name="label_re_enter_password">Re-enter Password</string>
+
+    <string name="text_agree_to_term_and_condition">By continuing to use this account located in VN, you agree to our Terms of Service and confirm that you have read our Privacy Policy.</string>
+
+
+    <string name="label_enter_phone_number">Enter phone number</string>
+    <string name="placeholder_phone_number">Phone number</string>
+    <string name="placeholder_email">email@email.com</string>
+    <string name="placeholder_password">English, at least 8 characters</string>
+    <string name="place_holder_add_nickname">Add nickname</string>
+
+
+    <string name="dialog_request_login_title_positive"> Login</string>
+    <string name="dialog_request_login_title_negative">dialog_request_login_title_negative</string>
+    <string name="dialog_request_login_title">You must login first</string>
+    <string name="dialog_request_login_desc">Please log in to use this feature</string>
+
+    <string name="dialog_return_complete_nick_name_positive">Continue</string>
+    <string name="dialog_return_complete_nick_name_negative">Discard</string>
+    <string name="dialog_return_complete_nick_name_title">Incomplete Profile</string>
+    <string name="dialog_return_complete_nick_name_desc">You haven\'t completed creating your nickname. Do you want to discard your progress?</string>
 
     <string name="btn_confirm">Confirm</string>
+    <string name="btn_next">Next</string>
+
 </resources>
