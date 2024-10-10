@@ -1,14 +1,27 @@
 package com.shinlee.repository.mapping
 
-import com.shinlee.network.model.LoginResponse
-import com.shinlee.repository.model.LoginEntity
+import com.shinlee.network.model.RegistrationResponse
+import com.shinlee.repository.model.RegistrationEntity
+import com.shinlee.repository.model.UserInfo
 
-fun LoginResponse.toEntity(): LoginEntity {
-    return LoginEntity(
+fun RegistrationResponse.toEntity(): RegistrationEntity {
+    return RegistrationEntity(
         token = this.token,
-        userInfo = LoginEntity.UserInfoEntity(
-            id = this.userInfoResponse.id,
-            email = this.userInfoResponse.email
-        )
+        userInfo = this.userInfoResponse?.toUserInfoEntity()
+    )
+}
+
+fun RegistrationResponse.UserInfoResponse.toUserInfoEntity(): UserInfo {
+    return UserInfo(
+        id = this.id.toString(),
+        email = this.email,
+        phone = this.phone ?: "",
+        profile = this.profile.map { it.toProfileEntity() }
+    )
+}
+
+fun RegistrationResponse.UserInfoResponse.Profile.toProfileEntity(): UserInfo.Profile {
+    return UserInfo.Profile(
+        nickName = this.nickname
     )
 }

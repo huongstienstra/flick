@@ -2,6 +2,7 @@ package com.shinlee.showplus.di
 
 
 import android.content.Context
+import com.google.gson.Gson
 import com.shinlee.local.pref.SharedPreferencesDataSourceImpl
 import com.shinlee.local.pref.SharedPreferencesDataSource
 import com.shinlee.showplus.ShowPlusApplication

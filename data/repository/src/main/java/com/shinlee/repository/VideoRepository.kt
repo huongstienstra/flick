@@ -1,9 +1,9 @@
 package com.shinlee.repository
 
-import com.shinlee.network.Result
+import com.shinlee.network.ApiResult
 import com.shinlee.repository.model.VideoInfo
 
 interface VideoRepository {
-    suspend fun getVideos(): Result<List<VideoInfo>>
+    suspend fun getVideos(): ApiResult<List<VideoInfo>>
 
 }

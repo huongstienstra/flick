@@ -1,12 +1,10 @@
 package com.shinlee.showplus.ui.screens.authentication.nav
 
 interface AuthNavigator {
-    fun navigateSignUp()
-    fun navigateTerm()
-    fun navigateToFirstStepSignup()
+    fun navigateLogin()
     fun navigateToMain()
-    fun navigateToConfirmPassword()
-    fun navigateToThirdStepSignup(token: String)
-    fun navigateToLogin()
-    fun onBackPress()
+    fun navigateToConfirmPassword(isShowConfirmPassword: Boolean = true)
+    fun navigateToInputPhoneNumber()
+    fun navigateToInputNickName()
+    fun navigateUp()
 }

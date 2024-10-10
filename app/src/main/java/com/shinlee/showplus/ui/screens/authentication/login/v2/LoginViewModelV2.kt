@@ -1,21 +1,11 @@
 package com.shinlee.showplus.ui.screens.authentication.login.v2
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.shinlee.local.pref.SharedPreferencesDataSource
-import com.shinlee.network.Result
-import com.shinlee.network.model.LoginRequest
 import com.shinlee.repository.AuthenticationRepository
-import com.shinlee.showplus.ui.screens.authentication.login.LoginData
-import com.shinlee.showplus.ui.screens.show.mapping.toLoginData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
 
 data class LoginUiState(
     val email: String = "",
@@ -56,50 +46,50 @@ class LoginViewModelV2(
     }
 
     fun loginByEmail() {
-        val currentState = _uiState.value
-        if (currentState.emailError == null && currentState.passwordError == null) {
-            _uiState.update { it.copy(isLoading = true) }
-            viewModelScope.launch(Dispatchers.IO) {
-                val result = repository.loginByEmail(
-                    LoginRequest(
-                        currentState.email.trim(),
-                        currentState.password.trim()
-                    )
-                )
-                if (result is Result.Success) {
-                    val data = result.data
-
-                    saveUserInfo(result.data.toLoginData().userInfo)
-                    sharedPreferencesDataSource.setToken(data.token)
-                    isPhoneValid.value = true
-                    _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
-
-                } else if (result is Result.Error) {
-                    Log.e("login", "Error: ${result.throwable.message}")
-
-                    // Handle later
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            passwordError = "Your password is not correct"
-                        )
-                    }
-                }
-            }
-        }
+//        val currentState = _uiState.value
+//        if (currentState.emailError == null && currentState.passwordError == null) {
+//            _uiState.update { it.copy(isLoading = true) }
+//            viewModelScope.launch(Dispatchers.IO) {
+//                val result = repository.loginByEmail(
+//                    LoginRequest(
+//                        currentState.email.trim(),
+//                        currentState.password.trim()
+//                    )
+//                )
+//                if (result is ApiResult.Success) {
+//                    val data = result.data
+//
+//                   // saveUserInfo(result.data.toLoginData().userInfo)
+//                    sharedPreferencesDataSource.setToken(data.token)
+//                    isPhoneValid.value = true
+//                    _uiState.update { it.copy(isLoading = false, isLoggedIn = true) }
+//
+//                } else if (result is ApiResult.Error) {
+//                    Log.e("login", "Error: ${result.throwable.message}")
+//
+//                    // Handle later
+//                    _uiState.update {
+//                        it.copy(
+//                            isLoading = false,
+//                            passwordError = "Your password is not correct"
+//                        )
+//                    }
+//                }
+//            }
+//        }
     }
 
 
-    private fun saveUserInfo(userInfo: LoginData.UserInfo){
-        viewModelScope.launch(Dispatchers.IO) {
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            ObjectOutputStream(byteArrayOutputStream).use { oos ->
-                oos.writeObject(userInfo) // Serialize the object
-            }
-            val byteArray = byteArrayOutputStream.toByteArray()
-            sharedPreferencesDataSource.saveUserInformation(byteArray.joinToString {","})
-        }
-    }
+//    private fun saveUserInfo(userInfo: LoginData.UserInfo){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val byteArrayOutputStream = ByteArrayOutputStream()
+//            ObjectOutputStream(byteArrayOutputStream).use { oos ->
+//                oos.writeObject(userInfo) // Serialize the object
+//            }
+//            val byteArray = byteArrayOutputStream.toByteArray()
+//            sharedPreferencesDataSource.saveUserInformation(byteArray.joinToString {","})
+//        }
+//    }
 
     private fun validateEmail(email: String): String? {
         return if (email.isEmpty()) {
