@@ -7,18 +7,24 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.contest.ContestFragment
 import com.shinlee.showplus.ui.screens.profile.ProfileFragment
 import com.shinlee.showplus.ui.screens.search.SearchFragment
 import com.shinlee.showplus.ui.screens.show.ShowFragmentV2
 import com.shinlee.showplus.ui.screens.upload.UploadFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
+        mainViewModel.checkLoginStatus()
 
         if (savedInstanceState == null) {
             loadFragment(ShowFragmentV2())

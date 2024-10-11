@@ -31,8 +31,6 @@ class VideoAdapterV2(
 ) :
     RecyclerView.Adapter<VideoAdapterV2.VideoViewHolder>() {
 
-    private var isFavourite = false
-
     private var playPauseAnimatorSet: AnimatorSet? = null
 
     fun updateVideos(newVideos: List<VideoShow>) {
@@ -50,7 +48,17 @@ class VideoAdapterV2(
             }
         }
 
-        fun bind(video: VideoShow) {
+         fun updateLikeIcon(isFavourite: Boolean) {
+            val iconRes = if (isFavourite) {
+                com.shinlee.common.R.drawable.ic_redlike
+            } else {
+                com.shinlee.common.R.drawable.ic_like
+            }
+            binding.btnLike.setIcon(iconRes)
+        }
+
+        fun bind(video: VideoShow, position: Int) {
+            updateLikeIcon(video.isFavourite)
             //set thumbnail
             Glide.with(itemView)
                 .load(video.thumbnail)
@@ -63,11 +71,7 @@ class VideoAdapterV2(
             }
 
             binding.btnLike.setOnClickListener {
-                isFavourite = !isFavourite
-                if (isFavourite) {
-                    binding.btnLike.setIcon(com.shinlee.common.R.drawable.ic_redlike)
-                } else binding.btnLike.setIcon(com.shinlee.common.R.drawable.ic_like)
-                listener?.onLikeVideo()
+                listener?.onLikeVideo(video, position)
             }
 
             binding.btnComment.setOnClickListener {
@@ -131,9 +135,9 @@ class VideoAdapterV2(
         }
 
         fun showThumbnail() {
-            Log.e("video", "show thumbnail")
             binding.thumbnail.visibility = View.VISIBLE
         }
+
 
         @OptIn(UnstableApi::class)
         fun playVideoAtPosition(position: Int) {
@@ -164,7 +168,7 @@ class VideoAdapterV2(
         }
 
         private fun togglePlayPause() {
-            player?.let {
+            player.let {
                 if (player.isPlaying) {
                     player.pause()
                     binding.playPauseIcon.setImageResource(com.shinlee.common.R.drawable.ic_video_pause)
@@ -235,7 +239,7 @@ class VideoAdapterV2(
     }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        holder.bind(videos[position])
+        holder.bind(videos[position], position)
     }
 
     override fun getItemCount() = videos.size
@@ -249,7 +253,7 @@ class VideoAdapterV2(
 
     interface OnClickListener {
         fun onShare(url: String)
-        fun onLikeVideo()
+        fun onLikeVideo(video: VideoShow, position: Int)
         fun onComment()
         fun onSubscribe()
         fun onSeeMore()

@@ -66,7 +66,7 @@ class ShowViewModel(
 
     fun getVideos() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getVideos()
+            val result = repository.getVideos(1)
             if (result is ApiResult.Success) {
                 val data = result.data.toVideoShowList()
                 _videoStateFlow.value = data // Update the StateFlow with the result

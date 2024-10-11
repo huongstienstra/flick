@@ -4,6 +4,6 @@ import com.shinlee.network.ApiResult
 import com.shinlee.repository.model.VideoInfo
 
 interface VideoRepository {
-    suspend fun getVideos(): ApiResult<List<VideoInfo>>
+    suspend fun getVideos(page: Int): ApiResult<List<VideoInfo>>
 
 }

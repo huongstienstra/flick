@@ -14,10 +14,15 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.shinlee.showplus.databinding.SeeMoreBottomsheetBinding
 import com.shinlee.showplus.databinding.ShowFragmentV2Binding
+import com.shinlee.showplus.extension.requestLoginDialog
+import com.shinlee.showplus.ui.MainViewModel
+import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity
+import com.shinlee.showplus.ui.screens.show.dialogs.CommentsBottomSheet
 import com.shinlee.showplus.ui.screens.show.dialogs.DescriptionBottomSheet
 import com.shinlee.showplus.ui.screens.show.dialogs.OnClickListener
 import com.shinlee.showplus.ui.screens.show.dialogs.ReportBottomSheet
 import com.shinlee.showplus.ui.screens.show.dialogs.VideoSeeMoreBottomSheet
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ShowFragmentV2 : Fragment() {
@@ -25,6 +30,7 @@ class ShowFragmentV2 : Fragment() {
     private var _binding: ShowFragmentV2Binding? = null
     private val binding get() = _binding!!
 
+    private val mainViewModel: MainViewModel by sharedViewModel<MainViewModel>()
     private val viewModel: ShowViewModelV2 by viewModel()
     private var player: ExoPlayer? = null
 
@@ -57,10 +63,29 @@ class ShowFragmentV2 : Fragment() {
                     startActivity(shareIntent)
                 }
 
-                override fun onLikeVideo() {
+                override fun onLikeVideo(video: VideoShow, position: Int) {
+                    if (mainViewModel.isLoggedIn()) {
+                        video.isFavourite = !video.isFavourite
+                        val viewHolder =
+                            binding.recyclerView.findViewHolderForAdapterPosition(position) as? VideoAdapterV2.VideoViewHolder
+                        viewHolder?.updateLikeIcon(isFavourite = video.isFavourite)
+
+                        // Call API to update like status on the server
+                    } else {
+                        this@ShowFragmentV2.requestLoginDialog(
+                            onNext = {
+                                startActivity(Intent(context, AuthenticationActivity::class.java))
+                            }, onCancel = {
+
+                            }
+                        )
+
+                    }
+
                 }
 
                 override fun onComment() {
+                    CommentsBottomSheet().showByTag(childFragmentManager)
                 }
 
                 override fun onSubscribe() {
@@ -85,6 +110,7 @@ class ShowFragmentV2 : Fragment() {
 
         setupRecyclerView()
         observeViewModel()
+        playFirstVideo()
         setupScrollListener()
         setListener()
     }
@@ -113,32 +139,29 @@ class ShowFragmentV2 : Fragment() {
         }
     }
 
-    private fun observeViewModel() {
-        viewModel.videos.observe(viewLifecycleOwner) {
-            videoAdapter?.updateVideos(it)
-            Log.e("video", "update list ${it.size}")
-        }
-
-        if (currentPlayingPosition == RecyclerView.NO_POSITION) {
-            binding.recyclerView.post {
-                playFirstVisibleVideo()
-            }
+    private fun playFirstVideo() {
+        if (viewModel.videos.value?.isNotEmpty() == true) {
+            playVideoAtPosition(0)
         }
     }
 
-    private fun playFirstVisibleVideo() {
-        val layoutManager = binding.recyclerView.layoutManager as LinearLayoutManager
-        val firstVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition()
-        if (firstVisiblePosition != RecyclerView.NO_POSITION) {
-            playVideoAtPosition(firstVisiblePosition)
+    private fun observeViewModel() {
+        viewModel.videos.observe(viewLifecycleOwner) {
+            videoAdapter?.updateVideos(it)
+            if (it.isNotEmpty() && currentPlayingPosition == RecyclerView.NO_POSITION) {
+                binding.recyclerView.post {
+                    playFirstVideo()
+                }
+            }
         }
+
+
     }
 
     private fun setupScrollListener() {
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                Log.e("video_list", "$newState")
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val centerPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
@@ -171,10 +194,13 @@ class ShowFragmentV2 : Fragment() {
     private fun playVideoAtPosition(position: Int) {
         val newViewHolder =
             binding.recyclerView.findViewHolderForAdapterPosition(position) as? VideoAdapterV2.VideoViewHolder
-                ?: return
+        Log.e("video", "newViewHolder: $newViewHolder")
+        newViewHolder?.let {
+            newViewHolder.playVideoAtPosition(position)
+            currentPlayingPosition = position
+        }
 
-        newViewHolder.playVideoAtPosition(position)
-        currentPlayingPosition = position
+
     }
 
 

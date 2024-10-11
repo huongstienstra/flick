@@ -23,5 +23,5 @@ val RedColor = Color(0xFFB90A1E)
 val BlackColor = Color(0xFF344054)
 val Gray3Color = Color(0xFF828282)
 val Black1Color = Color(0xFF000000)
-
+val AntiFlashWhite = Color(0xFFF0F0F0)
 val TextInfo = Color(0xFF2F80ED)

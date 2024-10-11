@@ -10,15 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.shinlee.common.composable.ProfileSectionPreview
 import com.shinlee.common.dialogs.ErrorDialog
 import com.shinlee.common.dialogs.OnClickListener
 import com.shinlee.showplus.R
 import com.shinlee.showplus.ui.LoginState
 import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity
+import com.shinlee.showplus.ui.screens.show.ShowFragmentV2
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import com.shinlee.common.R as R_common
+import com.shinlee.showplus.extension.requestLoginDialog
 
 
 class ProfileFragment : Fragment() {
@@ -37,12 +39,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel.checkLoginStatus()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.loginState.collect { loginState ->
-                    Log.e("login","view: $loginState")
                     when (loginState) {
                         LoginState.LoggedIn -> {
                             // User is logged in, show profile content
@@ -61,20 +60,14 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showLoginDialog() {
-        ErrorDialog.newInstance(
-            titleRes = R_common.string.dialog_request_login_title,
-            messageRes = R_common.string.dialog_request_login_desc,
-            positiveButtonTextRes = R_common.string.dialog_request_login_title_positive,
-            negativeButtonTextRes = R_common.string.dialog_request_login_title_negative
-        ).showByTag(fragmentManager = childFragmentManager, "", object : OnClickListener {
-            override fun onNextClick() {
+       this@ProfileFragment.requestLoginDialog(
+            onNext = {
                 startActivity(Intent(context, AuthenticationActivity::class.java))
+            },
+            onCancel = {
             }
 
-            override fun onCancelClick() {
-                // Handle cancel click
-            }
-        })
+        )
     }
 
 }

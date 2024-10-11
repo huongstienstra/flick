@@ -8,7 +8,8 @@ fun List<VideoInfo>.toVideoShowList(): List<VideoShow> {
         VideoShow(
             id = it.id ?: 0,
             videoLink = it.videoUrl ?: "",
-            thumbnail = it.thumbnailUrl ?: ""
+            thumbnail = it.thumbnailUrl ?: "",
+            isFavourite = false
         )
     }
 }

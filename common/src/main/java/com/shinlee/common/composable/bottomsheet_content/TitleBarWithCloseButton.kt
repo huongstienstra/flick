@@ -26,6 +26,7 @@ fun TitleBottomSheetDialog(
     modifier: Modifier,
     title: String,
     isNavigateUp: Boolean = false,
+    isNavigateRight: Boolean = true,
     onDismiss: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -57,15 +58,17 @@ fun TitleBottomSheetDialog(
                 .align(Alignment.Center)
         )
 
-        Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = "Close",
-            tint = Gray3Color,
-            modifier = Modifier
-                .size(24.dp)
-                .align(Alignment.CenterEnd)
-                .clickable(onClick = onDismiss)
-        )
+        if(isNavigateRight) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Close",
+                tint = Gray3Color,
+                modifier = Modifier
+                    .size(24.dp)
+                    .align(Alignment.CenterEnd)
+                    .clickable(onClick = onDismiss)
+            )
+        }
 
     }
 }

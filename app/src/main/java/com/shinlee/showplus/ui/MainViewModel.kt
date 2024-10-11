@@ -1,6 +1,5 @@
 package com.shinlee.showplus.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -37,18 +36,18 @@ class MainViewModel(private val sharedPreferencesDataSource: SharedPreferencesDa
             val userInfo = try {
                 userInfoJson.let { gson.fromJson(it, UserInfo::class.java) }
             } catch (e: JsonSyntaxException) {
-                Log.e("login","$e")
                 null
             }
-            Log.e("login","$userInfoJson and $userInfo and $token")
             if (userInfo != null && userInfo.profile.isNotEmpty() && token.isNotEmpty()) {
                 _loginState.value = LoginState.LoggedIn
             } else {
-                Log.e("login","IncompleteProfile")
                 _loginState.value = LoginState.IncompleteProfile
             }
-
         }
+    }
+
+    fun isLoggedIn(): Boolean {
+        return _loginState.value.let { it is LoginState.LoggedIn }
     }
 
 }
