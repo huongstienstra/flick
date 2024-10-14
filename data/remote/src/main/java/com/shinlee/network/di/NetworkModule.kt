@@ -34,9 +34,7 @@ fun createOkHttpClient(sharedPreferencesDataSource: SharedPreferencesDataSource)
             val original = chain.request()
             val requestBuilder = original.newBuilder()
             val token = sharedPreferencesDataSource.getToken()
-            if (token.isNotEmpty()) {
-                requestBuilder.addHeader("Authorization", "Bearer $token")
-            }
+            requestBuilder.addHeader("Authorization", "Bearer $token")
             chain.proceed(requestBuilder.build())
         }
         .build()

@@ -38,7 +38,7 @@ class VideoActionButton @JvmOverloads constructor(
         binding.customButtonIcon.setBackgroundResource(iconResId)
     }
 
-    private fun setText(text: String) {
+     fun setText(text: String) {
         if(text.isNotEmpty()) {
             binding.customButtonText.text = text
             binding.customButtonText.visibility = VISIBLE

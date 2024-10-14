@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -38,35 +39,35 @@
             android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/custom_button_background"
             app:iconSrc="@drawable/ic_like"
-            app:label="99.9k"
-            android:background="@drawable/custom_button_background"/>
+            app:label="99.9k" />
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_32"
+            android:background="@drawable/custom_button_background"
             app:iconSrc="@drawable/ic_comment"
-            app:label="9,999"
-            android:background="@drawable/custom_button_background"/>
+            app:label="9,999" />
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_32"
+            android:background="@drawable/custom_button_background"
             app:iconSrc="@drawable/ic_share"
-            app:label="share"
-            android:background="@drawable/custom_button_background"/>
+            app:label="share" />
 
         <com.shinlee.common.views.VideoActionButton
             android:id="@+id/btn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_32"
-            app:iconSrc="@drawable/ic_more"
-            android:background="@drawable/custom_button_background"/>
+            android:background="@drawable/custom_button_background"
+            app:iconSrc="@drawable/ic_more" />
 
     </LinearLayout>
 
@@ -92,12 +93,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_12"
-            android:text="apple"
             android:textColor="@color/white"
             android:textSize="@dimen/text_16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="apple" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/btn_subscribe"
@@ -108,12 +109,12 @@
             android:gravity="center"
             android:paddingHorizontal="@dimen/dp_4"
             android:paddingVertical="@dimen/dp_4"
-            android:text="Subscribe"
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_name"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Subscribe" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_desc"
@@ -123,10 +124,10 @@
             android:layout_marginEnd="100dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
             android:textColor="@color/white"
-            android:textSize="@dimen/dp_16"
-            app:layout_constraintTop_toBottomOf="@+id/avatar" />
+            android:textSize="@dimen/text_16sp"
+            app:layout_constraintTop_toBottomOf="@+id/avatar"
+            tools:text="is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tag"
@@ -136,10 +137,10 @@
             android:layout_marginEnd="100dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="#DJ #Contest #Music"
             android:textColor="@color/white"
             android:textSize="@dimen/text_16sp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            tools:text="#DJ #Contest #Music" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -153,14 +154,16 @@
         android:progressTint="#FF0000" />
 
     <LinearLayout
+        android:id="@+id/contest_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginTop="@dimen/dp_60"
         android:background="#1A000000"
+        android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dp_24"
         android:paddingVertical="@dimen/dp_16"
-        android:orientation="horizontal">
+        android:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iconMegaphone"
@@ -173,29 +176,29 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtShowPlus"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_contest_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
-            android:text="ShowPlus Competition."
+            android:layout_weight="1"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iconMegaphone"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ShowPlus Competition." />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtViewDetails"
+            android:id="@+id/tv_detail_contest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:text="View Details"
-            android:textColor="#FFFFFF"
             android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="View Details" />
 
     </LinearLayout>
 </FrameLayout>

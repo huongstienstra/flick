@@ -24,7 +24,10 @@ interface ShowPlusApiService {
     ): Response<MarvelCharacterResponseDto>
 
     @GET("/api/videos")
-    suspend fun getVideos(@Query("page") page: Int): Response<VideoResponse>
+    suspend fun getVideos(
+        @Query("page") page: Int,
+        @Query("page_size") pageSize: Int
+    ): Response<VideoResponse>
 
     @POST("/auth/login-with-email")
     suspend fun loginByEmail(@Body loginRequest: LoginRequest): Response<RegistrationResponse>

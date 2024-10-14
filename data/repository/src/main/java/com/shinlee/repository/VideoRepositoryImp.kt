@@ -9,9 +9,9 @@ import com.shinlee.repository.model.VideoInfo
 import com.shinlee.network.ApiResult as Result
 
 class VideoRepositoryImp(private val apiService: ShowPlusApiService) : VideoRepository {
-    override suspend fun getVideos(page: Int): ApiResult<List<VideoInfo>> {
+    override suspend fun getVideos(page: Int, pageSize: Int): ApiResult<List<VideoInfo>> {
         val response = safeApiCall {
-            apiService.getVideos(page = 1)
+            apiService.getVideos(page = page, pageSize = pageSize)
         }
 
         return when (response) {

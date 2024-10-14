@@ -2,7 +2,6 @@ package com.shinlee.showplus.ui.screens.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.shinlee.common.composable.ProfileSectionPreview
-import com.shinlee.common.dialogs.ErrorDialog
-import com.shinlee.common.dialogs.OnClickListener
 import com.shinlee.showplus.R
 import com.shinlee.showplus.ui.LoginState
 import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity
-import com.shinlee.showplus.ui.screens.show.ShowFragmentV2
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import com.shinlee.showplus.extension.requestLoginDialog

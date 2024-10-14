@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.transition)
     implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.paging.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -94,8 +95,6 @@ dependencies {
     implementation (libs.koin.android)
 
 
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
     implementation("androidx.compose.material:material:1.6.8")
 
     // FIREBASE
@@ -112,6 +111,7 @@ dependencies {
     // Paging Compose
     implementation ("com.google.accompanist:accompanist-pager:0.13.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.13.0")
+
     // ExpoPlayer
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-exoplayer-dash:1.4.1")
@@ -123,7 +123,12 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-core:1.5.0")
     implementation ("androidx.compose.material:material-icons-extended:1.5.0")
 
+    // Gson
     implementation ("com.google.code.gson:gson:2.11.0")
+
+    // Paging
+    implementation ("androidx.paging:paging-rxjava3:3.3.2")
+
 
 
 }

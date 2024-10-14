@@ -50,4 +50,6 @@ dependencies {
     // NETWORK
     implementation (libs.retrofit)
 
+    implementation ("androidx.paging:paging-rxjava3:3.3.2")
+
 }

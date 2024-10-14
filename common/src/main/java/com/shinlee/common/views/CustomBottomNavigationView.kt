@@ -2,6 +2,7 @@ package com.shinlee.common.views
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
@@ -58,6 +59,12 @@ class CustomBottomNavigationView @JvmOverloads constructor(
         containerView.isSelected = isSelected
         iconView.isSelected = isSelected
 
+        // Update icon color
+        iconView.setColorFilter(
+            if (isSelected) selectedTextColor else unselectedTextColor,
+            PorterDuff.Mode.SRC_IN
+        )
+
         textView.setTextColor(if (isSelected) selectedTextColor else unselectedTextColor)
     }
 
@@ -88,7 +95,7 @@ class CustomBottomNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val selectedTextColor = Color.parseColor("#FF0000")
-        private val unselectedTextColor = Color.parseColor("#808080")
+        private val selectedTextColor = Color.parseColor("#FF0000") // Example color
+        private val unselectedTextColor = Color.parseColor("#808080") // Example color
     }
 }

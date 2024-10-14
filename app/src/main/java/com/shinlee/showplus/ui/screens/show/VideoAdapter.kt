@@ -11,32 +11,39 @@ import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.shinlee.repository.VideoShow
 import com.shinlee.showplus.databinding.VideoItemViewV2Binding
 
-class VideoAdapterV2(
-    private var videos: List<VideoShow>,
+class VideoAdapter(
     private val player: ExoPlayer,
     private val listener: OnClickListener? = null
 ) :
-    RecyclerView.Adapter<VideoAdapterV2.VideoViewHolder>() {
+    PagingDataAdapter<VideoShow, VideoAdapter.VideoViewHolder>(VIDEO_COMPARATOR) {
+
+    companion object {
+        private val VIDEO_COMPARATOR = object : DiffUtil.ItemCallback<VideoShow>() {
+            override fun areItemsTheSame(oldItem: VideoShow, newItem: VideoShow): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: VideoShow, newItem: VideoShow): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     private var playPauseAnimatorSet: AnimatorSet? = null
-
-    fun updateVideos(newVideos: List<VideoShow>) {
-        videos = newVideos
-        notifyDataSetChanged()
-    }
 
     inner class VideoViewHolder(private val binding: VideoItemViewV2Binding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -48,7 +55,7 @@ class VideoAdapterV2(
             }
         }
 
-         fun updateLikeIcon(isFavourite: Boolean) {
+        fun updateLikeIcon(isFavourite: Boolean) {
             val iconRes = if (isFavourite) {
                 com.shinlee.common.R.drawable.ic_redlike
             } else {
@@ -58,13 +65,41 @@ class VideoAdapterV2(
         }
 
         fun bind(video: VideoShow, position: Int) {
-            updateLikeIcon(video.isFavourite)
+            binding.tvName.text = video.profileNickname ?: ""
+            binding.tvDesc.text = video.description ?: ""
+            binding.tvTag.text = video.tags?.joinToString(", ") { it.content ?: "" } ?: ""
+            binding.btnLike.setText(video.voteCount.toString())
+            binding.btnComment.setText(video.commentCount.toString())
+
+            if (!video.profilePhoto.isNullOrEmpty()) {
+                Glide.with(itemView)
+                    .load(video.profilePhoto)
+                    .placeholder(com.shinlee.common.R.drawable.avatar)
+                    .apply(
+                        RequestOptions()
+                            .circleCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    )
+                    .into(binding.avatar)
+            }
+
+            if (!video.contestTitle.isNullOrEmpty()) {
+                binding.contestView.visibility = View.VISIBLE
+                binding.tvContestTitle.text = video.contestTitle
+            } else binding.contestView.visibility = View.GONE
+
+            updateLikeIcon(video.isFavourite )
+
             //set thumbnail
             Glide.with(itemView)
-                .load(video.thumbnail)
+                .load(video.thumbnailUrl)
                 .apply(RequestOptions().centerCrop())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.thumbnail)
+
+            // show thumbnail and play video for the first view holder
+            showThumbnail()
+            playVideoAtPosition(position)
 
             binding.playerView.setOnClickListener {
                 togglePlayPause()
@@ -83,7 +118,7 @@ class VideoAdapterV2(
             }
 
             binding.btnSend.setOnClickListener {
-                listener?.onShare(video.videoLink)
+                video.videoUrl?.let { it1 -> listener?.onShare(it1) }
             }
 
             binding.btnSubscribe.setOnClickListener {
@@ -151,7 +186,7 @@ class VideoAdapterV2(
 
                 val currentMediaItem =
                     MediaItem.Builder()
-                        .setUri(videos[position].videoLink)
+                        .setUri(getItem(position)?.videoUrl)
                         .setMimeType(MimeTypes.APPLICATION_M3U8)
                         .build()
 
@@ -239,10 +274,11 @@ class VideoAdapterV2(
     }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        holder.bind(videos[position], position)
+        val video = getItem(position)
+        if (video != null) {
+            holder.bind(video, position)
+        }
     }
-
-    override fun getItemCount() = videos.size
 
     override fun onViewDetachedFromWindow(holder: VideoViewHolder) {
         super.onViewDetachedFromWindow(holder)

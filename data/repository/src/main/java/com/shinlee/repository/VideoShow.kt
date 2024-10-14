@@ -1,20 +1,20 @@
-package com.shinlee.repository.model
+package com.shinlee.repository
 
-data class VideoInfo(
+data class VideoShow(
     val id: Int? = null,
     val description: String? = null,
     val videoUrl: String? = null,
     val thumbnailUrl: String? = null,
-    val voteCount: Int? = null,
-    val commentCount: Int? = null,
+    val voteCount: Int = 0,
+    val commentCount: Int = 0,
     val profileId: Int? = null,
     val profilePhoto: String? = null,
-    val profileNickname: String? = null,
+    val profileNickname: String = "",
     val contestId: Int? = null,
     val contestTitle: String? = null,
     val contestImage: String? = null,
     val tags: List<Tag>? = null,
-    val isFavourite: Int
+    var isFavourite: Boolean
 ) {
     data class Tag(
         val id: Int? = null,

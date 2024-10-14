@@ -12,7 +12,7 @@ import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.contest.ContestFragment
 import com.shinlee.showplus.ui.screens.profile.ProfileFragment
 import com.shinlee.showplus.ui.screens.search.SearchFragment
-import com.shinlee.showplus.ui.screens.show.ShowFragmentV2
+import com.shinlee.showplus.ui.screens.show.ShowFragment
 import com.shinlee.showplus.ui.screens.upload.UploadFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.checkLoginStatus()
 
         if (savedInstanceState == null) {
-            loadFragment(ShowFragmentV2())
+            loadFragment(ShowFragment())
         }
 
         val bottomNavigationView = findViewById<CustomBottomNavigationView>(R.id.bottom_navigation)
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { itemId ->
             var selectedFragment: Fragment? = null
             when (itemId) {
-                com.shinlee.common.R.id.nav_home -> selectedFragment = ShowFragmentV2()
+                com.shinlee.common.R.id.nav_home -> selectedFragment = ShowFragment()
                 com.shinlee.common.R.id.nav_contest -> selectedFragment = ContestFragment()
                 com.shinlee.common.R.id.nav_upload -> selectedFragment = UploadFragment()
                 com.shinlee.common.R.id.nav_search -> selectedFragment = SearchFragment()
@@ -70,10 +70,10 @@ class MainActivity : AppCompatActivity() {
     private fun handleBackPress() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-        if (currentFragment !is ShowFragmentV2) {
+        if (currentFragment !is ShowFragment) {
             findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId =
                 R.id.showFragment
-            loadFragment(ShowFragmentV2())
+            loadFragment(ShowFragment())
         } else {
             finish()
         }

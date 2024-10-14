@@ -1,7 +1,7 @@
-package com.shinlee.showplus.ui.screens.show.mapping
+package com.shinlee.repository.mapping
 
-import com.shinlee.repository.model.VideoInfo
 import com.shinlee.repository.VideoShow
+import com.shinlee.repository.model.VideoInfo
 
 fun List<VideoInfo>.toVideoShowList(): List<VideoShow> {
     return this.map { parser ->
