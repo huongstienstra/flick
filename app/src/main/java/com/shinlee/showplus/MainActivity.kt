@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.shinlee.common.views.CustomBottomNavigationView
 import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.contest.ContestFragment
 import com.shinlee.showplus.ui.screens.profile.ProfileFragment
@@ -30,16 +31,16 @@ class MainActivity : AppCompatActivity() {
             loadFragment(ShowFragmentV2())
         }
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNavigationView = findViewById<CustomBottomNavigationView>(R.id.bottom_navigation)
 
-        bottomNavigationView.setOnItemSelectedListener { item ->
+        bottomNavigationView.setOnItemSelectedListener { itemId ->
             var selectedFragment: Fragment? = null
-            when (item.itemId) {
-                R.id.showFragment -> selectedFragment = ShowFragmentV2()
-                R.id.contestFragment -> selectedFragment = ContestFragment()
-                R.id.uploadFragment -> selectedFragment = UploadFragment()
-                R.id.searchFragment -> selectedFragment = SearchFragment()
-                R.id.profileFragment -> selectedFragment = ProfileFragment()
+            when (itemId) {
+                com.shinlee.common.R.id.nav_home -> selectedFragment = ShowFragmentV2()
+                com.shinlee.common.R.id.nav_contest -> selectedFragment = ContestFragment()
+                com.shinlee.common.R.id.nav_upload -> selectedFragment = UploadFragment()
+                com.shinlee.common.R.id.nav_search -> selectedFragment = SearchFragment()
+                com.shinlee.common.R.id.nav_profile -> selectedFragment = ProfileFragment()
             }
             if (selectedFragment != null) {
                 loadFragment(selectedFragment)
