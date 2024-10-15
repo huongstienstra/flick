@@ -53,5 +53,5 @@ data class VideoResponseParser(
 
 data class VideoResponse(
     @SerializedName("result")
-    val videos: List<VideoResponseParser>? = emptyList()
+    val videos: List<VideoResponseParser> = emptyList()
 ) : BaseResponse()

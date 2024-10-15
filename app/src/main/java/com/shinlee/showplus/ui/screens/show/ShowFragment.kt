@@ -1,5 +1,6 @@
 package com.shinlee.showplus.ui.screens.show
 
+import CommentBottomSheet
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,12 +13,10 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.shinlee.repository.model.VideoShow
 import com.shinlee.showplus.databinding.ShowFragmentV2Binding
 import com.shinlee.showplus.extension.requestLoginDialog
 import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity
-import com.shinlee.showplus.ui.screens.show.dialogs.CommentsBottomSheet
 import com.shinlee.showplus.ui.screens.show.dialogs.DescriptionBottomSheet
 import com.shinlee.showplus.ui.screens.show.dialogs.OnClickListener
 import com.shinlee.showplus.ui.screens.show.dialogs.ReportBottomSheet
@@ -79,8 +78,7 @@ class ShowFragment : Fragment() {
                     val viewHolder =
                         binding.recyclerView.findViewHolderForAdapterPosition(position) as? VideoAdapter.VideoViewHolder
                     viewHolder?.updateLikeIcon(isFavourite = video.isFavourite)
-
-                    // Call API to update like status on the server
+                    viewModel.likeVideo(video.id)
                 } else {
                     this@ShowFragment.requestLoginDialog(
                         onNext = {
@@ -94,8 +92,10 @@ class ShowFragment : Fragment() {
 
             }
 
-            override fun onComment() {
-                CommentsBottomSheet().showByTag(childFragmentManager)
+            override fun onComment(video: VideoShow) {
+                CommentBottomSheet.newInstance(
+                    videoId = video.id, totalOfComments = video.commentCount
+                ).showByTag(childFragmentManager)
             }
 
             override fun onSubscribe() {

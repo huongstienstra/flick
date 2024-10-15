@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.shinlee.repository.model.VideoShow
 import com.shinlee.showplus.databinding.VideoItemViewV2Binding
 
 class VideoAdapter(
@@ -110,7 +109,7 @@ class VideoAdapter(
             }
 
             binding.btnComment.setOnClickListener {
-                listener?.onComment()
+                listener?.onComment(video)
             }
 
             binding.btnMore.setOnClickListener {
@@ -290,7 +289,7 @@ class VideoAdapter(
     interface OnClickListener {
         fun onShare(url: String)
         fun onLikeVideo(video: VideoShow, position: Int)
-        fun onComment()
+        fun onComment(video: VideoShow)
         fun onSubscribe()
         fun onSeeMore()
     }

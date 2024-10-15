@@ -1,4 +1,4 @@
-package com.shinlee.common.composable.comments
+package com.shinlee.showplus.ui.screens.comment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -27,12 +28,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import coil3.compose.AsyncImage
 import com.shinlee.common.R
+import com.shinlee.common.composable.comments.AddCommentSection
+import com.shinlee.showplus.utils.NumberFormatter
+import com.shinlee.showplus.utils.TimeUtils
 
 @Composable
 fun CommentThreadLayout(
-    comments: List<CommentData>,
-    onViewMoreReplies: (String) -> Unit,
+    commentPagingItems: LazyPagingItems<CommentData>,
+    onViewMoreReplies: (Int) -> Unit,
     onAddCommentAction: () -> Unit = {},
     onDone: (String) -> Unit
 ) {
@@ -46,12 +53,52 @@ fun CommentThreadLayout(
                 .background(Color.White)
                 .padding(bottom = addCommentSectionHeight)
         ) {
-            items(comments) { comment ->
-                CommentWithReplies(
-                    comment = comment,
-                    onViewMoreReplies = onViewMoreReplies
-                )
+            items(commentPagingItems.itemCount) { index ->
+                val comment = commentPagingItems[index]
+                comment?.let {
+                    CommentWithReplies(
+                        comment = it,
+                        onViewMoreReplies = onViewMoreReplies
+                    )
+                }
             }
+
+            commentPagingItems.apply {
+                when {
+                    loadState.refresh is LoadState.Loading -> {
+                        item {
+                            // LoadingItem()
+                        }
+                    }
+
+                    loadState.append is LoadState.Loading -> {
+                        item {
+                            //LoadingItem()
+                        }
+                    }
+
+                    loadState.refresh is LoadState.Error -> {
+//                        val e = comments.loadState.refresh as LoadState.Error
+//                        item {
+//                            ErrorItem(
+//                                message = e.error.localizedMessage ?: "Unknown error",
+//                                onRetryClick = { comments.retry() }
+//                            )
+//                        }
+                    }
+
+                    loadState.append is LoadState.Error -> {
+//                        val e = comments.loadState.append as LoadState.Error
+//                        item {
+//                            ErrorItem(
+//                                message = e.error.localizedMessage ?: "Unknown error",
+//                                onRetryClick = { comments.retry() }
+//                            )
+//                        }
+                    }
+                }
+            }
+
         }
 
         AddCommentSection(
@@ -63,7 +110,7 @@ fun CommentThreadLayout(
                     addCommentSectionHeight = with(density) { coordinates.size.height.toDp() }
                 },
             enableInputText = false,
-            onAddComment =  {
+            onAddComment = {
                 onAddCommentAction()
             },
             onDone = {
@@ -79,26 +126,29 @@ fun CommentItem(
     comment: String,
     timestamp: String,
     likes: String,
-    profileImage: Int,
+    profileImage: String,
     showReplyButton: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top
     ) {
-        Image(
-            painter = painterResource(id = profileImage),
-            contentDescription = "Profile Picture",
+
+        AsyncImage(
             modifier = Modifier
                 .size(44.dp)
-                .clip(CircleShape)
+                .clip(CircleShape),
+            model = profileImage,
+            placeholder = painterResource(R.drawable.avatar),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = username,
+                text = username.ifEmpty { "---" },
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -112,7 +162,7 @@ fun CommentItem(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = timestamp,
+                    text = TimeUtils.getTimeAgo(timestamp),
                     color = Color.Gray,
                     fontSize = 12.sp
                 )
@@ -164,19 +214,22 @@ fun ReplyItem(
     comment: String,
     timestamp: String,
     likes: String,
-    profileImage: Int,
+    profileImage: String,
     showReplyButton: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top
     ) {
-        Image(
-            painter = painterResource(id = profileImage),
-            contentDescription = "Profile Picture",
+
+        AsyncImage(
             modifier = Modifier
                 .size(24.dp)
-                .clip(CircleShape)
+                .clip(CircleShape),
+            model = profileImage,
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.avatar),
+            contentDescription = null,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -204,7 +257,7 @@ fun ReplyItem(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = timestamp,
+                    text = TimeUtils.getTimeAgo(timestamp),
                     color = Color.Gray,
                     fontSize = 12.sp
                 )
@@ -255,7 +308,7 @@ fun MainComment(
     comment: String,
     timestamp: String,
     likes: String,
-    profileImage: Int,
+    profileImage: String,
     showReplyButton: Boolean = false
 ) {
     Box(
@@ -318,7 +371,7 @@ fun ReplyComment(
     comment: String,
     timestamp: String,
     likes: String,
-    profileImage: Int,
+    profileImage: String,
     showReplyButton: Boolean = false
 ) {
     Box(
@@ -342,7 +395,7 @@ fun ReplyComment(
 @Composable
 fun CommentWithReplies(
     comment: CommentData,
-    onViewMoreReplies: (String) -> Unit
+    onViewMoreReplies: (Int) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -351,9 +404,9 @@ fun CommentWithReplies(
             username = comment.username,
             comment = comment.comment,
             timestamp = comment.timestamp,
-            likes = comment.likes,
+            likes = NumberFormatter.formatSocialCount(comment.likes),
             profileImage = comment.profileImage,
-            showReplyButton = comment.showReplyButton
+            showReplyButton = true
         )
 
         if (isExpanded) {
@@ -363,7 +416,7 @@ fun CommentWithReplies(
                     replyTo = reply.replyTo,
                     comment = reply.comment,
                     timestamp = reply.timestamp,
-                    likes = reply.likes,
+                    likes = NumberFormatter.formatSocialCount(comment.likes),
                     profileImage = reply.profileImage,
                     showReplyButton = false
                 )
@@ -375,7 +428,7 @@ fun CommentWithReplies(
                     replyTo = reply.replyTo,
                     comment = reply.comment,
                     timestamp = reply.timestamp,
-                    likes = reply.likes,
+                    likes = NumberFormatter.formatSocialCount(comment.likes),
                     profileImage = reply.profileImage,
                     showReplyButton = false
                 )
@@ -385,7 +438,7 @@ fun CommentWithReplies(
         if (comment.totalReplies > 1) {
             ViewMoreRepliesItem(
                 modifier = Modifier.padding(start = 36.dp, top = 8.dp, bottom = 8.dp),
-                replyCount = comment.totalReplies - 1,
+                replyCount = comment.totalReplies,
                 onClick = {
                     isExpanded = true
                     onViewMoreReplies(comment.id)
@@ -398,27 +451,28 @@ fun CommentWithReplies(
 @Preview(showBackground = true)
 @Composable
 fun CommentWithRepliesPreview() {
-    val comment = CommentData(
-        id = "main1",
-        username = "Glucozo",
-        comment = "Great, he must be the winner",
-        timestamp = "8-21",
-        likes = "27.6k",
-        profileImage = R.drawable.avatar,
-        showReplyButton = true,
-        replies = listOf(
-            ReplyData(
-                id = "reply1",
-                username = "cuckoo",
-                replyTo = "conheocon",
-                comment = "Thank you",
-                timestamp = "8-21",
-                likes = "27.6k",
-                profileImage = R.drawable.avatar
-            )
-        ),
-        totalReplies = 100
-    )
+    val comment =
+        CommentData(
+            id = 1,
+            username = "Glucozo",
+            comment = "Great, he must be the winner",
+            timestamp = "8-21",
+            likes = 27,
+            profileImage = "",
+            showReplyButton = true,
+            replies = listOf(
+                ReplyData(
+                    id = 1,
+                    username = "cuckoo",
+                    replyTo = "conheocon",
+                    comment = "Thank you",
+                    timestamp = "8-21",
+                    likes = 26,
+                    profileImage = ""
+                )
+            ),
+            totalReplies = 100
+        )
     CommentWithReplies(
         comment
     ) {
@@ -431,51 +485,51 @@ fun CommentWithRepliesPreview() {
 fun CommentThreadLayoutPreview() {
     val comments = listOf(
         CommentData(
-            id = "main1",
+            id = 1,
             username = "Glucozo",
             comment = "Great, he must be the winner",
             timestamp = "8-21",
-            likes = "27.6k",
-            profileImage = R.drawable.avatar,
+            likes = 27,
+            profileImage = "",
             showReplyButton = true,
             replies = listOf(
                 ReplyData(
-                    id = "reply1",
+                    id = 1,
                     username = "cuckoo",
                     replyTo = "conheocon",
                     comment = "Thank you",
                     timestamp = "8-21",
-                    likes = "27.6k",
-                    profileImage = R.drawable.avatar
+                    likes = 26,
+                    profileImage = ""
                 )
             ),
             totalReplies = 100
         ),
         CommentData(
-            id = "main2",
+            id = 2,
             username = "Glucozo",
             comment = "Great, he must be the winner",
             timestamp = "8-21",
-            likes = "27.6k",
-            profileImage = R.drawable.avatar,
+            likes = 27,
+            profileImage = "",
             showReplyButton = true
         ),
         CommentData(
-            id = "main3",
+            id = 3,
             username = "Glucozo",
             comment = "Great, he must be the winner",
             timestamp = "8-21",
-            likes = "27.6k",
-            profileImage = R.drawable.avatar,
+            likes = 27,
+            profileImage = "",
             showReplyButton = true
         )
     )
 
-    CommentThreadLayout(
-        comments = comments,
-        onViewMoreReplies = { commentId -> /* Handle viewing more replies for this comment */ },
-        onDone = {}
-    )
+//    CommentThreadLayout(
+//        comments = comments,
+//        onViewMoreReplies = { commentId -> /* Handle viewing more replies for this comment */ },
+//        onDone = {}
+//    )
 }
 
 @Preview(showBackground = true)
@@ -486,7 +540,7 @@ fun CommentItemPreview() {
         comment = "Thank you",
         timestamp = "8-21",
         likes = "27.6k",
-        profileImage = R.drawable.avatar,
+        profileImage = "",
         showReplyButton = true
     )
 }
@@ -500,7 +554,7 @@ fun ReplyCommentPreview() {
         comment = "Thank you",
         timestamp = "8-21",
         likes = "27.6k",
-        profileImage = R.drawable.avatar,
+        profileImage = "",
         showReplyButton = false
     )
 }

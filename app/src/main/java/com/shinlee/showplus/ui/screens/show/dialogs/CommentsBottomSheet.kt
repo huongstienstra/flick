@@ -1,31 +1,45 @@
-package com.shinlee.showplus.ui.screens.show.dialogs
+import com.shinlee.showplus.ui.screens.show.dialogs.InputCommentDialog
 
 import CommentsBottomSheetContent
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.shinlee.common.composable.comments.CommentData
-import com.shinlee.common.composable.comments.ReplyData
+import com.shinlee.showplus.ui.screens.comment.CommentData
 import com.shinlee.showplus.R
+import com.shinlee.showplus.ui.screens.show.ShowViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CommentsBottomSheet : BottomSheetDialogFragment() {
+class CommentBottomSheet : BottomSheetDialogFragment() {
+
+    companion object {
+        private const val ARG_VIDEO_ID = "video_id"
+        private const val ARG_TOTAL_COMMENTS = "total_of_comments"
+
+        fun newInstance(videoId: Int, totalOfComments: Int): CommentBottomSheet {
+            val fragment = CommentBottomSheet()
+            val args = Bundle()
+            args.putInt(ARG_VIDEO_ID, videoId)
+            args.putInt(ARG_TOTAL_COMMENTS, totalOfComments)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    private val viewModel: ShowViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +86,6 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
             dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
         val behavior = BottomSheetBehavior.from(bottomSheet!!)
 
-        // Set initial height (e.g., 75% of screen height)
         val displayMetrics = resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
         val initialHeight = (screenHeight * 0.75).toInt()
@@ -80,122 +93,24 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
         behavior.peekHeight = initialHeight
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+        var videoId = -1
+        var totalOfComments = -1
+        arguments?.let {
+            videoId = it.getInt(ARG_VIDEO_ID, -1)
+            totalOfComments = it.getInt(ARG_TOTAL_COMMENTS, 0)
+        }
+
 
         view.findViewById<ComposeView>(R.id.compose_view).setContent {
-            val comments = listOf(
-                CommentData(
-                    id = "main1",
-                    username = "Glucozo",
-                    comment = "Great, he must be the winner",
-                    timestamp = "8-21",
-                    likes = "27.6k",
-                    profileImage = com.shinlee.common.R.drawable.avatar,
-                    showReplyButton = true,
-                    replies = listOf(
-                        ReplyData(
-                            id = "reply1",
-                            username = "cuckoo",
-                            replyTo = "conheocon",
-                            comment = "Thank you",
-                            timestamp = "8-21",
-                            likes = "27.6k",
-                            profileImage = com.shinlee.common.R.drawable.avatar
-                        ),
-                        ReplyData(
-                            id = "reply2",
-                            username = "cuckoo",
-                            replyTo = "conheocon",
-                            comment = "Thank you",
-                            timestamp = "8-21",
-                            likes = "27.6k",
-                            profileImage = com.shinlee.common.R.drawable.avatar
-                        ),
-                        ReplyData(
-                            id = "reply3",
-                            username = "cuckoo",
-                            replyTo = "conheocon",
-                            comment = "Thank you",
-                            timestamp = "8-21",
-                            likes = "27.6k",
-                            profileImage = com.shinlee.common.R.drawable.avatar
-                        )
-                    ),
-                    totalReplies = 100
-                ),
-                CommentData(
-                    id = "main2",
-                    username = "Glucozo",
-                    comment = "Great, he must be the winner",
-                    timestamp = "8-21",
-                    likes = "27.6k",
-                    profileImage = com.shinlee.common.R.drawable.avatar,
-                    showReplyButton = true
-                ),
-                CommentData(
-                    id = "main3",
-                    username = "Glucozo",
-                    comment = "Great, he must be the winner",
-                    timestamp = "8-21",
-                    likes = "27.6k",
-                    profileImage = com.shinlee.common.R.drawable.avatar,
-                    showReplyButton = true
-                ),
-                CommentData(
-                    id = "main4",
-                    username = "Glucozo",
-                    comment = "Great, he must be the winner",
-                    timestamp = "8-21",
-                    likes = "27.6k",
-                    profileImage = com.shinlee.common.R.drawable.avatar,
-                    showReplyButton = true
-                ),
-                CommentData(
-                    id = "main5",
-                    username = "Glucozo",
-                    comment = "Great, he must be the winner",
-                    timestamp = "8-21",
-                    likes = "27.6k",
-                    profileImage = com.shinlee.common.R.drawable.avatar,
-                    showReplyButton = true,
-                    replies = listOf(
-                        ReplyData(
-                            id = "reply1",
-                            username = "cuckoo",
-                            replyTo = "conheocon",
-                            comment = "Thank you",
-                            timestamp = "8-21",
-                            likes = "27.6k",
-                            profileImage = com.shinlee.common.R.drawable.avatar
-                        ),
-                        ReplyData(
-                            id = "reply2",
-                            username = "cuckoo",
-                            replyTo = "conheocon",
-                            comment = "Thank you",
-                            timestamp = "8-21",
-                            likes = "27.6k",
-                            profileImage = com.shinlee.common.R.drawable.avatar
-                        ),
-                        ReplyData(
-                            id = "reply3",
-                            username = "cuckoo",
-                            replyTo = "conheocon",
-                            comment = "Thank you",
-                            timestamp = "8-21",
-                            likes = "27.6k",
-                            profileImage = com.shinlee.common.R.drawable.avatar
-                        )
-                    ),
-                    totalReplies = 100
-                )
-            )
+            val commentPagingItems: LazyPagingItems<CommentData> =
+                viewModel.getCommentsPagingData(videoId).collectAsLazyPagingItems()
 
             CommentsBottomSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(650.dp),
-                "99",
-                comments,
+                totalOfComments = totalOfComments.toString(),
+                commentPagingItems = commentPagingItems,
                 onAddCommentAction = {
                     InputCommentDialog().showByTag(childFragmentManager)
                 },
@@ -211,7 +126,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun showByTag(manager: FragmentManager) {
-        super.show(manager, CommentsBottomSheet::class.java.name)
+        super.show(manager, CommentBottomSheet::class.java.name)
     }
 
 }

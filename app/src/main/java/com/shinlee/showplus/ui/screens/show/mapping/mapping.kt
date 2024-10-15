@@ -1,12 +1,14 @@
 package com.shinlee.showplus.ui.screens.show.mapping
 
+import com.shinlee.showplus.ui.screens.comment.CommentData
+import com.shinlee.repository.model.Comment
 import com.shinlee.repository.model.VideoInfo
-import com.shinlee.repository.model.VideoShow
+import com.shinlee.showplus.ui.screens.show.VideoShow
 
 fun List<VideoInfo>.toVideoShowList(): List<VideoShow> {
     return this.map { parser ->
         VideoShow(
-            id = parser.id,
+            id = parser.id ?: -1,
             description = parser.description,
             videoUrl = parser.videoUrl,
             thumbnailUrl = parser.thumbnailUrl,
@@ -32,3 +34,19 @@ fun List<VideoInfo.Tag>.toTagList(): List<VideoShow.Tag> {
         )
     }
 }
+
+fun List<Comment>.toCommentDataList(): List<CommentData> {
+    return this.map { comment ->
+        CommentData(
+            id = comment.id,
+            username = comment.profileName,
+            comment = comment.content,
+            timestamp = comment.date,
+            likes = comment.likeCount,
+            profileImage = comment.profileAvatar,
+            showReplyButton = comment.repliesCount > 0,
+            totalReplies = comment.repliesCount
+        )
+    }
+}
+

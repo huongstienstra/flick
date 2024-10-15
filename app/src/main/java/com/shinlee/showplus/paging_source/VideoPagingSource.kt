@@ -1,11 +1,11 @@
-package com.shinlee.repository.paging_source
+package com.shinlee.showplus.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.shinlee.network.ApiResult
 import com.shinlee.repository.VideoRepository
-import com.shinlee.repository.model.VideoShow
-import com.shinlee.repository.mapping.toVideoShowList
+import com.shinlee.showplus.ui.screens.show.VideoShow
+import com.shinlee.showplus.ui.screens.show.mapping.toVideoShowList
 
 
 class VideoPagingSource(
