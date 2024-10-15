@@ -7,6 +7,8 @@ open class BaseResponse(
     val code: Int? = null,
     @SerializedName("message")
     val message: String? = null,
+    @SerializedName("status")
+    val statusData: Boolean = false,
     @SerializedName("error")
     val error: String? = null,
     @SerializedName("title")

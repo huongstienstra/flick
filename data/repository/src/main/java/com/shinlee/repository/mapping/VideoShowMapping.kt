@@ -1,6 +1,6 @@
 package com.shinlee.repository.mapping
 
-import com.shinlee.repository.VideoShow
+import com.shinlee.repository.model.VideoShow
 import com.shinlee.repository.model.VideoInfo
 
 fun List<VideoInfo>.toVideoShowList(): List<VideoShow> {

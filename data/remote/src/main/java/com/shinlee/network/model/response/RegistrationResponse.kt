@@ -1,10 +1,9 @@
-package com.shinlee.network.model
+package com.shinlee.network.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.shinlee.network.model.BaseResponse
 
 data class RegistrationResponse(
-    @SerializedName("status")
-    val status: Boolean,
     @SerializedName("token")
     val token: String,
     @SerializedName("user_info")

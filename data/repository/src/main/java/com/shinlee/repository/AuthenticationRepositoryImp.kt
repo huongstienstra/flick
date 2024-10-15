@@ -3,16 +3,13 @@ package com.shinlee.repository
 import com.shinlee.network.ApiResult
 import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
-import com.shinlee.network.model.CheckEmailExistRequest
-import com.shinlee.network.model.LoginRequest
-import com.shinlee.network.model.RegisterRequest
-import com.shinlee.network.model.RegistrationRequest
+import com.shinlee.network.model.request.CheckEmailExistRequest
+import com.shinlee.network.model.request.LoginRequest
+import com.shinlee.network.model.request.RegistrationRequest
 import com.shinlee.repository.mapping.toCheckEmailExistEntity
 import com.shinlee.repository.mapping.toEntity
-import com.shinlee.repository.mapping.toRegisterEntity
 import com.shinlee.repository.model.CheckEmailExistEntity
 import com.shinlee.repository.model.RegistrationEntity
-import com.shinlee.repository.model.RegisterEntity
 
 class AuthenticationRepositoryImp(private val apiService: ShowPlusApiService) :
     AuthenticationRepository {
@@ -55,27 +52,6 @@ class AuthenticationRepositoryImp(private val apiService: ShowPlusApiService) :
             is ApiResult.Success -> {
                 val result = response.data.toEntity()
                 ApiResult.success(result)
-            }
-        }
-    }
-
-    override suspend fun registerByEmail(
-        email: String,
-        password: String,
-        passwordConfirm: String
-    ): ApiResult<RegisterEntity> {
-        val response = safeApiCall {
-            apiService.registerWithEmail(RegisterRequest(email, password, passwordConfirm))
-        }
-        return when (response) {
-
-            is ApiResult.Error -> {
-                ApiResult.error(response.throwable)
-            }
-
-            is ApiResult.Success -> {
-                val registerData = response.data.toRegisterEntity()
-                ApiResult.success(registerData)
             }
         }
     }

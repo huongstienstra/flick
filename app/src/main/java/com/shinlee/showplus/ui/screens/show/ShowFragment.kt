@@ -7,15 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.shinlee.repository.VideoShow
+import com.shinlee.repository.model.VideoShow
 import com.shinlee.showplus.databinding.ShowFragmentV2Binding
-import com.shinlee.showplus.extension.awaitPost
 import com.shinlee.showplus.extension.requestLoginDialog
 import com.shinlee.showplus.ui.MainViewModel
 import com.shinlee.showplus.ui.screens.authentication.AuthenticationActivity

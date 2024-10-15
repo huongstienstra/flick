@@ -1,6 +1,7 @@
-package com.shinlee.network.model
+package com.shinlee.network.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.shinlee.network.model.BaseResponse
 
 data class VideoResponseParser(
     @SerializedName("id")
@@ -50,3 +51,7 @@ data class VideoResponseParser(
     )
 }
 
+data class VideoResponse(
+    @SerializedName("result")
+    val videos: List<VideoResponseParser>? = emptyList()
+) : BaseResponse()

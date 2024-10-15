@@ -3,7 +3,6 @@ package com.shinlee.repository
 import com.shinlee.network.ApiResult
 import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
-import com.shinlee.network.model.VideoRequest
 import com.shinlee.repository.mapping.toVideoInfo
 import com.shinlee.repository.model.VideoInfo
 import com.shinlee.network.ApiResult as Result

@@ -1,4 +1,4 @@
-package com.shinlee.repository
+package com.shinlee.repository.model
 
 data class VideoShow(
     val id: Int? = null,

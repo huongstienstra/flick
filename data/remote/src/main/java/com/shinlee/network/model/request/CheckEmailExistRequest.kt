@@ -1,4 +1,4 @@
-package com.shinlee.network.model
+package com.shinlee.network.model.request
 
 import com.google.gson.annotations.SerializedName
 

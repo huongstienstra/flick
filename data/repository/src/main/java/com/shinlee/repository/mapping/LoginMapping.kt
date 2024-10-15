@@ -1,6 +1,6 @@
 package com.shinlee.repository.mapping
 
-import com.shinlee.network.model.RegistrationResponse
+import com.shinlee.network.model.response.RegistrationResponse
 import com.shinlee.repository.model.RegistrationEntity
 import com.shinlee.repository.model.UserInfo
 

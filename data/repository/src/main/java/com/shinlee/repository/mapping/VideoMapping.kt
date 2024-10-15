@@ -1,7 +1,6 @@
 package com.shinlee.repository.mapping
 
-import com.shinlee.network.model.VideoResponseParser
-import com.shinlee.repository.VideoShow
+import com.shinlee.network.model.response.VideoResponseParser
 import com.shinlee.repository.model.VideoInfo
 
 fun List<VideoResponseParser>.toVideoInfo(): List<VideoInfo> {

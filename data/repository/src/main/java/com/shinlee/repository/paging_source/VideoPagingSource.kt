@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.shinlee.network.ApiResult
 import com.shinlee.repository.VideoRepository
-import com.shinlee.repository.VideoShow
+import com.shinlee.repository.model.VideoShow
 import com.shinlee.repository.mapping.toVideoShowList
 
 
