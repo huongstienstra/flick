@@ -9,12 +9,13 @@ import com.shinlee.showplus.ui.screens.show.mapping.toCommentDataList
 
 class CommentPagingSource(
     private val repository: VideoRepository,
-    private val videoId: Int
+    private val videoId: Long,
 ) : PagingSource<Int, CommentData>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CommentData> {
         val page = params.key ?: 1
         return try {
+
             val response = repository.getComments(videoId, page = page, pageSize = params.loadSize)
             when (response) {
                 is ApiResult.Success -> {
@@ -30,6 +31,7 @@ class CommentPagingSource(
                     LoadResult.Error(response.throwable)
                 }
             }
+
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

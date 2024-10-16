@@ -1,17 +1,23 @@
 package com.shinlee.showplus.ui.screens.comment
 
+import android.util.Log
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,30 +34,49 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.shinlee.common.R
 import com.shinlee.common.composable.comments.AddCommentSection
+import com.shinlee.common.theme.PinkColor
+import com.shinlee.showplus.ui.screens.show.ShowViewModel
 import com.shinlee.showplus.utils.NumberFormatter
 import com.shinlee.showplus.utils.TimeUtils
 
 @Composable
 fun CommentThreadLayout(
-    commentPagingItems: LazyPagingItems<CommentData>,
+    viewModel: ShowViewModel,
     onViewMoreReplies: (Int) -> Unit,
-    onAddCommentAction: () -> Unit = {},
-    onDone: (String) -> Unit
+    onAddCommentAction: (String) -> Unit = {},
+    commentPagingItems: LazyPagingItems<CommentData>,
 ) {
     var addCommentSectionHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
+    val flingBehavior = ScrollableDefaults.flingBehavior()
+    val listState = rememberLazyListState()
+
+    val shouldScrollToTop by viewModel.shouldScrollToTop.collectAsState()
+
+    LaunchedEffect(shouldScrollToTop) {
+        if (shouldScrollToTop) {
+            commentPagingItems.refresh()
+            listState.scrollToItem(0)
+            viewModel.resetScrollState()
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(bottom = addCommentSectionHeight)
+                .padding(bottom = addCommentSectionHeight),
+            flingBehavior = flingBehavior
         ) {
             items(commentPagingItems.itemCount) { index ->
                 val comment = commentPagingItems[index]
@@ -67,13 +92,13 @@ fun CommentThreadLayout(
                 when {
                     loadState.refresh is LoadState.Loading -> {
                         item {
-                            // LoadingItem()
+                            LoadingItem()
                         }
                     }
 
                     loadState.append is LoadState.Loading -> {
                         item {
-                            //LoadingItem()
+                            LoadingItem()
                         }
                     }
 
@@ -109,13 +134,10 @@ fun CommentThreadLayout(
                 .onGloballyPositioned { coordinates ->
                     addCommentSectionHeight = with(density) { coordinates.size.height.toDp() }
                 },
-            enableInputText = false,
-            onAddComment = {
-                onAddCommentAction()
+            onAddComment = { content ->
+               // onAddCommentAction(content)
+                viewModel.postComment(content)
             },
-            onDone = {
-                onDone(it)
-            }
         )
     }
 }
@@ -445,6 +467,21 @@ fun CommentWithReplies(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun LoadingItem() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(40.dp),
+            color = PinkColor
+        )
     }
 }
 

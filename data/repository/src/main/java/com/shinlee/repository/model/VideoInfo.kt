@@ -1,7 +1,7 @@
 package com.shinlee.repository.model
 
 data class VideoInfo(
-    val id: Int? = null,
+    val id: Long? = null,
     val description: String? = null,
     val videoUrl: String? = null,
     val thumbnailUrl: String? = null,

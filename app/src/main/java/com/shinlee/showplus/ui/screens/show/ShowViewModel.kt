@@ -1,5 +1,6 @@
 package com.shinlee.showplus.ui.screens.show
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertHeaderItem
+import androidx.paging.insertSeparators
 import androidx.recyclerview.widget.RecyclerView
 import com.shinlee.network.ApiResult
 import com.shinlee.repository.VideoRepository
@@ -16,8 +19,17 @@ import com.shinlee.showplus.paging_source.CommentPagingSource
 import com.shinlee.showplus.paging_source.VideoPagingSource
 import com.shinlee.showplus.ui.screens.comment.CommentData
 import com.shinlee.showplus.ui.screens.show.core.video.ExoPlayerCache
+import com.shinlee.showplus.ui.screens.show.mapping.toCommentData
 import com.shinlee.showplus.ui.screens.show.mapping.toCommentDataList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class ShowViewModel(
@@ -37,7 +49,13 @@ class ShowViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    private var currentVideoId: Int? = null
+    private val _newCommentState = MutableStateFlow<CommentData?>(null)
+    val newCommentState: StateFlow<CommentData?> = _newCommentState.asStateFlow()
+
+    private val _shouldScrollToTop = MutableStateFlow(true)
+    val shouldScrollToTop: StateFlow<Boolean> = _shouldScrollToTop.asStateFlow()
+
+    var currentVideoId: Long = -1
 
     val videos: Flow<PagingData<VideoShow>> = Pager(
         config = PagingConfig(
@@ -50,7 +68,8 @@ class ShowViewModel(
         pagingSourceFactory = { VideoPagingSource(repository) }
     ).flow.cachedIn(viewModelScope)
 
-    fun getCommentsPagingData(videoId: Int): Flow<PagingData<CommentData>> {
+    fun getCommentsPagingData(videoId: Long): Flow<PagingData<CommentData>> {
+        currentVideoId = videoId
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -59,11 +78,34 @@ class ShowViewModel(
                 enablePlaceholders = false,
                 maxSize = 30
             ),
-            pagingSourceFactory = { CommentPagingSource(repository, videoId) }
-        ).flow.cachedIn(viewModelScope)
+            pagingSourceFactory = {
+                CommentPagingSource(repository, videoId)
+            }
+        ).flow
+            .cachedIn(viewModelScope)
     }
 
-    fun likeVideo(videoId: Int) {
+    fun postComment(content: String) {
+        viewModelScope.launch {
+            val result = repository.postComment(currentVideoId, content)
+            if (result is ApiResult.Success) {
+                val newComment = result.data?.toCommentData()
+                if (newComment != null) {
+                    _newCommentState.value = newComment
+                    _shouldScrollToTop.value = true
+                }
+
+            } else if (result is ApiResult.Error) {
+                _errorMessage.postValue(result.throwable.message)
+            }
+        }
+    }
+
+    fun resetScrollState() {
+        _shouldScrollToTop.value = false
+    }
+
+    fun likeVideo(videoId: Long) {
         viewModelScope.launch {
             val result = repository.likeVideo(videoId)
             if (result is ApiResult.Success) {
@@ -75,6 +117,7 @@ class ShowViewModel(
             }
         }
     }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -11,15 +11,15 @@ import androidx.paging.compose.LazyPagingItems
 import com.shinlee.common.composable.bottomsheet_content.TitleBottomSheetDialog
 import com.shinlee.showplus.ui.screens.comment.CommentData
 import com.shinlee.showplus.ui.screens.comment.CommentThreadLayout
+import com.shinlee.showplus.ui.screens.show.ShowViewModel
 
 @Composable
 fun CommentsBottomSheetContent(
     modifier: Modifier,
+    viewModel: ShowViewModel,
     totalOfComments: String,
-    commentPagingItems: LazyPagingItems<CommentData>,
     onDismiss: () -> Unit,
-    onAddCommentAction: () -> Unit = {},
-    onDone: (String) -> Unit,
+    commentPagingItems: LazyPagingItems<CommentData>,
 ) {
     Column(
         modifier = modifier
@@ -33,18 +33,19 @@ fun CommentsBottomSheetContent(
                 .fillMaxWidth().padding(end = 16.dp),
             title = "$totalOfComments Comments",
             isNavigateUp = false,
-            isNavigateRight = true,
+            isNavigateRight = false,
             onDismiss = { onDismiss() },
             onBack = {}
         )
 
         CommentThreadLayout(
-            commentPagingItems = commentPagingItems,
+            viewModel = viewModel,
+            commentPagingItems =  commentPagingItems,
             onViewMoreReplies = { commentId -> /* Handle viewing more replies for this comment */ },
-            onAddCommentAction = {
-                onAddCommentAction()
+            onAddCommentAction = { content ->
+
             },
-            onDone = { onDone(it) }
+
         )
 
     }

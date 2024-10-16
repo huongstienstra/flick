@@ -4,11 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,36 +20,25 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shinlee.common.R
-import com.shinlee.common.theme.AntiFlashWhite
-import kotlinx.coroutines.delay
 
 @Composable
 fun AddCommentSection(
     modifier: Modifier,
-    onAddComment: () -> Unit,
-    onDone: (String) -> Unit,
-    enableInputText: Boolean = false
+    onAddComment: (String) -> Unit,
 ) {
     var commentText by remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(enableInputText) {
-        if (enableInputText) {
-            delay(300) // Short delay to ensure the view is ready
-            focusRequester.requestFocus()
-        } else {
-            focusManager.clearFocus()
-        }
-    }
-
     Column(
         modifier = modifier.clickable {
-            onAddComment()
+            focusRequester.requestFocus()
         }
     ) {
         Divider(
@@ -70,43 +60,36 @@ fun AddCommentSection(
                     .clip(CircleShape)
             )
 
-            if (enableInputText) {
-                BorderedTextField(
-                    value = commentText,
-                    onValueChange = { commentText = it },
-                    placeholder = "Add comment...",
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                        .focusRequester(focusRequester)
+            BorderedTextField(
+                value = commentText,
+                onValueChange = { commentText = it },
+                placeholder = "Add comment...",
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+                    .focusRequester(focusRequester),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ).copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
                 )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .weight(1f)
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(AntiFlashWhite),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp),
-                        text = "Add a comment...",
-                        color = Color.Gray
-                    )
-                }
-            }
+            )
 
         }
         CommentInputActions(
             onMentionClick = { /* Handle mention click */ },
             onEmojiClick = { /* Handle emoji click */ },
             onSendClick = {
-                onDone(commentText)
+                onAddComment(commentText)
+                focusManager.clearFocus()
+                commentText = ""
             },
+            isEnabledSend = commentText.isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -119,8 +102,11 @@ fun CommentInputActions(
     onMentionClick: () -> Unit,
     onEmojiClick: () -> Unit,
     onSendClick: () -> Unit,
+    isEnabledSend: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val backgroundColorButtonSend = if (isEnabledSend) Color(0xFFFFC0CB) else Color(0xFFFFE0E0)
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.End,
@@ -163,8 +149,8 @@ fun CommentInputActions(
                 .width(40.dp)
                 .height(25.dp)
                 .clip(RoundedCornerShape(18.dp))
-                .background(Color(0xFFFFC0CB))
-                .clickable(onClick = onSendClick),
+                .background(backgroundColorButtonSend)
+                .clickable(onClick = onSendClick, enabled = isEnabledSend),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -181,7 +167,9 @@ fun BorderedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     Box(
         modifier = modifier
@@ -198,6 +186,8 @@ fun BorderedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             decorationBox = { innerTextField ->
                 Box {
                     if (value.isEmpty()) {
@@ -230,9 +220,7 @@ fun AddCommentSectionPreview() {
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White),
-        enableInputText = false, onAddComment = {
-
-        }, onDone = {
+        onAddComment = {
 
         })
 }
@@ -244,6 +232,7 @@ fun AddCommentActionPreview() {
         onMentionClick = { /* Handle mention click */ },
         onEmojiClick = { /* Handle emoji click */ },
         onSendClick = { /* Handle send click */ },
+        isEnabledSend = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)

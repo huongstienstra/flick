@@ -37,16 +37,21 @@ fun List<VideoInfo.Tag>.toTagList(): List<VideoShow.Tag> {
 
 fun List<Comment>.toCommentDataList(): List<CommentData> {
     return this.map { comment ->
-        CommentData(
-            id = comment.id,
-            username = comment.profileName,
-            comment = comment.content,
-            timestamp = comment.date,
-            likes = comment.likeCount,
-            profileImage = comment.profileAvatar,
-            showReplyButton = comment.repliesCount > 0,
-            totalReplies = comment.repliesCount
-        )
+        comment.toCommentData()
     }
 }
+
+fun Comment.toCommentData(): CommentData {
+    return CommentData(
+        id = id,
+        username = profileName,
+        comment = content,
+        timestamp = date,
+        likes = likeCount,
+        profileImage = profileAvatar,
+        showReplyButton = repliesCount > 0,
+        totalReplies = repliesCount
+    )
+}
+
 

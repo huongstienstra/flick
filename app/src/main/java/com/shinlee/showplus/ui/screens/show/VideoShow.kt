@@ -1,7 +1,7 @@
 package com.shinlee.showplus.ui.screens.show
 
 data class VideoShow(
-    val id: Int,
+    val id: Long,
     val description: String? = null,
     val videoUrl: String? = null,
     val thumbnailUrl: String? = null,

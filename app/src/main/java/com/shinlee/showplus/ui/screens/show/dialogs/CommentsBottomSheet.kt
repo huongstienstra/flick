@@ -1,22 +1,20 @@
 import com.shinlee.showplus.ui.screens.show.dialogs.InputCommentDialog
 
-import CommentsBottomSheetContent
-import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.shinlee.showplus.ui.screens.comment.CommentData
 import com.shinlee.showplus.R
@@ -29,10 +27,10 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
         private const val ARG_VIDEO_ID = "video_id"
         private const val ARG_TOTAL_COMMENTS = "total_of_comments"
 
-        fun newInstance(videoId: Int, totalOfComments: Int): CommentBottomSheet {
+        fun newInstance(videoId: Long, totalOfComments: Int): CommentBottomSheet {
             val fragment = CommentBottomSheet()
             val args = Bundle()
-            args.putInt(ARG_VIDEO_ID, videoId)
+            args.putLong(ARG_VIDEO_ID, videoId)
             args.putInt(ARG_TOTAL_COMMENTS, totalOfComments)
             fragment.arguments = args
             return fragment
@@ -41,34 +39,17 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
 
     private val viewModel: ShowViewModel by viewModel()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.comment_bottomsheet, container, false)
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            setupRatio(bottomSheetDialog)
-        }
-        return dialog
-    }
-
-    private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {
-        val bottomSheet =
-            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-        val behavior = BottomSheetBehavior.from(bottomSheet!!)
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        behavior.skipCollapsed = true
-        behavior.isDraggable = false
-
-        bottomSheet.background = null
-
-
     }
 
     override fun onStart() {
@@ -90,36 +71,35 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
         val screenHeight = displayMetrics.heightPixels
         val initialHeight = (screenHeight * 0.75).toInt()
 
-        behavior.peekHeight = initialHeight
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheet.background = null
 
-        var videoId = -1
+       behavior.maxWidth = initialHeight
+       behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        var videoId: Long = -1
         var totalOfComments = -1
         arguments?.let {
-            videoId = it.getInt(ARG_VIDEO_ID, -1)
+            videoId = it.getLong(ARG_VIDEO_ID, -1)
             totalOfComments = it.getInt(ARG_TOTAL_COMMENTS, 0)
         }
 
+        viewModel.currentVideoId = videoId
 
         view.findViewById<ComposeView>(R.id.compose_view).setContent {
+
             val commentPagingItems: LazyPagingItems<CommentData> =
-                viewModel.getCommentsPagingData(videoId).collectAsLazyPagingItems()
+                viewModel.getCommentsPagingData(viewModel.currentVideoId).collectAsLazyPagingItems()
 
             CommentsBottomSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(650.dp),
-                totalOfComments = totalOfComments.toString(),
+                viewModel = viewModel,
                 commentPagingItems = commentPagingItems,
-                onAddCommentAction = {
-                    InputCommentDialog().showByTag(childFragmentManager)
-                },
+                totalOfComments = totalOfComments.toString(),
                 onDismiss = {
                     dismissAllowingStateLoss()
                 },
-                onDone = {
-                    dismissAllowingStateLoss()
-                }
             )
 
         }

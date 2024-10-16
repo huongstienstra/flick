@@ -68,11 +68,8 @@ class InputCommentDialog : BottomSheetDialogFragment() {
                 modifier = androidx.compose.ui.Modifier
                     .fillMaxWidth()
                     .background(Color.White),
-                enableInputText = true,
                 onAddComment = {
 
-                }, onDone = {
-                    dismissAllowingStateLoss()
                 }
             )
         }

@@ -61,61 +61,70 @@ class ShowFragment : Fragment() {
     }
 
     private fun initializeVideoAdapter() {
-
-        videoAdapter = VideoAdapter(viewModel.getPlayer(), object : VideoAdapter.OnClickListener {
-            override fun onShare(url: String) {
-                val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                    putExtra(Intent.EXTRA_TEXT, url)
-                    type = "type/plain"
+        player = viewModel.getPlayer()
+        player?.let { player ->
+            videoAdapter = VideoAdapter(player, object : VideoAdapter.OnClickListener {
+                override fun onShare(url: String) {
+                    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                        putExtra(Intent.EXTRA_TEXT, url)
+                        type = "type/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
                 }
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            }
 
-            override fun onLikeVideo(video: VideoShow, position: Int) {
-                if (mainViewModel.isLoggedIn()) {
-                    video.isFavourite = !video.isFavourite
-                    val viewHolder =
-                        binding.recyclerView.findViewHolderForAdapterPosition(position) as? VideoAdapter.VideoViewHolder
-                    viewHolder?.updateLikeIcon(isFavourite = video.isFavourite)
-                    viewModel.likeVideo(video.id)
-                } else {
-                    this@ShowFragment.requestLoginDialog(
-                        onNext = {
-                            startActivity(Intent(context, AuthenticationActivity::class.java))
-                        }, onCancel = {
+                override fun onLikeVideo(video: VideoShow, position: Int) {
+                    if (mainViewModel.isLoggedIn()) {
+                        video.isFavourite = !video.isFavourite
+                        val viewHolder =
+                            binding.recyclerView.findViewHolderForAdapterPosition(position) as? VideoAdapter.VideoViewHolder
+                        viewHolder?.updateLikeIcon(isFavourite = video.isFavourite)
+                        viewModel.likeVideo(video.id)
+                    } else {
+                        this@ShowFragment.requestLoginDialog(
+                            onNext = {
+                                startActivity(Intent(context, AuthenticationActivity::class.java))
+                            }, onCancel = {}
+                        )
 
+                    }
+
+                }
+
+                override fun onComment(video: VideoShow) {
+                    if (mainViewModel.isLoggedIn()) {
+                        CommentBottomSheet.newInstance(
+                            videoId = video.id, totalOfComments = video.commentCount
+                        ).showByTag(childFragmentManager)
+                    } else {
+                        this@ShowFragment.requestLoginDialog(
+                            onNext = {
+                                startActivity(Intent(context, AuthenticationActivity::class.java))
+                            }, onCancel = {}
+                        )
+                    }
+
+                }
+
+                override fun onSubscribe() {
+                }
+
+                override fun onSeeMore() {
+                    val bottomSheet = VideoSeeMoreBottomSheet()
+                    bottomSheet.showByTag(childFragmentManager, object : OnClickListener {
+                        override fun onSeeDescription() {
+                            DescriptionBottomSheet().showByTag(childFragmentManager)
                         }
-                    )
 
+                        override fun onReport() {
+                            ReportBottomSheet().showByTag(childFragmentManager)
+                        }
+
+                    })
                 }
 
-            }
-
-            override fun onComment(video: VideoShow) {
-                CommentBottomSheet.newInstance(
-                    videoId = video.id, totalOfComments = video.commentCount
-                ).showByTag(childFragmentManager)
-            }
-
-            override fun onSubscribe() {
-            }
-
-            override fun onSeeMore() {
-                val bottomSheet = VideoSeeMoreBottomSheet()
-                bottomSheet.showByTag(childFragmentManager, object : OnClickListener {
-                    override fun onSeeDescription() {
-                        DescriptionBottomSheet().showByTag(childFragmentManager)
-                    }
-
-                    override fun onReport() {
-                        ReportBottomSheet().showByTag(childFragmentManager)
-                    }
-
-                })
-            }
-
-        })
+            })
+        }
 
         videoAdapter?.addLoadStateListener { loadState ->
             // Check if the initial load is complete and successful

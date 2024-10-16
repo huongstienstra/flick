@@ -1,6 +1,7 @@
 package com.shinlee.repository.mapping
 
 import com.shinlee.network.model.response.CommentResponse
+import com.shinlee.network.model.response.CommentResponseParse
 import com.shinlee.repository.model.Comment
 
 fun CommentResponse.toCommentList(): List<Comment> {
@@ -18,4 +19,17 @@ fun CommentResponse.toCommentList(): List<Comment> {
             )
         }
     }
+}
+
+fun CommentResponseParse.toComment(): Comment {
+    return Comment(
+        id = id ?: -1,
+        content = content ?: "",
+        videoId = videoId,
+        date = createdAt ?: updatedAt ?: "",
+        repliesCount = repliesCount ?: 0,
+        profileName = profile?.nickname ?: "",
+        profileAvatar = profile?.photo ?: "",
+        likeCount = likeCount ?: 0
+    )
 }

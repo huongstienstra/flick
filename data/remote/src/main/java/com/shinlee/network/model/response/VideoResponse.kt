@@ -5,7 +5,7 @@ import com.shinlee.network.model.BaseResponse
 
 data class VideoResponseParser(
     @SerializedName("id")
-    val id: Int? = null,
+    val id: Long? = null,
     @SerializedName("description")
     val description: String? = null,
     @SerializedName("video")

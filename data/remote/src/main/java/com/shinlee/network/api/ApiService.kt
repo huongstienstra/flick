@@ -8,8 +8,10 @@ import com.shinlee.network.model.request.RegistrationRequest
 import com.shinlee.network.model.response.RegistrationResponse
 import com.shinlee.network.model.response.VideoResponse
 import com.shinlee.network.model.request.LikeVideoRequest
+import com.shinlee.network.model.request.PostCommentRequest
 import com.shinlee.network.model.response.CommentResponse
 import com.shinlee.network.model.response.LikeVideoResponse
+import com.shinlee.network.model.response.PostCommentResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -28,10 +30,13 @@ interface ShowPlusApiService {
 
     @GET("api/videos/comments")
     suspend fun getComments(
-        @Query("id") videoId: Int,
+        @Query("id") videoId: Long,
         @Query("page") page: Int,
         @Query("page_size") pageSize: Int
     ): Response<CommentResponse>
+
+    @POST("api/videos/add-comment")
+    suspend fun postComment(@Body postComment: PostCommentRequest): Response<PostCommentResponse>
 
     @POST("/auth/login-with-email")
     suspend fun loginByEmail(@Body loginRequest: LoginRequest): Response<RegistrationResponse>

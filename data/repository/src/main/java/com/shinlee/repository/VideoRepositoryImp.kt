@@ -5,6 +5,8 @@ import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
 import com.shinlee.network.model.request.CommentRequest
 import com.shinlee.network.model.request.LikeVideoRequest
+import com.shinlee.network.model.request.PostCommentRequest
+import com.shinlee.repository.mapping.toComment
 import com.shinlee.repository.mapping.toCommentList
 import com.shinlee.repository.mapping.toVideoInfo
 import com.shinlee.repository.model.Comment
@@ -30,7 +32,7 @@ class VideoRepositoryImp(private val apiService: ShowPlusApiService) : VideoRepo
         }
     }
 
-    override suspend fun likeVideo(videoId: Int): ApiResult<Boolean> {
+    override suspend fun likeVideo(videoId: Long): ApiResult<Boolean> {
         val response = safeApiCall {
             apiService.likeVideo(LikeVideoRequest(videoId = videoId))
         }
@@ -47,7 +49,7 @@ class VideoRepositoryImp(private val apiService: ShowPlusApiService) : VideoRepo
     }
 
     override suspend fun getComments(
-        videoId: Int,
+        videoId: Long,
         page: Int,
         pageSize: Int
     ): ApiResult<List<Comment>> {
@@ -64,6 +66,24 @@ class VideoRepositoryImp(private val apiService: ShowPlusApiService) : VideoRepo
             is ApiResult.Success -> {
                 val comments = response.data.toCommentList()
                 ApiResult.success(comments)
+            }
+        }
+    }
+
+    override suspend fun postComment(videoId: Long, content: String): ApiResult<Comment?> {
+        val response = safeApiCall {
+            apiService.postComment(PostCommentRequest(videoId, content))
+        }
+
+        return when (response) {
+
+            is ApiResult.Error -> {
+                ApiResult.error(response.throwable)
+            }
+
+            is ApiResult.Success -> {
+                val comments = response.data.comment
+                ApiResult.success(comments?.toComment())
             }
         }
     }
