@@ -11,11 +11,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shinlee.showplus.ARG_SHOW_CONFIRM_PASSWORD
 import com.shinlee.showplus.MainActivity
 import com.shinlee.showplus.R
+import com.shinlee.showplus.databinding.FragmentInputOtpBinding
 import com.shinlee.showplus.extension.showExitConfirmationDialog
 import com.shinlee.showplus.ui.screens.authentication.nav.AuthNavigator
 import com.shinlee.showplus.ui.screens.authentication.signup.LoginFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.confirm_password.ConfirmPasswordFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.nick_name.InputNickNameFragment
+import com.shinlee.showplus.ui.screens.authentication.signup.otp.OTPScreenFragment
 import com.shinlee.showplus.ui.screens.authentication.signup.phone_number.InputPhoneNumberFragment
 
 class AuthenticationActivity : AppCompatActivity(), AuthNavigator {
@@ -72,6 +74,10 @@ class AuthenticationActivity : AppCompatActivity(), AuthNavigator {
 
     override fun navigateToInputNickName() {
         addFragment(InputNickNameFragment())
+    }
+
+    override fun navigateInputOTP() {
+        addFragment(OTPScreenFragment())
     }
 
     override fun navigateToMain() {

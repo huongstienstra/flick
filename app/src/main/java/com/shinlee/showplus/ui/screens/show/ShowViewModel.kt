@@ -76,7 +76,7 @@ class ShowViewModel(
                 initialLoadSize = 10,
                 prefetchDistance = 5,
                 enablePlaceholders = false,
-                maxSize = 30
+                maxSize = 20
             ),
             pagingSourceFactory = {
                 CommentPagingSource(repository, videoId)

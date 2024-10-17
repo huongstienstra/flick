@@ -13,25 +13,25 @@ data class RegistrationResponse(
         @SerializedName("id")
         val id: Int,
         @SerializedName("email")
-        val email: String,
+        val email: String? = null,
         @SerializedName("password")
-        val password: String,
+        val password: String? = null,
         @SerializedName("third_party_auth")
-        val thirdPartyAuth: String?,
+        val thirdPartyAuth: String? = null,
         @SerializedName("phone")
-        val phone: String?,
+        val phone: String? = null,
         @SerializedName("status")
-        val status: String,
+        val status: String? = null,
         @SerializedName("candy")
-        val candy: Int,
+        val candy: Int? = null,
         @SerializedName("invite_code")
-        val inviteCode: String?,
+        val inviteCode: String? = null,
         @SerializedName("profile")
-        val profile: List<Profile>
+        val profile: List<Profile>? = null
     ) {
         data class Profile(
             @SerializedName("nickname")
-            val nickname: String
+            val nickname: String? = null
         )
     }
 }

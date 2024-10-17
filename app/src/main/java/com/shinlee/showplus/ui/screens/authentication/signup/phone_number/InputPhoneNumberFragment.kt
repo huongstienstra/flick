@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.media3.common.util.Log
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -27,8 +28,7 @@ import java.util.concurrent.TimeUnit
 
 
 class InputPhoneNumberFragment : Fragment() {
-    private val viewModel: LoginViewModel by sharedViewModel<LoginViewModel>()
-    private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    private val viewModel: PhoneNumberViewModel by sharedViewModel<PhoneNumberViewModel>()
 
     private var navigator: AuthNavigator? = null
 
@@ -46,7 +46,6 @@ class InputPhoneNumberFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setupCallbacks()
         return inflater.inflate(R.layout.fragment_third_step_signup, container, false).apply {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -57,45 +56,30 @@ class InputPhoneNumberFragment : Fragment() {
                             .background(Color.White),
                         navigateUp = {
                             navigator?.navigateUp()
-                        }, onNext = { phoneNumber ->
-                            sendVerificationCode(phoneNumber = "+84969283845")
+                            viewModel.resetPhoneNumber()
                         },
-                        viewModel = viewModel
+                        onNext = {
+                            navigator?.navigateInputOTP()
+                        },
+                        onOpenCountryCode = {
+                            CountryCodeBottomSheet().showByTag(
+                                childFragmentManager,
+                                object : OnSelected {
+                                    override fun onCountryCodeSelected(countryCode: String) {
+                                        viewModel.updateCountryCode(countryCode)
+                                    }
+                                })
+                        },
+                        viewModel = viewModel,
                     )
                 }
             }
         }
     }
 
-
-    private fun sendVerificationCode(phoneNumber: String) {
-        val options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(requireActivity())
-            .setCallbacks(callbacks)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.loadCountries()
     }
 
-    private fun setupCallbacks() {
-        callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                // Auto verification completed
-//                signInWithPhoneAuthCredential(credential)
-            }
-
-            override fun onVerificationFailed(e: FirebaseException) {
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                Log.e("phone", "$e")
-            }
-
-            override fun onCodeSent(
-                verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken
-            ) {
-
-            }
-        }
-    }
 }

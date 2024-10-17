@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
 
         if (currentFragment !is ShowFragment) {
-            findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId =
-                R.id.showFragment
+//            findViewById<CustomBottomNavigationView>(R.id.bottom_navigation).selectedItemId =
+//                R.id.showFragment
             loadFragment(ShowFragment())
         } else {
             finish()

@@ -31,32 +31,38 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinlee.common.composable.CountryCodeSelector
 import com.shinlee.common.theme.AppSpace
-import com.shinlee.showplus.ui.screens.authentication.signup.LoginViewModel
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
 fun InputPhoneNumberScreen(
     modifier: Modifier,
     navigateUp: () -> Unit,
-    onNext: (String) -> Unit,
-    viewModel: LoginViewModel
+    onNext: () -> Unit,
+    onOpenCountryCode: () -> Unit,
+    viewModel: PhoneNumberViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
-    var value by remember { mutableStateOf("") }
+//    LaunchedEffect(Unit) {
+//        focusRequester.requestFocus()
+//    }
 
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         TopBar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -88,8 +94,10 @@ fun InputPhoneNumberScreen(
                 )
         ) {
             CountryCodeSelector(
-                countryCode = "84",
-                onSelectorClick = {},
+                countryCode = uiState.selectedCountryCode,
+                onSelectorClick = {
+                    onOpenCountryCode()
+                },
                 modifier = Modifier
                     .padding(end = AppSpace.space8dp)
                     .wrapContentSize()
@@ -97,48 +105,15 @@ fun InputPhoneNumberScreen(
                     .background(Color.White)
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(
-                        width = 1.dp,
-                        color = Color.Gray.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .background(color = Color.White)
-                    .padding(horizontal = AppSpace.space16dp)
-            ) {
-                BasicTextField(
-                    value = value,
-                    onValueChange = {
-                        value = it
-                        viewModel.updatePhoneNumber(it)
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number).copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    visualTransformation = VisualTransformation.None,
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            if (value.isEmpty()) {
-                                Text(
-                                    text = stringResource(R.string.placeholder_phone_number),
-                                    color = Color.Gray
-                                )
-                            }
-                            innerTextField()
-                        }
-
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
+            PhoneInput(
+                value = uiState.phoneNumber ?: "",
+                onValueChange = {
+                    viewModel.updatePhoneNumber(it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                focusRequester = focusRequester,
+                errorMessage = uiState.phoneNumberError,
+            )
 
         }
 
@@ -151,8 +126,72 @@ fun InputPhoneNumberScreen(
             text = stringResource(R.string.btn_next),
             enable = uiState.phoneNumberError == null,
             onClick = {
-                onNext(value)
+                focusManager.clearFocus()
+                onNext()
             }
         )
+    }
+}
+
+@Composable
+fun PhoneInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester,
+    errorMessage: String? = null,
+) {
+    Column(modifier = modifier) {
+        Box(
+            // color = if (errorMessage != null) Color.Red else Color.Gray.copy(alpha = 0.5f)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(44.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .border(
+                    width = 1.dp,
+                    color = if (errorMessage != null) Color.Red else Color.Gray.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .background(color = Color.White)
+                .padding(horizontal = AppSpace.space16dp)
+        ) {
+            BasicTextField(
+                value = value,
+                onValueChange = {
+                    onValueChange(it)
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                visualTransformation = VisualTransformation.None,
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (value.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.placeholder_phone_number),
+                                color = Color.Gray
+                            )
+                        }
+                        innerTextField()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .focusRequester(focusRequester)
+            )
+        }
+
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
     }
 }

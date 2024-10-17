@@ -43,7 +43,7 @@ fun CountryCodeSelector(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "+$countryCode",
+                text = countryCode,
                 color = Color.DarkGray
             )
             Icon(

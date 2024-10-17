@@ -16,15 +16,15 @@ fun RegistrationResponse.toEntity(): RegistrationEntity {
 fun RegistrationResponse.UserInfoResponse.toUserInfoEntity(): UserInfo {
     return UserInfo(
         id = this.id.toString(),
-        email = this.email,
+        email = this.email ?: "",
         phone = this.phone ?: "",
-        profile = this.profile.map { it.toProfileEntity() }
+        profile = if (this.profile != null) this.profile!!.map { it.toProfileEntity() } else emptyList()
     )
 }
 
 fun RegistrationResponse.UserInfoResponse.Profile.toProfileEntity(): UserInfo.Profile {
     return UserInfo.Profile(
-        nickName = this.nickname
+        nickName = this.nickname ?: ""
     )
 }
 

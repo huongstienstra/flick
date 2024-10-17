@@ -30,7 +30,9 @@
     <string name="placeholder_email">email@email.com</string>
     <string name="placeholder_password">English, at least 8 characters</string>
     <string name="place_holder_add_nickname">Add nickname</string>
-
+    <string name="label_enter_otp">Enter 6-digit number</string>
+    <string name="text_otp_sent_to_phone">Your code was sent to %s</string>
+    <string name="button_resend_code">Resend code</string>
 
     <string name="dialog_request_login_title_positive"> Login</string>
     <string name="dialog_request_login_title_negative">dialog_request_login_title_negative</string>

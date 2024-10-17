@@ -6,5 +6,6 @@ interface AuthNavigator {
     fun navigateToConfirmPassword(isShowConfirmPassword: Boolean = true)
     fun navigateToInputPhoneNumber()
     fun navigateToInputNickName()
+    fun navigateInputOTP()
     fun navigateUp()
 }

@@ -1,9 +1,11 @@
 package com.shinlee.repository
 
+import android.content.RestrictionEntry
 import com.shinlee.network.ApiResult
 import com.shinlee.network.api.ShowPlusApiService
 import com.shinlee.network.handler.safeApiCall
 import com.shinlee.network.model.request.CheckEmailExistRequest
+import com.shinlee.network.model.request.FirebaseToken
 import com.shinlee.network.model.request.LoginRequest
 import com.shinlee.network.model.request.RegistrationRequest
 import com.shinlee.repository.mapping.toCheckEmailExistEntity
@@ -22,6 +24,26 @@ class AuthenticationRepositoryImp(private val apiService: ShowPlusApiService) :
     ): ApiResult<RegistrationEntity> {
         val response = safeApiCall {
             apiService.loginByEmail(LoginRequest(email, password, passwordConfirm, firebaseToken))
+        }
+        return when (response) {
+
+            is ApiResult.Error -> {
+                ApiResult.error(response.throwable)
+            }
+
+            is ApiResult.Success -> {
+                val result = response.data.toEntity()
+                ApiResult.success(result)
+            }
+        }
+    }
+
+    override suspend fun loginWithPhone(
+        idToken: String,
+        firebaseToken: String
+    ): ApiResult<RegistrationEntity> {
+        val response = safeApiCall {
+            apiService.loginByPhone(FirebaseToken(idToken, firebaseToken))
         }
         return when (response) {
 

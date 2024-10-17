@@ -2,6 +2,7 @@ package com.shinlee.network.api
 
 import com.shinlee.network.model.request.CheckEmailExistRequest
 import com.shinlee.network.model.request.CommentRequest
+import com.shinlee.network.model.request.FirebaseToken
 import com.shinlee.network.model.response.CheckEmailExistResponse
 import com.shinlee.network.model.request.LoginRequest
 import com.shinlee.network.model.request.RegistrationRequest
@@ -40,6 +41,9 @@ interface ShowPlusApiService {
 
     @POST("/auth/login-with-email")
     suspend fun loginByEmail(@Body loginRequest: LoginRequest): Response<RegistrationResponse>
+
+    @POST("auth/login-with-phone")
+    suspend fun loginByPhone(@Body loginRequest: FirebaseToken): Response<RegistrationResponse>
 
     @POST("/auth/check-exist-email")
     suspend fun checkEmailExist(@Body email: CheckEmailExistRequest): Response<CheckEmailExistResponse>

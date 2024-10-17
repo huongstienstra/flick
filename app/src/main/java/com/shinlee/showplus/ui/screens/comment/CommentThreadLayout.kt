@@ -76,7 +76,7 @@ fun CommentThreadLayout(
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(bottom = addCommentSectionHeight),
-            flingBehavior = flingBehavior
+           //flingBehavior = flingBehavior
         ) {
             items(commentPagingItems.itemCount) { index ->
                 val comment = commentPagingItems[index]

@@ -140,7 +140,7 @@ fun InputNickNameScreen(
             onValueChange = {
                 viewModel.updateInvitedCode(it)
             },
-            error = uiState.invitedCodeError,
+            error = null,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text).copy(
                 imeAction = ImeAction.Done
             ),

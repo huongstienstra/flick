@@ -1,7 +1,6 @@
 package com.shinlee.showplus.ui.screens.authentication.signup
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -26,13 +25,11 @@ data class SignupUiState(
     val confirmPassword: String = "",
     val nickName: String = "",
     val invitedCode: String? = null,
-    val phoneNumber: String = "",
 
     val emailError: String? = null,
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
     val nickNameError: String? = null,
-    val invitedCodeError: String? = null,
     val phoneNumberError: String? = null,
 
     val completedNickName: Boolean = false,
@@ -55,8 +52,6 @@ class LoginViewModel(
             passwordError = "",
             confirmPasswordError = "",
             nickNameError = "",
-            invitedCodeError = "",
-            phoneNumberError = ""
         )
     )
     val uiState: StateFlow<SignupUiState> = _uiState.asStateFlow()
@@ -105,7 +100,7 @@ class LoginViewModel(
     }
 
     fun isPasswordValid(isCheckConfirmPassword: Boolean): Boolean {
-        if(isCheckConfirmPassword) {
+        if (isCheckConfirmPassword) {
             val currentState = _uiState.value
             return currentState.password.length >= 8 &&
                     currentState.password == currentState.confirmPassword &&
@@ -130,26 +125,17 @@ class LoginViewModel(
         _uiState.update {
             it.copy(
                 invitedCode = code,
-                invitedCodeError = validateCode(code)
             )
         }
     }
 
-    fun updatePhoneNumber(phone: String) {
-        _uiState.update {
-            it.copy(
-                phoneNumber = phone,
-                phoneNumberError = validatePhoneNumber(phone = it.phoneNumber)
-            )
-        }
-    }
 
     fun resetErrorMessage() {
         _uiState.update {
             it.copy(errorMessage = null)
         }
-
     }
+
 
     fun onLoginEmail() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -171,7 +157,12 @@ class LoginViewModel(
 
                 _uiState.update { it.copy(completedLogin = true) }
             } else if (result is ApiResult.Error) {
-                _uiState.update { it.copy(completedLogin = false, passwordError = result.throwable.message) }
+                _uiState.update {
+                    it.copy(
+                        completedLogin = false,
+                        passwordError = result.throwable.message
+                    )
+                }
             }
         }
     }
@@ -196,7 +187,12 @@ class LoginViewModel(
 
                 _uiState.update { it.copy(completedNickName = true) }
             } else if (result is ApiResult.Error) {
-                _uiState.update { it.copy(completedNickName = false, nickNameError = result.throwable.message) }
+                _uiState.update {
+                    it.copy(
+                        completedNickName = false,
+                        nickNameError = result.throwable.message
+                    )
+                }
             }
         }
 
@@ -231,24 +227,6 @@ class LoginViewModel(
         }
     }
 
-
-    private fun validatePassword(password: String): String? {
-        return when {
-            password.isEmpty() -> "Password cannot be empty"
-            password.length < 8 -> "Password must be at least 8 characters"
-//            !password.any { it.isDigit() } -> "Password must contain at least one number"
-//            !password.any { it.isLetter() } -> "Password must contain at least one letter"
-            else -> null
-        }
-    }
-
-    private fun validateConfirmPassword(password: String, confirmPassword: String): String? {
-        return when {
-            password != confirmPassword -> "Your password no correct"
-            else -> null
-        }
-    }
-
     private fun validateNickName(nickName: String): String? {
         return when {
             nickName.isEmpty() -> "nick name not be empty"
@@ -256,20 +234,6 @@ class LoginViewModel(
         }
     }
 
-    private fun validateCode(code: String): String? {
-        return when {
-            code.isEmpty() -> "code not be empty"
-            code.length > 6 -> "code must be at least 6 characters"
-            else -> null
-        }
-    }
-
-    private fun validatePhoneNumber(phone: String): String? {
-        return when {
-            phone.isEmpty() -> "Phone can not be empty"
-            else -> null
-        }
-    }
 
     private fun validateEmail(email: String): String? {
         return if (email.isEmpty()) {
