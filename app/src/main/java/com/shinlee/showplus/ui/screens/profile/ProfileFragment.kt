@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -34,19 +39,37 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.loginState.collect { loginState ->
-                    when (loginState) {
-                        LoginState.LoggedIn -> {
-                            // User is logged in, show profile content
-                        }
+                    composeView.setContent {
+                        when (loginState) {
+                            LoginState.LoggedIn -> {
+                                ProfileScreen(
+                                    viewModel = mainViewModel,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(Color.White)
+                                )
+                            }
 
-                        LoginState.Unknown -> {
+                            LoginState.Unknown -> {
+                                // Show loading or placeholder UI
+                                // LoadingScreen()
+                            }
 
+                            LoginState.IncompleteProfile -> {
+                                // Show incomplete profile UI
+                                this@ProfileFragment.showLoginDialog()
+                            }
+
+                            else -> {
+                                // Show login UI
+                                // LoginScreen(onLoginClick = { showLoginDialog() })
+                            }
                         }
-                        LoginState.IncompleteProfile-> showLoginDialog()
-                        else -> showLoginDialog()
                     }
                 }
             }
@@ -55,7 +78,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showLoginDialog() {
-       this@ProfileFragment.requestLoginDialog(
+        this@ProfileFragment.requestLoginDialog(
             onNext = {
                 startActivity(Intent(context, AuthenticationActivity::class.java))
             },

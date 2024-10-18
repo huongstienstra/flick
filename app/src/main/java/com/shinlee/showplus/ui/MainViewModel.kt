@@ -21,14 +21,20 @@ sealed class LoginState {
     data object TokenExpired : LoginState()
 }
 
+class ProfileUiState(
+    var userName: String? = null,
+)
+
 class MainViewModel(private val sharedPreferencesDataSource: SharedPreferencesDataSource) :
     ViewModel() {
-
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Unknown)
     val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
 
-     fun checkLoginStatus() {
+    private val _uiState = MutableStateFlow(ProfileUiState(null))
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+
+    fun checkLoginStatus() {
         viewModelScope.launch(Dispatchers.IO) {
             val gson = Gson()
             val userInfoJson = sharedPreferencesDataSource.getUserInformation()
@@ -40,6 +46,9 @@ class MainViewModel(private val sharedPreferencesDataSource: SharedPreferencesDa
             }
             if (userInfo != null && userInfo.profile.isNotEmpty() && token.isNotEmpty()) {
                 _loginState.value = LoginState.LoggedIn
+
+                val userProfile = userInfo.profile.firstOrNull()
+                _uiState.value.userName = userProfile?.nickName
             } else {
                 _loginState.value = LoginState.IncompleteProfile
             }
