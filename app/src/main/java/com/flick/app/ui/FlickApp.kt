@@ -56,8 +56,14 @@ fun FlickApp(
                     onGetPlayer = {
                         showViewModel.getPlayer() as? ExoPlayer
                     },
+                    onGetPlayerForVideo = { videoUrl ->
+                        showViewModel.getPlayerForVideo(videoUrl)
+                    },
                     onReleasePlayer = { player ->
                         showViewModel.releasePlayer(player)
+                    },
+                    onPreloadVideo = { videoUrl ->
+                        showViewModel.preloadNextVideo(videoUrl)
                     },
                     onLikeVideo = { videoId ->
                         showViewModel.likeVideo(videoId)

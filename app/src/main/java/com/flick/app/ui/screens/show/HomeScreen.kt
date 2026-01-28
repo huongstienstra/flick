@@ -51,13 +51,19 @@ import timber.log.Timber
 
 /**
  * Home screen with vertical video feed (TikTok-style)
+ *
+ * Optimizations:
+ * - Pre-renders next video surface for instant playback on swipe
+ * - Uses adaptive buffering based on network conditions
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     videos: LazyPagingItems<VideoShow>,
     onGetPlayer: suspend () -> ExoPlayer?,
+    onGetPlayerForVideo: (String) -> ExoPlayer,
     onReleasePlayer: (ExoPlayer) -> Unit,
+    onPreloadVideo: (String) -> Unit,
     onLikeVideo: (Long) -> Unit,
     onCommentClick: (VideoShow) -> Unit,
     onShareClick: (VideoShow) -> Unit,
@@ -70,6 +76,7 @@ fun HomeScreen(
 
     var currentPage by remember { mutableIntStateOf(0) }
     var currentPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
+    var currentVideoUrl by remember { mutableStateOf<String?>(null) }
 
     // Track page changes
     LaunchedEffect(pagerState) {
@@ -79,13 +86,42 @@ fun HomeScreen(
         }
     }
 
-    // Get player for current page
-    LaunchedEffect(currentPage) {
+    // Get player for current page - uses preloaded player if available
+    LaunchedEffect(currentPage, videos.itemCount) {
+        // Release previous player
         currentPlayer?.let { player ->
             player.stop()
             onReleasePlayer(player)
         }
-        currentPlayer = onGetPlayer()
+
+        // Get video URL for current page
+        val video = if (currentPage < videos.itemCount) videos[currentPage] else null
+        val videoUrl = video?.videoUrl
+
+        if (videoUrl != null && videoUrl.isNotBlank()) {
+            currentVideoUrl = videoUrl
+            // Try to get preloaded player, falls back to new player
+            currentPlayer = onGetPlayerForVideo(videoUrl)
+        } else {
+            currentVideoUrl = null
+            currentPlayer = onGetPlayer()
+        }
+    }
+
+    // Preload next video when page settles (after swipe animation completes)
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { settledPage ->
+            Timber.d("Page settled at: $settledPage")
+            val nextIndex = settledPage + 1
+            if (nextIndex < videos.itemCount) {
+                videos[nextIndex]?.videoUrl?.let { url ->
+                    if (url.isNotBlank()) {
+                        Timber.d("Preloading next video: $url")
+                        onPreloadVideo(url)
+                    }
+                }
+            }
+        }
     }
 
     Box(
@@ -137,9 +173,10 @@ private fun VideoPageContent(
     var likeCount by remember(video.id) { mutableIntStateOf(video.voteCount) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Video Player
+        // Video Player with thumbnail for loading state
         VideoPlayer(
             videoUrl = video.videoUrl ?: "",
+            thumbnailUrl = video.thumbnailUrl,
             player = player,
             isPlaying = isPlaying,
             modifier = Modifier.fillMaxSize()

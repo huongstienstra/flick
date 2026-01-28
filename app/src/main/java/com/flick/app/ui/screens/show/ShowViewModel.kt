@@ -18,9 +18,11 @@ import com.flick.app.paging_source.CommentPagingSource
 import com.flick.app.paging_source.VideoPagingSource
 import com.flick.app.ui.screens.comment.CommentData
 import com.flick.app.ui.screens.show.core.video.ExoPlayerCache
+import com.flick.app.ui.screens.show.core.video.VideoPreloader
 import com.flick.app.ui.screens.show.mapping.toCommentData
 import com.flick.app.ui.screens.show.mapping.toCommentDataList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import timber.log.Timber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 
 class ShowViewModel(
     private val playerCache: ExoPlayerCache,
+    private val videoPreloader: VideoPreloader,
     private val repository: VideoRepository
 ) : ViewModel() {
 
@@ -41,6 +44,38 @@ class ShowViewModel(
 
     fun getPlayer() = playerCache.getPlayer()
     fun releasePlayer(player: ExoPlayer) = playerCache.releasePlayer(player)
+
+    /**
+     * Gets a player for the given video URL.
+     * If the video was preloaded, returns the preloaded player for instant playback.
+     * Otherwise, returns a new player from the cache.
+     */
+    fun getPlayerForVideo(videoUrl: String): ExoPlayer {
+        val preloadedPlayer = videoPreloader.getPreloadedPlayer(videoUrl)
+        return if (preloadedPlayer != null) {
+            Timber.d("ShowViewModel: Using preloaded player for: $videoUrl")
+            preloadedPlayer
+        } else {
+            Timber.d("ShowViewModel: Getting new player for: $videoUrl")
+            playerCache.getPlayer()
+        }
+    }
+
+    /**
+     * Preloads the next video for instant playback on swipe.
+     * Call this when the user settles on a page.
+     */
+    fun preloadNextVideo(videoUrl: String) {
+        Timber.d("ShowViewModel: Preloading next video: $videoUrl")
+        videoPreloader.preloadNext(videoUrl)
+    }
+
+    /**
+     * Checks if a video is preloaded and ready for instant playback.
+     */
+    fun isVideoPreloaded(videoUrl: String): Boolean {
+        return videoPreloader.isPreloaded(videoUrl)
+    }
 
     private val _isLikeVideo = MutableLiveData<Boolean>()
     val isLikeVideo: LiveData<Boolean> = _isLikeVideo
@@ -120,10 +155,12 @@ class ShowViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        videoPreloader.clear()
         playerCache.releaseAllPlayers()
     }
 
     fun releaseAllPlayers() {
+        videoPreloader.clear()
         playerCache.releaseAllPlayers()
     }
 }

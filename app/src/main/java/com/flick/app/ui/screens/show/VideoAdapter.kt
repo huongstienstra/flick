@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.flick.app.databinding.VideoItemViewV2Binding
+import com.flick.app.ui.screens.show.core.FrameScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,6 +43,9 @@ class VideoAdapter(
     private var isSeeking = false
     private var progressUpdateJob: Job? = null
     private val progressUpdateScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    // Frame scheduler for distributing heavy tasks across frames
+    private val frameScheduler = FrameScheduler.getInstance()
 
 
     companion object {
@@ -78,12 +82,12 @@ class VideoAdapter(
         }
 
         fun bind(video: VideoShow, position: Int) {
+            // Immediate lightweight text updates (fast, no frame scheduling needed)
             binding.tvName.text = video.profileNickname ?: ""
             binding.tvDesc.text = video.description ?: ""
             binding.tvTag.text = video.tags?.joinToString(", ") { it.content ?: "" } ?: ""
             binding.btnLike.setText(video.voteCount.toString())
             binding.btnComment.setText(video.commentCount.toString())
-
 
             binding.videoControllerOverlay.setPlayer(player)
 
@@ -92,16 +96,20 @@ class VideoAdapter(
                 binding.videoControllerOverlay.show()
             }
 
-            if (!video.profilePhoto.isNullOrEmpty()) {
-                Glide.with(itemView)
-                    .load(video.profilePhoto)
-                    .placeholder(com.flick.common.R.drawable.avatar)
-                    .apply(
-                        RequestOptions()
-                            .circleCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    )
-                    .into(binding.avatar)
+            // Schedule heavy image loading tasks to be distributed across frames
+            // This prevents jank during fast scrolling
+            frameScheduler.scheduleTask {
+                if (!video.profilePhoto.isNullOrEmpty()) {
+                    Glide.with(itemView)
+                        .load(video.profilePhoto)
+                        .placeholder(com.flick.common.R.drawable.avatar)
+                        .apply(
+                            RequestOptions()
+                                .circleCrop()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        )
+                        .into(binding.avatar)
+                }
             }
 
             if (!video.contestTitle.isNullOrEmpty()) {
@@ -111,12 +119,14 @@ class VideoAdapter(
 
             updateLikeIcon(video.isFavourite)
 
-            //set thumbnail
-            Glide.with(itemView)
-                .load(video.thumbnailUrl)
-                .apply(RequestOptions().centerCrop())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(binding.thumbnail)
+            // Schedule thumbnail loading on next frame
+            frameScheduler.scheduleTask {
+                Glide.with(itemView)
+                    .load(video.thumbnailUrl)
+                    .apply(RequestOptions().centerCrop())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.thumbnail)
+            }
 
             // show thumbnail and play video for the first view holder
             showThumbnail()

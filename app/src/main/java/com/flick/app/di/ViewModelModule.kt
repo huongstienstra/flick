@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { MainViewModel(get()) }
-    viewModel { ShowViewModel(get(), get()) }
+    viewModel { ShowViewModel(get(), get(), get()) }
     viewModel { PermissionViewModel() }
     viewModel { PhoneNumberViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
