@@ -132,10 +132,6 @@ Shared components:
 - `ShowViewModel`: Manages video feed, likes, and comments
 - `SearchViewModel`: Handles search query and results
 
-## License
-
-This project is for educational and portfolio purposes.
-
 ## Acknowledgments
 
 - [Pexels](https://www.pexels.com/) for providing free video content API
