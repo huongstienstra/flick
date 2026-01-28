@@ -1,26 +1,10 @@
-# Flick
+# Video Optimization Techniques
 
-A modern TikTok-style vertical video streaming app for Android, built with Kotlin, Jetpack Compose, and clean architecture principles.
-
-![Android](https://img.shields.io/badge/Android-3DDC84?style=flat&logo=android&logoColor=white)
-![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=white)
-![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=flat&logo=jetpack-compose&logoColor=white)
-![ExoPlayer](https://img.shields.io/badge/ExoPlayer-FF0000?style=flat&logo=youtube&logoColor=white)
-
-## Features
-
-- Vertical video feed with smooth swiping (TikTok-style)
-- Video search functionality
-- Like and comment on videos
-- User profiles and authentication
-- **Advanced video optimizations** (see below)
-- Clean architecture with multi-module structure
+This document showcases the **4 key video optimizations** implemented in Flick, inspired by [TikTok's Android engineering](https://android-developers.googleblog.com/2022/08/precise-improvements-how-tiktok-enhanced-its-social-experience-on-android.html).
 
 ---
 
-## Video Optimization Techniques
-
-This app implements **4 key optimizations** inspired by [TikTok's Android engineering](https://android-developers.googleblog.com/2022/08/precise-improvements-how-tiktok-enhanced-its-social-experience-on-android.html):
+## Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -43,7 +27,7 @@ This app implements **4 key optimizations** inspired by [TikTok's Android engine
 
 ---
 
-### 1. Adaptive Buffer Sizing
+## 1. Adaptive Buffer Sizing
 
 Dynamically adjusts video buffer based on network conditions to optimize startup time and prevent rebuffering.
 
@@ -87,7 +71,7 @@ Dynamically adjusts video buffer based on network conditions to optimize startup
 
 ---
 
-### 2. Video Pre-rendering
+## 2. Video Pre-rendering
 
 Pre-loads the next video while the current one plays, enabling **instant playback** on swipe.
 
@@ -121,7 +105,7 @@ Pre-loads the next video while the current one plays, enabling **instant playbac
     └─────────────────────────────────────────────────────────────┘
 ```
 
-**Performance Impact:**
+### Performance Impact
 
 ```
     Without Preloading:
@@ -137,7 +121,7 @@ Pre-loads the next video while the current one plays, enabling **instant playbac
 
 ---
 
-### 3. Frame Distribution
+## 3. Frame Distribution
 
 Distributes heavy tasks across multiple frames using `Choreographer` to prevent jank during scrolling.
 
@@ -163,7 +147,7 @@ Distributes heavy tasks across multiple frames using `Choreographer` to prevent 
     └─────────────────────────────────────────────────────────┘
 ```
 
-**Choreographer Callback:**
+### Choreographer Callback Flow
 
 ```
          ┌──────────────────────────────────────────┐
@@ -197,7 +181,7 @@ Distributes heavy tasks across multiple frames using `Choreographer` to prevent 
 
 ---
 
-### 4. Thumbnail Loading State
+## 4. Thumbnail Loading State
 
 Shows video thumbnail during buffering to eliminate black screen flash.
 
@@ -221,7 +205,7 @@ Shows video thumbnail during buffering to eliminate black screen flash.
     └─────────────────────┘            └─────────────────────┘
 ```
 
-**State Flow:**
+### State Flow
 
 ```
     ┌─────────┐   prepare()   ┌───────────┐  first frame  ┌─────────┐
@@ -291,17 +275,6 @@ Shows video thumbnail during buffering to eliminate black screen flash.
 │  └─────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           DATA MODULES                                   │
-├──────────────────┬──────────────────┬───────────────────────────────────┤
-│   data:remote    │  data:repository │      data:local                   │
-│  ┌────────────┐  │  ┌────────────┐  │  ┌────────────┐                   │
-│  │PexelsAPI   │  │  │VideoRepo   │  │  │SharedPrefs │                   │
-│  │Service     │──┼─▶│Impl        │──┼─▶│DataSource  │                   │
-│  └────────────┘  │  └────────────┘  │  └────────────┘                   │
-└──────────────────┴──────────────────┴───────────────────────────────────┘
 ```
 
 ---
@@ -327,55 +300,8 @@ app/src/main/java/com/flick/app/
 
 ---
 
-## Tech Stack
+## References
 
-| Category | Technology |
-|----------|------------|
-| UI | Jetpack Compose, Material 3 |
-| Video | ExoPlayer (Media3) |
-| Networking | Retrofit, OkHttp |
-| DI | Koin |
-| Image Loading | Coil |
-| Async | Kotlin Coroutines, Flow |
-| Paging | Paging 3 |
-| Logging | Timber |
-
----
-
-## Setup
-
-### Prerequisites
-
-- Android Studio Hedgehog (2023.1.1) or newer
-- JDK 8 or higher
-- Android SDK 34
-
-### API Key Configuration
-
-This app uses the [Pexels API](https://www.pexels.com/api/) for video content:
-
-1. Get a free API key from [Pexels](https://www.pexels.com/api/)
-2. Add your API key to `local.properties`:
-
-```properties
-PEXELS_API_KEY=your_api_key_here
-```
-
-### Build
-
-```bash
-./gradlew assembleDebug
-```
-
----
-
-## License
-
-This project is for educational and portfolio purposes.
-
-## Acknowledgments
-
-- [TikTok Android Engineering Blog](https://android-developers.googleblog.com/2022/08/precise-improvements-how-tiktok-enhanced-its-social-experience-on-android.html) for optimization techniques
-- [Pexels](https://www.pexels.com/) for free video content API
-- [ExoPlayer](https://github.com/google/ExoPlayer) for video playback
-- [Jetpack Compose](https://developer.android.com/jetpack/compose) for modern UI toolkit
+- [TikTok Android Engineering Blog](https://android-developers.googleblog.com/2022/08/precise-improvements-how-tiktok-enhanced-its-social-experience-on-android.html)
+- [ExoPlayer Documentation](https://developer.android.com/guide/topics/media/exoplayer)
+- [Android Choreographer](https://developer.android.com/reference/android/view/Choreographer)
