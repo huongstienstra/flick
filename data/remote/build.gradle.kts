@@ -1,10 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
+// Read local.properties for API keys
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 android {
-    namespace = "com.shinlee.network"
+    namespace = "com.flick.network"
     compileSdk = 34
 
     defaultConfig {
@@ -13,7 +22,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField ("String", "BASE_URL",  "\"https://devapiv2.showpl.com\"") // change your url here
+        buildConfigField("String", "BASE_URL", "\"https://devapiv2.showpl.com\"")
+        buildConfigField("String", "PEXELS_BASE_URL", "\"https://api.pexels.com/\"")
+        buildConfigField("String", "PEXELS_API_KEY", "\"${localProperties.getProperty("PEXELS_API_KEY", "")}\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

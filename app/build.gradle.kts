@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.shinlee.showplus"
+    namespace = "com.flick.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.shinlee.showplus"
+        applicationId = "com.flick.app"
         minSdk = 24
         targetSdk = 34
 
@@ -45,6 +45,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -138,6 +139,15 @@ dependencies {
     // Paging
     implementation ("androidx.paging:paging-rxjava3:3.3.2")
     implementation ("androidx.paging:paging-compose:3.3.2")
+
+    // Timber logging
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    // Testing
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 
 
 

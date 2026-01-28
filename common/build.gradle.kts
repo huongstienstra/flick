@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shinlee.common"
+    namespace = "com.flick.common"
     compileSdk = 34
 
     defaultConfig {

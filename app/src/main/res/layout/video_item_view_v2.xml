@@ -35,7 +35,7 @@
         android:layout_marginBottom="@dimen/dp_8"
         android:orientation="vertical">
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             app:iconSrc="@drawable/ic_like"
             app:label="99.9k" />
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             app:iconSrc="@drawable/ic_comment"
             app:label="9,999" />
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             app:iconSrc="@drawable/ic_share"
             app:label="share" />
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,14 +144,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ProgressBar
-        android:id="@+id/video_progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <com.flick.common.views.VideoControllerOverlay
+        android:id="@+id/video_controller_overlay"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_gravity="bottom"
-        android:max="100"
-        android:progressTint="#FF0000" />
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom" />
 
     <LinearLayout
         android:id="@+id/contest_view"
@@ -186,7 +183,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iconMegaphone"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="ShowPlus Competition." />
+            tools:text="Flick Competition." />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_detail_contest"

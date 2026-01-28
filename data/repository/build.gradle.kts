@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shinlee.repository"
+    namespace = "com.flick.repository"
     compileSdk = 34
 
     defaultConfig {
@@ -38,11 +38,14 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // DATA MODULE
     implementation(project(":data:remote"))
+    implementation(project(":data:local"))
 
     // KOIN
     implementation (libs.koin.android)

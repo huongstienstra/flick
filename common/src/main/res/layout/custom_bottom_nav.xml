@@ -30,52 +30,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/nav_contest"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/nav_contest_icon"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:src="@drawable/contest_icon_selector" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/nav_contest_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/contest"
-            android:textSize="@dimen/text_12sp"
-            android:textColor="@color/black"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/nav_upload"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/nav_upload_icon"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:src="@drawable/ic_upload" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/nav_upload_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/upload"
-            android:textSize="@dimen/text_12sp"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/nav_search"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -120,6 +74,5 @@
             android:textSize="@dimen/text_12sp"
             android:textColor="@color/black"/>
     </LinearLayout>
-
 
 </LinearLayout>

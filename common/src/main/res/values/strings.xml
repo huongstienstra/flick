@@ -1,9 +1,7 @@
 <resources>
-    <string name="home">show+</string>
-    <string name="contest">contest</string>
-    <string name="upload">upload</string>
-    <string name="search">search</string>
-    <string name="profile">profile</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
 
     <string name="signup">Sign Up</string>
 
@@ -44,6 +42,5 @@
 
     <string name="btn_confirm">Confirm</string>
     <string name="btn_next">Next</string>
-
 
 </resources>

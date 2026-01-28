@@ -1,0 +1,62 @@
+package com.flick.app.ui
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.flick.local.pref.SharedPreferencesDataSource
+import com.flick.repository.model.UserInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+
+sealed class LoginState {
+    data object Unknown : LoginState()
+    data object LoggedIn : LoginState()
+    data object LoggedOut : LoginState()
+    data object IncompleteProfile : LoginState()
+    data object TokenExpired : LoginState()
+}
+
+class ProfileUiState(
+    var userName: String? = null,
+)
+
+class MainViewModel(private val sharedPreferencesDataSource: SharedPreferencesDataSource) :
+    ViewModel() {
+
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.Unknown)
+    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
+
+    private val _uiState = MutableStateFlow(ProfileUiState(null))
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+
+    fun checkLoginStatus() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val gson = Gson()
+            val userInfoJson = sharedPreferencesDataSource.getUserInformation()
+            val token = sharedPreferencesDataSource.getToken()
+            val userInfo = try {
+                userInfoJson.let { gson.fromJson(it, UserInfo::class.java) }
+            } catch (e: JsonSyntaxException) {
+                null
+            }
+            if (userInfo != null && userInfo.profile.isNotEmpty() && token.isNotEmpty()) {
+                _loginState.value = LoginState.LoggedIn
+
+                val userProfile = userInfo.profile.firstOrNull()
+                _uiState.value.userName = userProfile?.nickName
+            } else {
+                _loginState.value = LoginState.IncompleteProfile
+            }
+        }
+    }
+
+    fun isLoggedIn(): Boolean {
+        return _loginState.value.let { it is LoginState.LoggedIn }
+    }
+
+}

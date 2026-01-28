@@ -71,20 +71,20 @@
         android:layout_marginBottom="@dimen/dp_8"
         android:orientation="vertical">
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:iconSrc="@drawable/ic_like"
             app:label="12.6k" />
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:iconSrc="@drawable/ic_message" />
 
-        <com.shinlee.common.views.VideoActionButton
+        <com.flick.common.views.VideoActionButton
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

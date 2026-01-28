@@ -13,7 +13,7 @@
         tools:listitem="@layout/video_item_view_v2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-    <com.shinlee.common.views.CustomTab
+    <com.flick.common.views.CustomTab
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
