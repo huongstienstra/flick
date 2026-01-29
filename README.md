@@ -369,10 +369,6 @@ PEXELS_API_KEY=your_api_key_here
 
 ---
 
-## License
-
-This project is for educational and portfolio purposes.
-
 ## Acknowledgments
 
 - [TikTok Android Engineering Blog](https://android-developers.googleblog.com/2022/08/precise-improvements-how-tiktok-enhanced-its-social-experience-on-android.html) for optimization techniques
