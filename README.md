@@ -9,9 +9,9 @@ A modern TikTok-style vertical video streaming app for Android, built with Kotli
 
 ## Demo
 
-<video src="./video-flick.webm" controls width="320"></video>
+[![Flick app demo](./assets/video-flick-demo.gif)](./video-flick.webm)
 
-[Watch the demo video](./video-flick.webm)
+[Open the full WebM demo](./video-flick.webm)
 
 ## Features
 
