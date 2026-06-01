@@ -153,46 +153,6 @@ sequenceDiagram
 - **Correct visual handoff:** The active page owns the player, and the thumbnail belongs to the current `videoUrl`, so users do not see stale thumbnails or old video frames.
 - **Interview talking point:** This implementation separates data loading, playback ownership, and rendering state, which makes the feed easier to debug and reason about.
 
-## Reload and Refresh Flow
-
-The feed is built on Paging 3, so reload behavior is centered around invalidating or refreshing the `LazyPagingItems` stream. The current home feed does not expose a visible pull-to-refresh control yet, but the architecture already supports refresh/retry through Paging's `refresh()`, `retry()`, `LoadState`, and `PagingSource.getRefreshKey()` APIs.
-
-```mermaid
-flowchart TD
-    A["User returns to feed or triggers refresh"] --> B["LazyPagingItems.refresh()"]
-    B --> C["Paging creates a new VideoPagingSource"]
-    C --> D["getRefreshKey keeps position near anchor item"]
-    D --> E["VideoRepository requests fresh page data"]
-    E --> F["Pexels API returns latest videos"]
-    F --> G["Mapper rebuilds VideoShow models"]
-    G --> H["VerticalPager recomposes with refreshed items"]
-    H --> I["currentPage is observed again"]
-    I --> J["Prepared adjacent player can be promoted"]
-    J --> K["Previous player is stopped and cleared"]
-    K --> L["Reusable ExoPlayer is assigned to active page"]
-    L --> M["Current thumbnail is shown while video prepares"]
-    M --> Q["First frame rendered, thumbnail hidden"]
-
-    E --> N["Network or API error"]
-    N --> O["LoadState.Error"]
-    O --> P["UI can call LazyPagingItems.retry()"]
-    P --> C
-```
-
-### Reload Responsibilities
-
-- `VideoPagingSource.getRefreshKey()` determines which page should reload after invalidation, keeping the refreshed feed near the user's current scroll position.
-- `LazyPagingItems.refresh()` is the natural entry point for a future pull-to-refresh gesture on the home feed.
-- `LazyPagingItems.retry()` can retry failed network loads without discarding already loaded paging data.
-- `LoadState.Refresh` represents the first-page reload state; `LoadState.Append` represents loading more content at the end of the feed.
-- `HomeScreen` resets playback ownership on page changes by stopping the previous player, clearing its media items, returning it to `ExoPlayerCache`, and assigning a player only to the active page.
-- `HomeScreen` also keeps one adjacent video prepared in a paused player, so swiping forward can promote a warm player instead of waiting for a cold prepare.
-- `VideoPlayer` keeps reloads visually stable by showing the refreshed item's thumbnail until Media3 confirms the new first frame has rendered.
-
-### Suggested Pull-To-Refresh Hook
-
-If a visible reload gesture is added later, it should call `videos.refresh()` from the `HomeScreen` layer and render loading/error states from `videos.loadState.refresh`. That keeps reload behavior inside the Paging pipeline instead of adding a second custom networking path.
-
 ## Setup
 
 ### Prerequisites
