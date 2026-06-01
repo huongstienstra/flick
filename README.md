@@ -7,6 +7,12 @@ A modern TikTok-style vertical video streaming app for Android, built with Kotli
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=flat&logo=jetpack-compose&logoColor=white)
 ![ExoPlayer](https://img.shields.io/badge/ExoPlayer-FF0000?style=flat&logo=youtube&logoColor=white)
 
+## Demo
+
+<video src="./video-flick.webm" controls width="320"></video>
+
+[Watch the demo video](./video-flick.webm)
+
 ## Features
 
 - Vertical video feed with smooth swiping (TikTok-style)
