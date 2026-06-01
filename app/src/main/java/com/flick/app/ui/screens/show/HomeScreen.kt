@@ -27,11 +27,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -43,6 +45,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
@@ -69,7 +73,20 @@ fun HomeScreen(
     )
 
     var currentPage by remember { mutableIntStateOf(0) }
-    var currentPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
+    var activePlayer by remember { mutableStateOf<ActiveVideoPlayer?>(null) }
+    var preloadedPlayer by remember { mutableStateOf<ActiveVideoPlayer?>(null) }
+    val currentVideo = videos.getOrNull(currentPage)
+    val nextVideo = videos.getOrNull(currentPage + 1)
+    val currentActivePlayer by rememberUpdatedState(activePlayer)
+    val currentPreloadedPlayer by rememberUpdatedState(preloadedPlayer)
+
+    fun releasePlayerEntry(entry: ActiveVideoPlayer?) {
+        entry?.player?.let { player ->
+            player.stop()
+            player.clearMediaItems()
+            onReleasePlayer(player)
+        }
+    }
 
     // Track page changes
     LaunchedEffect(pagerState) {
@@ -79,13 +96,83 @@ fun HomeScreen(
         }
     }
 
-    // Get player for current page
-    LaunchedEffect(currentPage) {
-        currentPlayer?.let { player ->
-            player.stop()
-            onReleasePlayer(player)
+    // Get or promote a prepared player for current page.
+    LaunchedEffect(currentPage, currentVideo?.videoUrl) {
+        val videoUrl = currentVideo?.videoUrl
+        if (videoUrl.isNullOrBlank()) {
+            releasePlayerEntry(activePlayer)
+            activePlayer = null
+            return@LaunchedEffect
         }
-        currentPlayer = onGetPlayer()
+
+        val preparedPlayer = preloadedPlayer?.takeIf {
+            it.page == currentPage && it.videoUrl == videoUrl
+        }
+
+        if (preparedPlayer != null) {
+            if (activePlayer?.player !== preparedPlayer.player) {
+                releasePlayerEntry(activePlayer)
+            }
+            preloadedPlayer = null
+            activePlayer = preparedPlayer
+            preparedPlayer.player.playWhenReady = true
+            preparedPlayer.player.play()
+        } else {
+            releasePlayerEntry(activePlayer)
+            activePlayer = null
+
+            activePlayer = onGetPlayer()?.let { player ->
+                preparePlayer(player = player, videoUrl = videoUrl, playWhenReady = true)
+                ActiveVideoPlayer(
+                    page = currentPage,
+                    videoUrl = videoUrl,
+                    player = player
+                )
+            }
+        }
+    }
+
+    // Preload the next page so scroll-to-play starts from a prepared player.
+    LaunchedEffect(currentPage, nextVideo?.videoUrl) {
+        val nextPage = currentPage + 1
+        val nextVideoUrl = nextVideo?.videoUrl
+
+        if (nextVideoUrl.isNullOrBlank()) {
+            releasePlayerEntry(preloadedPlayer)
+            preloadedPlayer = null
+            return@LaunchedEffect
+        }
+
+        if (preloadedPlayer?.page == nextPage && preloadedPlayer?.videoUrl == nextVideoUrl) {
+            return@LaunchedEffect
+        }
+
+        releasePlayerEntry(preloadedPlayer)
+        preloadedPlayer = null
+
+        if (activePlayer?.page == nextPage && activePlayer?.videoUrl == nextVideoUrl) {
+            return@LaunchedEffect
+        }
+
+        preloadedPlayer = onGetPlayer()?.let { player ->
+            preparePlayer(player = player, videoUrl = nextVideoUrl, playWhenReady = false)
+            ActiveVideoPlayer(
+                page = nextPage,
+                videoUrl = nextVideoUrl,
+                player = player
+            )
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            val active = currentActivePlayer
+            val preloaded = currentPreloadedPlayer
+            releasePlayerEntry(active)
+            if (preloaded?.player !== active?.player) {
+                releasePlayerEntry(preloaded)
+            }
+        }
     }
 
     Box(
@@ -108,11 +195,14 @@ fun HomeScreen(
             ) { page ->
                 val video = videos[page]
                 val isCurrentPage = page == currentPage
+                val pagePlayer = activePlayer
+                    ?.takeIf { it.page == page }
+                    ?.player
 
                 video?.let {
                     VideoPageContent(
                         video = it,
-                        player = if (isCurrentPage) currentPlayer else null,
+                        player = if (isCurrentPage) pagePlayer else null,
                         isPlaying = isCurrentPage,
                         onLikeClick = { onLikeVideo(it.id) },
                         onCommentClick = { onCommentClick(it) },
@@ -121,6 +211,43 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
+
+private data class ActiveVideoPlayer(
+    val page: Int,
+    val videoUrl: String,
+    val player: ExoPlayer
+)
+
+private fun LazyPagingItems<VideoShow>.getOrNull(index: Int): VideoShow? {
+    return if (index in 0 until itemCount) this[index] else null
+}
+
+private fun preparePlayer(
+    player: ExoPlayer,
+    videoUrl: String,
+    playWhenReady: Boolean
+) {
+    val currentUrl = player.currentMediaItem
+        ?.localConfiguration
+        ?.uri
+        ?.toString()
+
+    player.repeatMode = Player.REPEAT_MODE_ONE
+
+    if (currentUrl != videoUrl) {
+        player.stop()
+        player.clearMediaItems()
+        player.setMediaItem(MediaItem.fromUri(videoUrl))
+        player.prepare()
+    }
+
+    player.playWhenReady = playWhenReady
+    if (playWhenReady) {
+        player.play()
+    } else {
+        player.pause()
     }
 }
 
@@ -140,6 +267,7 @@ private fun VideoPageContent(
         // Video Player
         VideoPlayer(
             videoUrl = video.videoUrl ?: "",
+            thumbnailUrl = video.thumbnailUrl,
             player = player,
             isPlaying = isPlaying,
             modifier = Modifier.fillMaxSize()
